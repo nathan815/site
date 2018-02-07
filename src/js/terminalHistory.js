@@ -1,11 +1,11 @@
 import $ from 'jquery';
 import KeyCodes from './keyCodes';
+import { commandInput } from './elements';
 
 export const upInputStack = [];
 export const downInputStack = [];
 
 export const handleHistory = function(keycode) {
-    let commandInput = $('input#command');
     let popping = keycode == KeyCodes.ARROW_UP ? upInputStack : downInputStack;
     let pushing = keycode == KeyCodes.ARROW_UP ? downInputStack : upInputStack;
     let txt = popping.pop();

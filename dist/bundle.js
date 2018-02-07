@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -10439,10 +10439,18 @@ return jQuery;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-const arrHas = function(arr, ele) {
-    return arr.indexOf(ele) > -1;
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = arrHas;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
+
+
+const terminalWindow = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#window');
+/* harmony export (immutable) */ __webpack_exports__["c"] = terminalWindow;
+
+const terminalOutput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#output');
+/* harmony export (immutable) */ __webpack_exports__["b"] = terminalOutput;
+
+const commandInput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('input#command');
+/* harmony export (immutable) */ __webpack_exports__["a"] = commandInput;
 
 
 /***/ }),
@@ -10461,42 +10469,51 @@ const arrHas = function(arr, ele) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+const arrHas = function(arr, ele) {
+    return arr.indexOf(ele) > -1;
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = arrHas;
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__commandHandler__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__terminalHistory__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__keyCodes__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__keyCodes__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__commandHandler__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__terminalHistory__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__elements__ = __webpack_require__(1);
 
 
 
 
 
-const terminalWindow = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#window');
-const terminalOutput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#output');
-const commandInput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('input#command');
 
-terminalWindow.on('click', function(e) {
+__WEBPACK_IMPORTED_MODULE_4__elements__["c" /* terminalWindow */].on('click', function(e) {
     let haveSel = getSelection().toString().length > 0;
     if(!haveSel) {
-        commandInput.focus();
-        commandInput.val(commandInput.val());
+        __WEBPACK_IMPORTED_MODULE_4__elements__["a" /* commandInput */].focus();
+        __WEBPACK_IMPORTED_MODULE_4__elements__["a" /* commandInput */].val(__WEBPACK_IMPORTED_MODULE_4__elements__["a" /* commandInput */].val());
     }
 });
 
-commandInput.on('keydown', function(e) {
+__WEBPACK_IMPORTED_MODULE_4__elements__["a" /* commandInput */].on('keydown', function(e) {
     let txt = '';
     switch(e.which) {
-        case __WEBPACK_IMPORTED_MODULE_3__keyCodes__["a" /* default */].ENTER:
-            while(__WEBPACK_IMPORTED_MODULE_2__terminalHistory__["a" /* downInputStack */].length > 0) {
-                __WEBPACK_IMPORTED_MODULE_2__terminalHistory__["c" /* upInputStack */].push(__WEBPACK_IMPORTED_MODULE_2__terminalHistory__["a" /* downInputStack */].pop());
+        case __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ENTER:
+            while(__WEBPACK_IMPORTED_MODULE_3__terminalHistory__["a" /* downInputStack */].length > 0) {
+                __WEBPACK_IMPORTED_MODULE_3__terminalHistory__["c" /* upInputStack */].push(__WEBPACK_IMPORTED_MODULE_3__terminalHistory__["a" /* downInputStack */].pop());
             }
             handleInput(this.value);
             break;
-        case __WEBPACK_IMPORTED_MODULE_3__keyCodes__["a" /* default */].ARROW_UP:
-        case __WEBPACK_IMPORTED_MODULE_3__keyCodes__["a" /* default */].ARROW_DOWN:
+        case __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_UP:
+        case __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_DOWN:
             e.preventDefault();
-            Object(__WEBPACK_IMPORTED_MODULE_2__terminalHistory__["b" /* handleHistory */])(e.which);
+            Object(__WEBPACK_IMPORTED_MODULE_3__terminalHistory__["b" /* handleHistory */])(e.which);
             break;
     }
 });
@@ -10505,31 +10522,38 @@ const handleInput = function(input) {
     let output = '';
 
     try {
-        output = Object(__WEBPACK_IMPORTED_MODULE_1__commandHandler__["a" /* processCommand */])(input);
+        output = Object(__WEBPACK_IMPORTED_MODULE_2__commandHandler__["a" /* processCommand */])(input);
     } catch(e) {
         output = e.message;
     }
 
+    __WEBPACK_IMPORTED_MODULE_4__elements__["a" /* commandInput */].val('');
     if(output.length > 0) {
-        terminalOutput.append('\n$ ' + input + '\n' + output);
-        commandInput.val('');
+        let text = '';
+        if(__WEBPACK_IMPORTED_MODULE_4__elements__["b" /* terminalOutput */].text() != '') {
+            text = '\n'
+        }
+        text += '$ ' + input + '\n' + output;
+        __WEBPACK_IMPORTED_MODULE_4__elements__["b" /* terminalOutput */].append(text);
     }
     if(input.length > 0) {
-        __WEBPACK_IMPORTED_MODULE_2__terminalHistory__["c" /* upInputStack */].push(input);
+        __WEBPACK_IMPORTED_MODULE_3__terminalHistory__["c" /* upInputStack */].push(input);
     }
 };
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__commands__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__helpers__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__commands__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__helpers__ = __webpack_require__(3);
 
 
 
 const processCommand = function(input) {
+    if(input == '')
+        return '';
     let parts = input.split(' ');
     const commandName = parts[0];
     const command = __WEBPACK_IMPORTED_MODULE_0__commands__["a" /* AllCommands */][commandName];
@@ -10537,7 +10561,7 @@ const processCommand = function(input) {
     const args = [];
 
     if(command === undefined) {
-        throw new Error('bash - Unknown commmand: ' + commandName);
+        throw new Error('-bash: '+commandName+': command not found');
     }
 
     parts = parts.splice(1);
@@ -10562,21 +10586,24 @@ const processCommand = function(input) {
     console.log("args=",args);
 
     if(Object(__WEBPACK_IMPORTED_MODULE_1__helpers__["a" /* arrHas */])(options, 'h') || Object(__WEBPACK_IMPORTED_MODULE_1__helpers__["a" /* arrHas */])(options, 'help')) {
-        return 'HELP for ' + commandName + ': ' + command.helpText;
+        return '-- Help entry for: ' + commandName + ' -- \n' + command.helpText;
     }
     else {
-        return command.execute(options, args, input);
+        let commandResult = command.execute(options, args, input);
+        return commandResult ? commandResult : '';
     }
 };
 /* harmony export (immutable) */ __webpack_exports__["a"] = processCommand;
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__helpers__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__helpers__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__elements__ = __webpack_require__(1);
+
 
 
 const lsCommand = function(options, args, input) {
@@ -10592,6 +10619,10 @@ const gitCommand = function(options, args, input) {
     return 'fatal: Not a git repository (or any of the parent directories): .git';
 }
 
+const clearCommand = function(options, args, input) {
+    __WEBPACK_IMPORTED_MODULE_1__elements__["b" /* terminalOutput */].text('');
+}
+
 const AllCommands = {
     ls: {
         execute: lsCommand,
@@ -10601,7 +10632,11 @@ const AllCommands = {
     git: {
         execute: gitCommand,
         possibleOptions: [],
-        helpText: 'The best source control system!'
+        helpText: 'Git is the best source control system.'
+    },
+    clear: {
+        execute: clearCommand,
+        possibleOptions: []
     }
 };
 /* harmony export (immutable) */ __webpack_exports__["a"] = AllCommands;
@@ -10612,13 +10647,15 @@ const GenericOptions = [ 'h', 'help' ];
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__keyCodes__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__elements__ = __webpack_require__(1);
+
 
 
 
@@ -10630,16 +10667,15 @@ const downInputStack = [];
 
 
 const handleHistory = function(keycode) {
-    let commandInput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('input#command');
     let popping = keycode == __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_UP ? upInputStack : downInputStack;
     let pushing = keycode == __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_UP ? downInputStack : upInputStack;
     let txt = popping.pop();
     if(txt && txt.length > 0) {
-        commandInput.val(txt);
+        __WEBPACK_IMPORTED_MODULE_2__elements__["a" /* commandInput */].val(txt);
         pushing.push(txt);
     }
     else if(keycode == __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_DOWN && downInputStack.length == 0) {
-        commandInput.val('');
+        __WEBPACK_IMPORTED_MODULE_2__elements__["a" /* commandInput */].val('');
     }
 };
 /* harmony export (immutable) */ __webpack_exports__["b"] = handleHistory;

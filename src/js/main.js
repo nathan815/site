@@ -1,11 +1,8 @@
 import $ from 'jquery';
+import KeyCodes from './keyCodes';
 import { processCommand } from './commandHandler';
 import { handleHistory, upInputStack, downInputStack } from './terminalHistory';
-import KeyCodes from './keyCodes';
-
-const terminalWindow = $('div#window');
-const terminalOutput = $('div#output');
-const commandInput = $('input#command');
+import { terminalWindow, terminalOutput, commandInput } from './elements';
 
 terminalWindow.on('click', function(e) {
     let haveSel = getSelection().toString().length > 0;
@@ -41,9 +38,14 @@ const handleInput = function(input) {
         output = e.message;
     }
 
+    commandInput.val('');
     if(output.length > 0) {
-        terminalOutput.append('\n$ ' + input + '\n' + output);
-        commandInput.val('');
+        let text = '';
+        if(terminalOutput.text() != '') {
+            text = '\n'
+        }
+        text += '$ ' + input + '\n' + output;
+        terminalOutput.append(text);
     }
     if(input.length > 0) {
         upInputStack.push(input);

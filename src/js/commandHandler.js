@@ -2,6 +2,8 @@ import { AllCommands, GenericOptions } from './commands';
 import { arrHas } from './helpers';
 
 export const processCommand = function(input) {
+    if(input == '')
+        return '';
     let parts = input.split(' ');
     const commandName = parts[0];
     const command = AllCommands[commandName];
@@ -9,7 +11,7 @@ export const processCommand = function(input) {
     const args = [];
 
     if(command === undefined) {
-        throw new Error('bash - Unknown commmand: ' + commandName);
+        throw new Error('-bash: '+commandName+': command not found');
     }
 
     parts = parts.splice(1);
@@ -34,9 +36,10 @@ export const processCommand = function(input) {
     console.log("args=",args);
 
     if(arrHas(options, 'h') || arrHas(options, 'help')) {
-        return 'HELP for ' + commandName + ': ' + command.helpText;
+        return '-- Help entry for: ' + commandName + ' -- \n' + command.helpText;
     }
     else {
-        return command.execute(options, args, input);
+        let commandResult = command.execute(options, args, input);
+        return commandResult ? commandResult : '';
     }
 };
