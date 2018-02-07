@@ -5,16 +5,19 @@ const lsCommand = function(options, args, input) {
     if(options[0] == 'a') {
         return 'All';
     }
-    return 'Listing...';
+    return '. \t ..';
 }
 
-const gitCommand = function(options, args, input) {
-    if(arrHas(args, 'init'))
+const gitCommand = function(options, args) {
+    if(args[0] == 'init')
         return 'fatal: unable to initialize git repository (permission denied)';
+    else if(options[0] == 'version')
+        return 'git version 2.14.3 (Apple Git-98)';
+
     return 'fatal: Not a git repository (or any of the parent directories): .git';
 }
 
-const clearCommand = function(options, args, input) {
+const clearCommand = function() {
     $terminalOutput.text('');
 }
 
@@ -26,7 +29,7 @@ export const AllCommands = {
     },
     git: {
         execute: gitCommand,
-        possibleOptions: [],
+        possibleOptions: [ 'version' ],
         helpText: 'Git is the best source control system.'
     },
     clear: {

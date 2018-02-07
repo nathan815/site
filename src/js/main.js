@@ -2,7 +2,7 @@ import $ from 'jquery';
 import KeyCodes from './keyCodes';
 import { processCommand } from './commandHandler';
 import { $terminalWindow, $terminalOutput, $commandInput } from './elements';
-import { handleHistory, upInputStack, downInputStack, clearDownInputStack } from './terminalHistory';
+import { handleHistory, historyStack, clearDownInputStack } from './terminalHistory';
 
 $terminalWindow.on('click', function(e) {
     let haveSel = getSelection().toString().length > 0;
@@ -45,6 +45,6 @@ const handleInput = function(input) {
         $terminalOutput.append(text);
     }
     if(input.length > 0) {
-        upInputStack.push(input);
+        historyStack.up.push(input);
     }
 };

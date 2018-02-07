@@ -10493,6 +10493,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
+function main() {
+    __WEBPACK_IMPORTED_MODULE_3__elements__["b" /* $terminalOutput */].append('Welcome to nathanieljohnson.me ...<br>- Type ls to view menu options<br>- Type help for a list of available commands');
+}
+
+document.onload = main;
+
 __WEBPACK_IMPORTED_MODULE_3__elements__["c" /* $terminalWindow */].on('click', function(e) {
     let haveSel = getSelection().toString().length > 0;
     if(!haveSel) {
@@ -10534,7 +10540,7 @@ const handleInput = function(input) {
         __WEBPACK_IMPORTED_MODULE_3__elements__["b" /* $terminalOutput */].append(text);
     }
     if(input.length > 0) {
-        __WEBPACK_IMPORTED_MODULE_4__terminalHistory__["c" /* upInputStack */].push(input);
+        __WEBPACK_IMPORTED_MODULE_4__terminalHistory__["c" /* historyStack */].up.push(input);
     }
 };
 
@@ -10607,16 +10613,19 @@ const lsCommand = function(options, args, input) {
     if(options[0] == 'a') {
         return 'All';
     }
-    return 'Listing...';
+    return '. \t ..';
 }
 
-const gitCommand = function(options, args, input) {
-    if(Object(__WEBPACK_IMPORTED_MODULE_0__helpers__["a" /* arrHas */])(args, 'init'))
+const gitCommand = function(options, args) {
+    if(args[0] == 'init')
         return 'fatal: unable to initialize git repository (permission denied)';
+    else if(options[0] == 'version')
+        return 'git version 2.14.3 (Apple Git-98)';
+
     return 'fatal: Not a git repository (or any of the parent directories): .git';
 }
 
-const clearCommand = function(options, args, input) {
+const clearCommand = function() {
     __WEBPACK_IMPORTED_MODULE_1__elements__["b" /* $terminalOutput */].text('');
 }
 
@@ -10628,7 +10637,7 @@ const AllCommands = {
     },
     git: {
         execute: gitCommand,
-        possibleOptions: [],
+        possibleOptions: [ 'version' ],
         helpText: 'Git is the best source control system.'
     },
     clear: {
@@ -10656,31 +10665,29 @@ const GenericOptions = [ 'h', 'help' ];
 
 
 
-const upInputStack = [];
-/* harmony export (immutable) */ __webpack_exports__["c"] = upInputStack;
-
-const downInputStack = [];
-/* unused harmony export downInputStack */
+const historyStack = { up: [], down: [] };
+/* harmony export (immutable) */ __webpack_exports__["c"] = historyStack;
 
 
 const handleHistory = function(keycode) {
-    let popping = keycode == __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_UP ? upInputStack : downInputStack;
-    let pushing = keycode == __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_UP ? downInputStack : upInputStack;
+    let popping = keycode == __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_UP ? historyStack.up : historyStack.down;
+    let pushing = keycode == __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_UP ? historyStack.down : historyStack.up;
     let txt = popping.pop();
+
     if(txt && txt.length > 0) {
         __WEBPACK_IMPORTED_MODULE_2__elements__["a" /* $commandInput */].val(txt);
         pushing.push(txt);
     }
-    else if(keycode == __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_DOWN && downInputStack.length == 0) {
-        commandInput.val('');
+    else if(keycode == __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_DOWN && historyStack.down.length == 0) {
+        __WEBPACK_IMPORTED_MODULE_2__elements__["a" /* $commandInput */].val('');
     }
 };
 /* harmony export (immutable) */ __webpack_exports__["b"] = handleHistory;
 
 
 const clearDownInputStack = function() {
-    while(downInputStack.length > 0) {
-        upInputStack.push(downInputStack.pop());
+    while(historyStack.down.length > 0) {
+        historyStack.up.push(historyStack.down.pop());
     }
 };
 /* harmony export (immutable) */ __webpack_exports__["a"] = clearDownInputStack;
