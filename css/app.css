@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Anonymous+Pro');
 
 body {
-    background: rgb(35,75,110);
+    background: #106BB5 url('../img/fabric-light.png');
     font-family: Monaco, 'Anonymous Pro', Courier, monospace;
     padding: 10px;
     margin: 0;

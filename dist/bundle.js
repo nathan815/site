@@ -10493,12 +10493,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-function main() {
-    __WEBPACK_IMPORTED_MODULE_3__elements__["b" /* $terminalOutput */].append('Welcome to nathanieljohnson.me ...<br>- Type ls to view menu options<br>- Type help for a list of available commands');
-}
-
-document.onload = main;
-
 __WEBPACK_IMPORTED_MODULE_3__elements__["c" /* $terminalWindow */].on('click', function(e) {
     let haveSel = getSelection().toString().length > 0;
     if(!haveSel) {
