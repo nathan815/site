@@ -5,6 +5,15 @@ body {
     margin: 0;
 }
 
+.header {
+    text-align: center;
+    margin: 40px 0 10px 0;
+    font-weight: bold;
+    color: #444;
+}
+.center {
+    text-align: center;
+}
 .terminal {
     max-width: 100%;
     width: 700px;
@@ -28,9 +37,13 @@ body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     text-align: center;
     color: #222;
-    opacity: 0.9;
+    cursor: default;
+}
+.terminal .bar #title {
+    cursor: default;
 }
 .terminal .window {
+    background: none;
     position: absolute;
     top: 11.5%;
     left: 8.5%;
@@ -39,13 +52,12 @@ body {
     z-index: 2;
     color: #eee;
     font-size: 14px;
-    background: none;
     cursor: text;
 }
 
 .terminal input {
-    width: 96%;
     background: none;
+    width: 96%;
     border: 0;
     outline: 0;
     font-size: inherit;
