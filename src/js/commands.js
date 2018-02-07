@@ -1,5 +1,5 @@
 import { arrHas } from './helpers';
-import { terminalOutput } from './elements';
+import { $terminalOutput } from './elements';
 
 const lsCommand = function(options, args, input) {
     if(options[0] == 'a') {
@@ -15,7 +15,7 @@ const gitCommand = function(options, args, input) {
 }
 
 const clearCommand = function(options, args, input) {
-    terminalOutput.text('');
+    $terminalOutput.text('');
 }
 
 export const AllCommands = {

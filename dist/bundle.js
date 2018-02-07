@@ -10443,14 +10443,14 @@ return jQuery;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
 
 
-const terminalWindow = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#window');
-/* harmony export (immutable) */ __webpack_exports__["c"] = terminalWindow;
+const $terminalWindow = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#window');
+/* harmony export (immutable) */ __webpack_exports__["c"] = $terminalWindow;
 
-const terminalOutput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#output');
-/* harmony export (immutable) */ __webpack_exports__["b"] = terminalOutput;
+const $terminalOutput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#output');
+/* harmony export (immutable) */ __webpack_exports__["b"] = $terminalOutput;
 
-const commandInput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('input#command');
-/* harmony export (immutable) */ __webpack_exports__["a"] = commandInput;
+const $commandInput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('input#command');
+/* harmony export (immutable) */ __webpack_exports__["a"] = $commandInput;
 
 
 /***/ }),
@@ -10485,35 +10485,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__keyCodes__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__commandHandler__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__terminalHistory__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__elements__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__elements__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__terminalHistory__ = __webpack_require__(7);
 
 
 
 
 
 
-__WEBPACK_IMPORTED_MODULE_4__elements__["c" /* terminalWindow */].on('click', function(e) {
+__WEBPACK_IMPORTED_MODULE_3__elements__["c" /* $terminalWindow */].on('click', function(e) {
     let haveSel = getSelection().toString().length > 0;
     if(!haveSel) {
-        __WEBPACK_IMPORTED_MODULE_4__elements__["a" /* commandInput */].focus();
-        __WEBPACK_IMPORTED_MODULE_4__elements__["a" /* commandInput */].val(__WEBPACK_IMPORTED_MODULE_4__elements__["a" /* commandInput */].val());
+        __WEBPACK_IMPORTED_MODULE_3__elements__["a" /* $commandInput */].focus();
     }
 });
 
-__WEBPACK_IMPORTED_MODULE_4__elements__["a" /* commandInput */].on('keydown', function(e) {
+__WEBPACK_IMPORTED_MODULE_3__elements__["a" /* $commandInput */].on('keydown', function(e) {
     let txt = '';
     switch(e.which) {
         case __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ENTER:
-            while(__WEBPACK_IMPORTED_MODULE_3__terminalHistory__["a" /* downInputStack */].length > 0) {
-                __WEBPACK_IMPORTED_MODULE_3__terminalHistory__["c" /* upInputStack */].push(__WEBPACK_IMPORTED_MODULE_3__terminalHistory__["a" /* downInputStack */].pop());
-            }
+            Object(__WEBPACK_IMPORTED_MODULE_4__terminalHistory__["a" /* clearDownInputStack */])();
             handleInput(this.value);
             break;
         case __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_UP:
         case __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_DOWN:
             e.preventDefault();
-            Object(__WEBPACK_IMPORTED_MODULE_3__terminalHistory__["b" /* handleHistory */])(e.which);
+            Object(__WEBPACK_IMPORTED_MODULE_4__terminalHistory__["b" /* handleHistory */])(e.which);
             break;
     }
 });
@@ -10527,17 +10524,17 @@ const handleInput = function(input) {
         output = e.message;
     }
 
-    __WEBPACK_IMPORTED_MODULE_4__elements__["a" /* commandInput */].val('');
+    __WEBPACK_IMPORTED_MODULE_3__elements__["a" /* $commandInput */].val('');
     if(output.length > 0) {
         let text = '';
-        if(__WEBPACK_IMPORTED_MODULE_4__elements__["b" /* terminalOutput */].text() != '') {
+        if(__WEBPACK_IMPORTED_MODULE_3__elements__["b" /* $terminalOutput */].text() != '') {
             text = '\n'
         }
         text += '$ ' + input + '\n' + output;
-        __WEBPACK_IMPORTED_MODULE_4__elements__["b" /* terminalOutput */].append(text);
+        __WEBPACK_IMPORTED_MODULE_3__elements__["b" /* $terminalOutput */].append(text);
     }
     if(input.length > 0) {
-        __WEBPACK_IMPORTED_MODULE_3__terminalHistory__["c" /* upInputStack */].push(input);
+        __WEBPACK_IMPORTED_MODULE_4__terminalHistory__["c" /* upInputStack */].push(input);
     }
 };
 
@@ -10620,7 +10617,7 @@ const gitCommand = function(options, args, input) {
 }
 
 const clearCommand = function(options, args, input) {
-    __WEBPACK_IMPORTED_MODULE_1__elements__["b" /* terminalOutput */].text('');
+    __WEBPACK_IMPORTED_MODULE_1__elements__["b" /* $terminalOutput */].text('');
 }
 
 const AllCommands = {
@@ -10663,7 +10660,7 @@ const upInputStack = [];
 /* harmony export (immutable) */ __webpack_exports__["c"] = upInputStack;
 
 const downInputStack = [];
-/* harmony export (immutable) */ __webpack_exports__["a"] = downInputStack;
+/* unused harmony export downInputStack */
 
 
 const handleHistory = function(keycode) {
@@ -10671,14 +10668,22 @@ const handleHistory = function(keycode) {
     let pushing = keycode == __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_UP ? downInputStack : upInputStack;
     let txt = popping.pop();
     if(txt && txt.length > 0) {
-        __WEBPACK_IMPORTED_MODULE_2__elements__["a" /* commandInput */].val(txt);
+        __WEBPACK_IMPORTED_MODULE_2__elements__["a" /* $commandInput */].val(txt);
         pushing.push(txt);
     }
     else if(keycode == __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_DOWN && downInputStack.length == 0) {
-        __WEBPACK_IMPORTED_MODULE_2__elements__["a" /* commandInput */].val('');
+        commandInput.val('');
     }
 };
 /* harmony export (immutable) */ __webpack_exports__["b"] = handleHistory;
+
+
+const clearDownInputStack = function() {
+    while(downInputStack.length > 0) {
+        upInputStack.push(downInputStack.pop());
+    }
+};
+/* harmony export (immutable) */ __webpack_exports__["a"] = clearDownInputStack;
 
 
 /***/ })
