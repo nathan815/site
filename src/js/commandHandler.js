@@ -1,4 +1,5 @@
 import { AllCommands, GenericOptions } from './commands';
+import { arrHas } from './helpers';
 
 export const processCommand = function(input) {
     let parts = input.split(' ');
@@ -19,7 +20,7 @@ export const processCommand = function(input) {
             // get rid of the leading dashes
             part = part.indexOf('--') == 0 ? part.slice(2) : part.slice(1);
             // make sure option is possible
-            if(command.possibleOptions.indexOf(part) == -1 && GenericOptions.indexOf(part) == -1) {
+            if(!arrHas(command.possibleOptions, part) && !arrHas(GenericOptions, part)) {
                 throw new Error(commandName + ' - Unknown option: '+part);
             }
             options.push(part);
@@ -29,7 +30,10 @@ export const processCommand = function(input) {
         }
     }
 
-    if(options.indexOf('h') != -1 || options.indexOf('help') != -1) {
+    console.log("ops=",options);
+    console.log("args=",args);
+
+    if(arrHas(options, 'h') || arrHas(options, 'help')) {
         return 'HELP for ' + commandName + ': ' + command.helpText;
     }
     else {

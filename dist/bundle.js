@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -68,18 +68,34 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+const arrHas = function(arr, ele) {
+    return arr.indexOf(ele) > -1;
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = arrHas;
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__commandHandler__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__commandHandler__ = __webpack_require__(3);
 
 
 
 const KEY_ENTER = 13;
+const KEY_UP = 38;
+const KEY_DOWN = 40;
 
 const terminalWindow = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#window');
 const terminalOutput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#output');
 const commandInput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('input#command');
+
+const upInputStack = [];
+const downInputStack = [];
 
 terminalWindow.on('click', function(e) {
     let haveSel = getSelection().toString().length > 0;
@@ -89,24 +105,57 @@ terminalWindow.on('click', function(e) {
     }
 });
 
-commandInput.on('keypress', function(e) {
-    let input = this.value;
-    let output = null;
+commandInput.on('keydown', function(e) {
+    let txt = '';
+    switch(e.which) {
+        case KEY_ENTER:
+            while(downInputStack.length > 0) {
+                upInputStack.push(downInputStack.pop());
+            }
+            handleInput(this.value);
+            break;
+        case KEY_UP:
+            e.preventDefault();
+            txt = upInputStack.pop();
+            if(txt && txt.length > 0) {
+                commandInput.val(txt);
+                downInputStack.push(txt);
+            }
+            break;
+        case KEY_DOWN:
+            e.preventDefault();
+            txt = downInputStack.pop();
+            if(txt && txt.length > 0) {
+                commandInput.val(txt);
+                upInputStack.push(txt);
+            }
+            else if(downInputStack.length == 0) {
+                commandInput.val('');
+            }
+            break;
+    }
+});
+
+const handleInput = function(input) {
+    let output = '';
+
     try {
-        if(e.which == KEY_ENTER) 
-            output = Object(__WEBPACK_IMPORTED_MODULE_1__commandHandler__["a" /* processCommand */])(input);
+        output = Object(__WEBPACK_IMPORTED_MODULE_1__commandHandler__["a" /* processCommand */])(input);
     } catch(e) {
         output = e.message;
     }
 
-    if(output && output.length > 0) {
-        terminalOutput.append('\n' + output);
+    if(output.length > 0) {
+        terminalOutput.append('\n$ ' + input + '\n' + output);
         commandInput.val('');
     }
-});
+    if(input.length > 0) {
+        upInputStack.push(input);
+    }
+};
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -10477,11 +10526,13 @@ return jQuery;
 
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__commands__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__commands__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__helpers__ = __webpack_require__(0);
+
 
 
 const processCommand = function(input) {
@@ -10503,7 +10554,7 @@ const processCommand = function(input) {
             // get rid of the leading dashes
             part = part.indexOf('--') == 0 ? part.slice(2) : part.slice(1);
             // make sure option is possible
-            if(command.possibleOptions.indexOf(part) == -1 && __WEBPACK_IMPORTED_MODULE_0__commands__["b" /* GenericOptions */].indexOf(part) == -1) {
+            if(!Object(__WEBPACK_IMPORTED_MODULE_1__helpers__["a" /* arrHas */])(command.possibleOptions, part) && !Object(__WEBPACK_IMPORTED_MODULE_1__helpers__["a" /* arrHas */])(__WEBPACK_IMPORTED_MODULE_0__commands__["b" /* GenericOptions */], part)) {
                 throw new Error(commandName + ' - Unknown option: '+part);
             }
             options.push(part);
@@ -10513,8 +10564,10 @@ const processCommand = function(input) {
         }
     }
 
-    console.log('ops',options);
-    if(options.indexOf('h') != -1 || options.indexOf('help') != -1) {
+    console.log("ops=",options);
+    console.log("args=",args);
+
+    if(Object(__WEBPACK_IMPORTED_MODULE_1__helpers__["a" /* arrHas */])(options, 'h') || Object(__WEBPACK_IMPORTED_MODULE_1__helpers__["a" /* arrHas */])(options, 'help')) {
         return 'HELP for ' + commandName + ': ' + command.helpText;
     }
     else {
@@ -10525,24 +10578,36 @@ const processCommand = function(input) {
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__helpers__ = __webpack_require__(0);
+
+
 const lsCommand = function(options, args, input) {
-    console.log("args=",args);
-    console.log("ops=",options);
     if(options[0] == 'a') {
         return 'All';
     }
     return 'Listing...';
 }
 
+const gitCommand = function(options, args, input) {
+    if(Object(__WEBPACK_IMPORTED_MODULE_0__helpers__["a" /* arrHas */])(args, 'init'))
+        return 'fatal: unable to initialize git repository (permission denied)';
+    return 'fatal: Not a git repository (or any of the parent directories): .git';
+}
+
 const AllCommands = {
     ls: {
-        helpText: 'Lists files',
         execute: lsCommand,
-        possibleOptions: [ 'a' ]
+        possibleOptions: [ 'a' ],
+        helpText: 'Lists files'
+    },
+    git: {
+        execute: gitCommand,
+        possibleOptions: [],
+        helpText: 'The best source control system!'
     }
 };
 /* harmony export (immutable) */ __webpack_exports__["a"] = AllCommands;
