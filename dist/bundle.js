@@ -71,13 +71,38 @@
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__commandHandler__ = __webpack_require__(2);
 
 
-const terminalWindow = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('#window');
-const command = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('#command');
 
-terminalWindow.on('click', function() {
-    command.focus();
+const KEY_ENTER = 13;
+
+const terminalWindow = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#window');
+const terminalOutput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#output');
+const commandInput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('input#command');
+
+terminalWindow.on('click', function(e) {
+    let haveSel = getSelection().toString().length > 0;
+    if(!haveSel) {
+        commandInput.focus();
+        commandInput.val(commandInput.val());
+    }
+});
+
+commandInput.on('keypress', function(e) {
+    let input = this.value;
+    let output = null;
+    try {
+        if(e.which == KEY_ENTER) 
+            output = Object(__WEBPACK_IMPORTED_MODULE_1__commandHandler__["a" /* processCommand */])(input);
+    } catch(e) {
+        output = e.message;
+    }
+
+    if(output && output.length > 0) {
+        terminalOutput.append('\n' + output);
+        commandInput.val('');
+    }
 });
 
 /***/ }),
@@ -10449,6 +10474,82 @@ if ( !noGlobal ) {
 
 return jQuery;
 } );
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__commands__ = __webpack_require__(3);
+
+
+const processCommand = function(input) {
+    let parts = input.split(' ');
+    const commandName = parts[0];
+    const command = __WEBPACK_IMPORTED_MODULE_0__commands__["a" /* AllCommands */][commandName];
+    const options = [];
+    const args = [];
+
+    if(command === undefined) {
+        throw new Error('bash - Unknown commmand: ' + commandName);
+    }
+
+    parts = parts.splice(1);
+    // parse options and arguments
+    for(let i = 0; i < parts.length; i++) {
+        let part = parts[i];
+        if(part.indexOf('--') == 0 || part.indexOf('-') == 0) {
+            // get rid of the leading dashes
+            part = part.indexOf('--') == 0 ? part.slice(2) : part.slice(1);
+            // make sure option is possible
+            if(command.possibleOptions.indexOf(part) == -1 && __WEBPACK_IMPORTED_MODULE_0__commands__["b" /* GenericOptions */].indexOf(part) == -1) {
+                throw new Error(commandName + ' - Unknown option: '+part);
+            }
+            options.push(part);
+        }
+        else {
+            args.push(part);
+        }
+    }
+
+    console.log('ops',options);
+    if(options.indexOf('h') != -1 || options.indexOf('help') != -1) {
+        return 'HELP for ' + commandName + ': ' + command.helpText;
+    }
+    else {
+        return command.execute(options, args, input);
+    }
+};
+/* harmony export (immutable) */ __webpack_exports__["a"] = processCommand;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const lsCommand = function(options, args, input) {
+    console.log("args=",args);
+    console.log("ops=",options);
+    if(options[0] == 'a') {
+        return 'All';
+    }
+    return 'Listing...';
+}
+
+const AllCommands = {
+    ls: {
+        helpText: 'Lists files',
+        execute: lsCommand,
+        possibleOptions: [ 'a' ]
+    }
+};
+/* harmony export (immutable) */ __webpack_exports__["a"] = AllCommands;
+
+
+const GenericOptions = [ 'h', 'help' ];
+/* harmony export (immutable) */ __webpack_exports__["b"] = GenericOptions;
 
 
 /***/ })
