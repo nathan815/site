@@ -1,21 +1,36 @@
 body {
+    background: #ccc url("https://www.toptal.com/designers/subtlepatterns/patterns/debut_light.png");
     font-family: Monaco, 'Courier New', Courier, monospace;
     padding: 10px;
-    background: #ddd;
+    margin: 0;
 }
 
 .terminal {
     max-width: 100%;
     width: 700px;
-    margin: 0 auto;
+    margin: 40px auto;
     position: relative;
 }
 .terminal img.bg {
     width: 100%;
     height: 100%;
     z-index: 1;
+    opacity: 0.9;
 }
-.terminal .container {
+.terminal .bar {
+    background: none;
+    position: absolute;
+    top: -26px;
+    left: 0;
+    width: 100%;
+    height: 18px;
+    font-size: 13px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    text-align: center;
+    color: #222;
+    opacity: 0.9;
+}
+.terminal .window {
     position: absolute;
     top: 11.5%;
     left: 8.5%;
@@ -25,10 +40,11 @@ body {
     color: #eee;
     font-size: 14px;
     background: none;
+    cursor: text;
 }
 
 .terminal input {
-    width: 93%;
+    width: 96%;
     background: none;
     border: 0;
     outline: 0;
