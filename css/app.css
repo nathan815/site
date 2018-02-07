@@ -36,7 +36,7 @@ body {
     font-size: 13px;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     text-align: center;
-    color: #222;
+    color: rgb(61,59,61);
     cursor: default;
 }
 .terminal .bar #title {
