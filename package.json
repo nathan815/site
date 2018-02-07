@@ -1,7 +1,7 @@
 {
   "name": "nathan815.github.io",
   "version": "1.0.0",
-  "description": "",
+  "description": "Personal website",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -20,5 +20,8 @@
   "homepage": "https://github.com/nathan815/nathan815.github.io#readme",
   "devDependencies": {
     "webpack": "^3.10.0"
+  },
+  "dependencies": {
+    "jquery": "^3.3.1"
   }
 }

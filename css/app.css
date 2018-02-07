@@ -64,3 +64,7 @@ body {
     font-family: inherit;
     color: inherit;
 }
+.terminal .bar,
+.terminal .command-input {
+    user-select: none;
+}
