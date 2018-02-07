@@ -60,102 +60,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-const arrHas = function(arr, ele) {
-    return arr.indexOf(ele) > -1;
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = arrHas;
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__commandHandler__ = __webpack_require__(3);
-
-
-
-const KEY_ENTER = 13;
-const KEY_UP = 38;
-const KEY_DOWN = 40;
-
-const terminalWindow = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#window');
-const terminalOutput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#output');
-const commandInput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('input#command');
-
-const upInputStack = [];
-const downInputStack = [];
-
-terminalWindow.on('click', function(e) {
-    let haveSel = getSelection().toString().length > 0;
-    if(!haveSel) {
-        commandInput.focus();
-        commandInput.val(commandInput.val());
-    }
-});
-
-commandInput.on('keydown', function(e) {
-    let txt = '';
-    switch(e.which) {
-        case KEY_ENTER:
-            while(downInputStack.length > 0) {
-                upInputStack.push(downInputStack.pop());
-            }
-            handleInput(this.value);
-            break;
-        case KEY_UP:
-            e.preventDefault();
-            txt = upInputStack.pop();
-            if(txt && txt.length > 0) {
-                commandInput.val(txt);
-                downInputStack.push(txt);
-            }
-            break;
-        case KEY_DOWN:
-            e.preventDefault();
-            txt = downInputStack.pop();
-            if(txt && txt.length > 0) {
-                commandInput.val(txt);
-                upInputStack.push(txt);
-            }
-            else if(downInputStack.length == 0) {
-                commandInput.val('');
-            }
-            break;
-    }
-});
-
-const handleInput = function(input) {
-    let output = '';
-
-    try {
-        output = Object(__WEBPACK_IMPORTED_MODULE_1__commandHandler__["a" /* processCommand */])(input);
-    } catch(e) {
-        output = e.message;
-    }
-
-    if(output.length > 0) {
-        terminalOutput.append('\n$ ' + input + '\n' + output);
-        commandInput.val('');
-    }
-    if(input.length > 0) {
-        upInputStack.push(input);
-    }
-};
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -10526,12 +10435,97 @@ return jQuery;
 
 
 /***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const arrHas = function(arr, ele) {
+    return arr.indexOf(ele) > -1;
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = arrHas;
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = ({
+    ENTER: 13,
+    ARROW_UP: 38,
+    ARROW_DOWN: 40,
+});
+
+/***/ }),
 /* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__commands__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__helpers__ = __webpack_require__(0);
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__commandHandler__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__terminalHistory__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__keyCodes__ = __webpack_require__(2);
+
+
+
+
+
+const terminalWindow = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#window');
+const terminalOutput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#output');
+const commandInput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('input#command');
+
+terminalWindow.on('click', function(e) {
+    let haveSel = getSelection().toString().length > 0;
+    if(!haveSel) {
+        commandInput.focus();
+        commandInput.val(commandInput.val());
+    }
+});
+
+commandInput.on('keydown', function(e) {
+    let txt = '';
+    switch(e.which) {
+        case __WEBPACK_IMPORTED_MODULE_3__keyCodes__["a" /* default */].ENTER:
+            while(__WEBPACK_IMPORTED_MODULE_2__terminalHistory__["a" /* downInputStack */].length > 0) {
+                __WEBPACK_IMPORTED_MODULE_2__terminalHistory__["c" /* upInputStack */].push(__WEBPACK_IMPORTED_MODULE_2__terminalHistory__["a" /* downInputStack */].pop());
+            }
+            handleInput(this.value);
+            break;
+        case __WEBPACK_IMPORTED_MODULE_3__keyCodes__["a" /* default */].ARROW_UP:
+        case __WEBPACK_IMPORTED_MODULE_3__keyCodes__["a" /* default */].ARROW_DOWN:
+            e.preventDefault();
+            Object(__WEBPACK_IMPORTED_MODULE_2__terminalHistory__["b" /* handleHistory */])(e.which);
+            break;
+    }
+});
+
+const handleInput = function(input) {
+    let output = '';
+
+    try {
+        output = Object(__WEBPACK_IMPORTED_MODULE_1__commandHandler__["a" /* processCommand */])(input);
+    } catch(e) {
+        output = e.message;
+    }
+
+    if(output.length > 0) {
+        terminalOutput.append('\n$ ' + input + '\n' + output);
+        commandInput.val('');
+    }
+    if(input.length > 0) {
+        __WEBPACK_IMPORTED_MODULE_2__terminalHistory__["c" /* upInputStack */].push(input);
+    }
+};
+
+/***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__commands__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__helpers__ = __webpack_require__(1);
 
 
 
@@ -10578,11 +10572,11 @@ const processCommand = function(input) {
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__helpers__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__helpers__ = __webpack_require__(1);
 
 
 const lsCommand = function(options, args, input) {
@@ -10615,6 +10609,40 @@ const AllCommands = {
 
 const GenericOptions = [ 'h', 'help' ];
 /* harmony export (immutable) */ __webpack_exports__["b"] = GenericOptions;
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__keyCodes__ = __webpack_require__(2);
+
+
+
+const upInputStack = [];
+/* harmony export (immutable) */ __webpack_exports__["c"] = upInputStack;
+
+const downInputStack = [];
+/* harmony export (immutable) */ __webpack_exports__["a"] = downInputStack;
+
+
+const handleHistory = function(keycode) {
+    let commandInput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('input#command');
+    let popping = keycode == __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_UP ? upInputStack : downInputStack;
+    let pushing = keycode == __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_UP ? downInputStack : upInputStack;
+    let txt = popping.pop();
+    if(txt && txt.length > 0) {
+        commandInput.val(txt);
+        pushing.push(txt);
+    }
+    else if(keycode == __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_DOWN && downInputStack.length == 0) {
+        commandInput.val('');
+    }
+};
+/* harmony export (immutable) */ __webpack_exports__["b"] = handleHistory;
 
 
 /***/ })
