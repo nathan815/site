@@ -5,14 +5,25 @@
     <link href="css/app.css" rel="stylesheet" />
 </head>
 <body>
-    <h1 class="header">Nathaniel Johnson</h1>
+    <header>
+        <h1>Nathaniel Johnson</h1>
+        <nav>
+            <ul>
+                <li><a href="#home" class="current">home ~/</a></li>
+                <li><a href="#about">about</a></li>
+                <li><a href="#projects">projects</a></li>
+                <li><a href="#resume">resume</a></li>
+                <li><a href="#contact">contact</a></li>
+            </ul>
+        </nav>
+    </header>
     <div class="terminal">
         <img src="img/terminal.png" class="bg" />
         <div class="bar">
             <span id="title">bash ~/</span>
         </div>
         <div class="window" id="window">
-            <div id="output">Welcome to :: nathanieljohnson.me ::<br>- Type <span class="blue">ls</span> to view menu options<br>- Type <span class="blue">help</span> for a list of available commands</div>
+            <div id="output">Welcome to :: nathanieljohnson.me ::<br>To navigate, either click the links above or use commands.<br>- Type <span class="blue">ls</span> to view menu options<br>- Type <span class="blue">help</span> for a list of available commands</div>
             <div class="command-input">
                 $ <input type="text" id="command" autofocus spellcheck="false" autocomplete="false" />
             </div>

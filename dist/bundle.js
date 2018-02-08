@@ -10625,7 +10625,7 @@ const lsCommand = function(options, args, input) {
         dir = args[0];
     }
     let precedingDir = dir != __WEBPACK_IMPORTED_MODULE_2__directorySystem__["a" /* Directory */].current ? (dir + '/') : '';
-    return __WEBPACK_IMPORTED_MODULE_2__directorySystem__["a" /* Directory */].generateContents(dir) + '\n[type <span class="blue">cd <i>'+precedingDir+'item-name</i></span> to view an item]';
+    return __WEBPACK_IMPORTED_MODULE_2__directorySystem__["a" /* Directory */].generateContents(dir) + '\n[type <span class="blue">open <i>'+precedingDir+'item-name</i></span> to view an item]';
 }
 
 const gitCommand = function(options, args) {

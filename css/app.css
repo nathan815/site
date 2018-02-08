@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Anonymous+Pro');
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+
 
 body {
     background: #0C64AB url('../img/fabric-light.png');
@@ -13,12 +15,30 @@ a {
 a:hover {
     text-decoration: underline;
 }
-
-h1.header {
+header {
+    font-family: Raleway, Helvetica;
+}
+header h1 {
+    font-size: 40px;
     text-align: center;
     margin: 40px 0 10px 0;
     font-weight: bold;
     color: #fff;
+}
+header nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px auto 0;
+    width: 700px;
+    text-align: center;
+}
+header nav ul li {
+    display: inline-block;
+    margin-right: 10px;
+}
+header nav ul li a.current {
+    font-weight: bold;
+    text-shadow: 0 0 3px #333;
 }
 footer {
     font-size: 13px;
@@ -33,7 +53,7 @@ footer {
     max-width: 100%;
     width: 700px;
     min-height: 400px;
-    margin: 30px auto;
+    margin: 15px auto;
     position: relative;
 }
 .terminal .blue {
