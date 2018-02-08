@@ -2,11 +2,11 @@ import $ from 'jquery';
 import KeyCodes from './keyCodes';
 import { $commandInput } from './elements';
 
-export const historyStack = { up: [], down: [] };
+const stack = { up: [], down: [] };
 
-export const handleHistory = function(keycode) {
-    let popping = keycode == KeyCodes.ARROW_UP ? historyStack.up : historyStack.down;
-    let pushing = keycode == KeyCodes.ARROW_UP ? historyStack.down : historyStack.up;
+const handleHistory = function(keycode) {
+    let popping = keycode == KeyCodes.ARROW_UP ? stack.up : stack.down;
+    let pushing = keycode == KeyCodes.ARROW_UP ? stack.down : stack.up;
     let txt = popping.pop();
     let input = $commandInput.val().trim();
 
@@ -14,13 +14,21 @@ export const handleHistory = function(keycode) {
         $commandInput.val(txt);
         pushing.push(txt);
     }
-    else if(keycode == KeyCodes.ARROW_DOWN && historyStack.down.length == 0) {
+    else if(keycode == KeyCodes.ARROW_DOWN && stack.down.length == 0) {
         $commandInput.val('');
     }
 };
 
-export const clearDownInputStack = function() {
-    while(historyStack.down.length > 0) {
-        historyStack.up.push(historyStack.down.pop());
+const clearDownInputStack = function() {
+    while(stack.down.length > 0) {
+        stack.up.push(TerminalHistory.stack.down.pop());
     }
 };
+
+const TerminalHistory = {
+    stack: stack,
+    handleHistory: handleHistory,
+    clearDownInputStack: clearDownInputStack
+};
+
+export default TerminalHistory;

@@ -23,6 +23,7 @@
     "webpack": "^3.10.0"
   },
   "dependencies": {
+    "history": "^4.7.2",
     "jquery": "^3.3.1"
   }
 }
