@@ -1,10 +1,16 @@
-import { AllCommands, GenericOptions } from './commands';
+import { AllCommands } from './commands';
 import { arrHas } from './helpers';
 
 export const processCommand = function(input) {
+    input = input.trim();
     if(input == '')
         return '';
     let parts = input.split(' ');
+    // remove blank "parts" so double spaces don't screw things up
+    for(let i = 0; i < parts.length; i++) {
+        if(parts[i].trim() == '')
+            parts.splice(i, 1);
+    }
     const commandName = parts[0];
     const command = AllCommands[commandName];
     const options = [];
@@ -22,7 +28,7 @@ export const processCommand = function(input) {
             // get rid of the leading dashes
             part = part.indexOf('--') == 0 ? part.slice(2) : part.slice(1);
             // make sure option is possible
-            if(!arrHas(command.possibleOptions, part) && !arrHas(GenericOptions, part)) {
+            if(!arrHas(command.possibleOptions, part)) {
                 throw new Error(commandName + ' - Unknown option: '+part);
             }
             options.push(part);
@@ -35,11 +41,6 @@ export const processCommand = function(input) {
     console.log("ops=",options);
     console.log("args=",args);
 
-    if(arrHas(options, 'h') || arrHas(options, 'help')) {
-        return '-- Help entry for: ' + commandName + ' -- \n' + command.helpText;
-    }
-    else {
-        let commandResult = command.execute(options, args, input);
-        return commandResult ? commandResult : '';
-    }
+    let commandResult = command.execute(options, args, input);
+    return commandResult ? commandResult : '';
 };

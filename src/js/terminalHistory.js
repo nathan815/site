@@ -8,6 +8,7 @@ export const handleHistory = function(keycode) {
     let popping = keycode == KeyCodes.ARROW_UP ? historyStack.up : historyStack.down;
     let pushing = keycode == KeyCodes.ARROW_UP ? historyStack.down : historyStack.up;
     let txt = popping.pop();
+    let input = $commandInput.val().trim();
 
     if(txt && txt.length > 0) {
         $commandInput.val(txt);

@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Anonymous+Pro');
 
 body {
-    background: #106BB5 url('../img/fabric-light.png');
+    background: #0C64AB url('../img/fabric-light.png');
     font-family: Monaco, 'Anonymous Pro', Courier, monospace;
     padding: 10px;
     margin: 0;
@@ -32,8 +32,15 @@ footer {
 .terminal {
     max-width: 100%;
     width: 700px;
+    min-height: 400px;
     margin: 30px auto;
     position: relative;
+}
+.terminal .blue {
+    color: #1AB4E8;
+}
+.terminal .italic {
+    font-style: italic;
 }
 .terminal img.bg {
     width: 100%;

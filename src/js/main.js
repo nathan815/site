@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import KeyCodes from './keyCodes';
-import { processCommand } from './commandHandler';
+import { htmlEntities } from './helpers';
+import { processCommand } from './commandSystem';
 import { $terminalWindow, $terminalOutput, $commandInput } from './elements';
 import { handleHistory, historyStack, clearDownInputStack } from './terminalHistory';
 
@@ -17,6 +18,7 @@ $commandInput.on('keydown', function(e) {
         case KeyCodes.ENTER:
             clearDownInputStack();
             handleInput(this.value);
+            $terminalWindow.scrollTop($terminalWindow.height() + $terminalOutput.height());
             break;
         case KeyCodes.ARROW_UP:
         case KeyCodes.ARROW_DOWN:
@@ -28,6 +30,7 @@ $commandInput.on('keydown', function(e) {
 
 const handleInput = function(input) {
     let output = '';
+    input = htmlEntities(input);
 
     try {
         output = processCommand(input);
