@@ -1,11 +1,9 @@
-@import url('https://fonts.googleapis.com/css?family=Anonymous+Pro');
-@import url('https://fonts.googleapis.com/css?family=Raleway');
-
+@import url('https://fonts.googleapis.com/css?family=Anonymous+Pro|Raleway');
 
 body {
-    background: #0C64AB url('../img/fabric-light.png');
+    background: #0C64AB url('../img/fabric-light.png') fixed;
     font-family: Monaco, 'Anonymous Pro', Courier, monospace;
-    padding: 10px;
+    padding: 10px 0 70px;
     margin: 0;
 }
 a {
@@ -16,19 +14,27 @@ a:hover {
     text-decoration: underline;
 }
 header {
-    font-family: Raleway, Helvetica;
+    font-family: Raleway, Helvetica, Arial, sans-serif;
+    position: fixed;
+    width: 100%;
+    margin: 25px 0 0 0;
 }
 header h1 {
     font-size: 40px;
     text-align: center;
-    margin: 40px 0 10px 0;
+    margin: 0 0 10px 0;
     font-weight: bold;
     color: #fff;
+}
+header img {
+    width: 100px;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #333;
 }
 header nav ul {
     list-style: none;
     padding: 0;
-    margin: 20px auto 0;
+    margin: 15px auto 0;
     width: 700px;
     text-align: center;
 }
@@ -36,28 +42,36 @@ header nav ul li {
     display: inline-block;
     margin-right: 10px;
 }
-header nav ul li a.current {
+/*header nav ul li a.current {
     font-weight: bold;
-    text-shadow: 0 0 3px #333;
-}
+    text-shadow: 0 0 5px #222;
+}*/
 footer {
     font-size: 13px;
     margin: 0 0 40px;
     text-align: center;
     color: #fff;
 }
+.pages {
+    display: none;
+    color: white;
+}
 .center {
     text-align: center;
 }
 .terminal {
     max-width: 100%;
-    width: 700px;
     min-height: 400px;
-    margin: 15px auto;
+    width: 700px;
+    margin: 230px auto 0;
     position: relative;
 }
-.terminal .blue {
+.terminal .blue,
+.terminal b {
     color: #1AB4E8;
+}
+.terminal .grey {
+    color: #999;
 }
 .terminal .italic {
     font-style: italic;
@@ -66,7 +80,7 @@ footer {
     width: 100%;
     height: 100%;
     z-index: 1;
-    opacity: 0.95;
+    opacity: 0.97;
     user-select: none;
 }
 .terminal .bar {
@@ -100,7 +114,8 @@ footer {
     overflow-y: scroll;
 }
 .terminal .window #output {
-    white-space: pre;
+    white-space: pre-wrap;
+    word-break: keep-all;
 }
 
 .terminal input {

@@ -1,11 +1,38 @@
 import $ from 'jquery';
-import createHashHistory from 'history';
+import { createHashHistory } from 'history';
 
 import KeyCodes from './keyCodes';
 import { htmlEntities } from './helpers';
 import TerminalHistory from './terminalHistory';
+import { Directory } from './directorySystem';
 import { processCommand } from './commandSystem';
 import { $terminalWindow, $terminalOutput, $commandInput } from './elements';
+
+$(function() {
+
+});
+
+$('nav a').click(function(e) {
+    e.preventDefault();
+    openPage($(this).data('page'));
+    /*$('nav a').removeClass('current');
+    $(this).addClass('current');*/
+});
+
+const openPage = function(page) {
+    switch(page) {
+        case 'home':
+            triggerCommand('cd ~');
+            break;
+        case 'projects':
+        case 'about':
+        case 'resume':
+        case 'contact':
+            let prefix = Directory.current != '~' ? '~/' : '';
+            triggerCommand('open ' + prefix + page);
+            break;
+    }
+}
 
 $terminalWindow.on('click', function(e) {
     let haveSel = getSelection().toString().length > 0;
@@ -30,7 +57,7 @@ $commandInput.on('keydown', function(e) {
 
 const triggerCommand = function(command) {
     $commandInput.val(command);
-    handleEnter(val);
+    handleEnter(command);
 }
 
 const handleEnter = function(value) {
@@ -40,7 +67,7 @@ const handleEnter = function(value) {
 };
 
 const handleInput = function(input) {
-    let output = '';
+    let output;
     input = htmlEntities(input);
 
     try {
@@ -50,14 +77,22 @@ const handleInput = function(input) {
     }
 
     $commandInput.val('');
-    if(output.length > 0) {
+    let fullOutput = '$ ' + input + '\n';
+    if(output.length > 0 && output != false && typeof output != 'function') {
         let text = '';
         if($terminalOutput.text() != '') {
             text = '\n'
         }
-        text += '$ ' + input + '\n' + output;
-        $terminalOutput.append(text);
+        fullOutput += output + '\n';
     }
+    if(output != false) {
+        $terminalOutput.append(fullOutput);
+    }
+
+    if(typeof output == 'function') {
+        output.call();
+    }
+
     if(input.length > 0) {
         TerminalHistory.stack.up.push(input);
     }

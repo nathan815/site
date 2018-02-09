@@ -60,11 +60,82 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 12);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return addLeadingSlash; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return stripLeadingSlash; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return hasBasename; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return stripBasename; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return stripTrailingSlash; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return parsePath; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return createPath; });
+var addLeadingSlash = function addLeadingSlash(path) {
+  return path.charAt(0) === '/' ? path : '/' + path;
+};
+
+var stripLeadingSlash = function stripLeadingSlash(path) {
+  return path.charAt(0) === '/' ? path.substr(1) : path;
+};
+
+var hasBasename = function hasBasename(path, prefix) {
+  return new RegExp('^' + prefix + '(\\/|\\?|#|$)', 'i').test(path);
+};
+
+var stripBasename = function stripBasename(path, prefix) {
+  return hasBasename(path, prefix) ? path.substr(prefix.length) : path;
+};
+
+var stripTrailingSlash = function stripTrailingSlash(path) {
+  return path.charAt(path.length - 1) === '/' ? path.slice(0, -1) : path;
+};
+
+var parsePath = function parsePath(path) {
+  var pathname = path || '/';
+  var search = '';
+  var hash = '';
+
+  var hashIndex = pathname.indexOf('#');
+  if (hashIndex !== -1) {
+    hash = pathname.substr(hashIndex);
+    pathname = pathname.substr(0, hashIndex);
+  }
+
+  var searchIndex = pathname.indexOf('?');
+  if (searchIndex !== -1) {
+    search = pathname.substr(searchIndex);
+    pathname = pathname.substr(0, searchIndex);
+  }
+
+  return {
+    pathname: pathname,
+    search: search === '?' ? '' : search,
+    hash: hash === '#' ? '' : hash
+  };
+};
+
+var createPath = function createPath(location) {
+  var pathname = location.pathname,
+      search = location.search,
+      hash = location.hash;
+
+
+  var path = pathname || '/';
+
+  if (search && search !== '?') path += search.charAt(0) === '?' ? search : '?' + search;
+
+  if (hash && hash !== '#') path += hash.charAt(0) === '#' ? hash : '#' + hash;
+
+  return path;
+};
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -10435,458 +10506,7 @@ return jQuery;
 
 
 /***/ }),
-/* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-const arrHas = function(arr, ele) {
-    return arr.indexOf(ele) > -1;
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = arrHas;
-
-
-const htmlEntities = function(str) {
-    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
-/* harmony export (immutable) */ __webpack_exports__["b"] = htmlEntities;
-
-
-/***/ }),
 /* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
-
-
-const $terminalWindow = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#window');
-/* harmony export (immutable) */ __webpack_exports__["c"] = $terminalWindow;
-
-const $terminalOutput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#output');
-/* harmony export (immutable) */ __webpack_exports__["b"] = $terminalOutput;
-
-const $commandInput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('input#command');
-/* harmony export (immutable) */ __webpack_exports__["a"] = $commandInput;
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony default export */ __webpack_exports__["a"] = ({
-    ENTER: 13,
-    ARROW_UP: 38,
-    ARROW_DOWN: 40,
-});
-
-/***/ }),
-/* 4 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_history__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__keyCodes__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__helpers__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__terminalHistory__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__commandSystem__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__elements__ = __webpack_require__(2);
-
-
-
-
-
-
-
-
-
-__WEBPACK_IMPORTED_MODULE_6__elements__["c" /* $terminalWindow */].on('click', function(e) {
-    let haveSel = getSelection().toString().length > 0;
-    if(!haveSel) {
-        __WEBPACK_IMPORTED_MODULE_6__elements__["a" /* $commandInput */].focus();
-    }
-});
-
-__WEBPACK_IMPORTED_MODULE_6__elements__["a" /* $commandInput */].on('keydown', function(e) {
-    let txt = '';
-    switch(e.which) {
-        case __WEBPACK_IMPORTED_MODULE_2__keyCodes__["a" /* default */].ENTER:
-            handleEnter(this.value);
-            break;
-        case __WEBPACK_IMPORTED_MODULE_2__keyCodes__["a" /* default */].ARROW_UP:
-        case __WEBPACK_IMPORTED_MODULE_2__keyCodes__["a" /* default */].ARROW_DOWN:
-            e.preventDefault();
-            __WEBPACK_IMPORTED_MODULE_4__terminalHistory__["a" /* default */].handleHistory(e.which);
-            break;
-    }
-});
-
-const triggerCommand = function(command) {
-    __WEBPACK_IMPORTED_MODULE_6__elements__["a" /* $commandInput */].val(command);
-    handleEnter(val);
-}
-
-const handleEnter = function(value) {
-    __WEBPACK_IMPORTED_MODULE_4__terminalHistory__["a" /* default */].clearDownInputStack();
-    handleInput(value);
-    __WEBPACK_IMPORTED_MODULE_6__elements__["c" /* $terminalWindow */].scrollTop(__WEBPACK_IMPORTED_MODULE_6__elements__["c" /* $terminalWindow */].height() + __WEBPACK_IMPORTED_MODULE_6__elements__["b" /* $terminalOutput */].height());
-};
-
-const handleInput = function(input) {
-    let output = '';
-    input = Object(__WEBPACK_IMPORTED_MODULE_3__helpers__["b" /* htmlEntities */])(input);
-
-    try {
-        output = Object(__WEBPACK_IMPORTED_MODULE_5__commandSystem__["a" /* processCommand */])(input);
-    } catch(e) {
-        output = e.message;
-    }
-
-    __WEBPACK_IMPORTED_MODULE_6__elements__["a" /* $commandInput */].val('');
-    if(output.length > 0) {
-        let text = '';
-        if(__WEBPACK_IMPORTED_MODULE_6__elements__["b" /* $terminalOutput */].text() != '') {
-            text = '\n'
-        }
-        text += '$ ' + input + '\n' + output;
-        __WEBPACK_IMPORTED_MODULE_6__elements__["b" /* $terminalOutput */].append(text);
-    }
-    if(input.length > 0) {
-        __WEBPACK_IMPORTED_MODULE_4__terminalHistory__["a" /* default */].stack.up.push(input);
-    }
-};
-
-/***/ }),
-/* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__commands__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__helpers__ = __webpack_require__(1);
-
-
-
-const processCommand = function(input) {
-    input = input.trim();
-    if(input == '')
-        return '';
-    let parts = input.split(' ');
-    // remove blank "parts" so double spaces don't screw things up
-    for(let i = 0; i < parts.length; i++) {
-        if(parts[i].trim() == '')
-            parts.splice(i, 1);
-    }
-    const commandName = parts[0];
-    const command = __WEBPACK_IMPORTED_MODULE_0__commands__["a" /* AllCommands */][commandName];
-    const options = [];
-    const args = [];
-
-    if(command === undefined) {
-        throw new Error('-bash: '+commandName+': command not found');
-    }
-
-    parts = parts.splice(1);
-    // parse options and arguments
-    for(let i = 0; i < parts.length; i++) {
-        let part = parts[i];
-        if(part.indexOf('--') == 0 || part.indexOf('-') == 0) {
-            // get rid of the leading dashes
-            part = part.indexOf('--') == 0 ? part.slice(2) : part.slice(1);
-            // make sure option is possible
-            if(!Object(__WEBPACK_IMPORTED_MODULE_1__helpers__["a" /* arrHas */])(command.possibleOptions, part)) {
-                throw new Error(commandName + ' - Unknown option: '+part);
-            }
-            options.push(part);
-        }
-        else {
-            args.push(part);
-        }
-    }
-
-    console.log("ops=",options);
-    console.log("args=",args);
-
-    let commandResult = command.execute(options, args, input);
-    return commandResult ? commandResult : '';
-};
-/* harmony export (immutable) */ __webpack_exports__["a"] = processCommand;
-
-
-/***/ }),
-/* 6 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__helpers__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__elements__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__directorySystem__ = __webpack_require__(7);
-
-
-
-
-const info = __webpack_require__(8);
-
-const lsCommand = function(options, args, input) {
-    let output = '';
-    let dir = __WEBPACK_IMPORTED_MODULE_2__directorySystem__["a" /* Directory */].current;
-    if(args[0] !== undefined && args[0].trim() != '') {
-        dir = args[0];
-    }
-    let precedingDir = dir != __WEBPACK_IMPORTED_MODULE_2__directorySystem__["a" /* Directory */].current ? (dir + '/') : '';
-    return __WEBPACK_IMPORTED_MODULE_2__directorySystem__["a" /* Directory */].generateContents(dir) + '\n[type <span class="blue">open <i>'+precedingDir+'item-name</i></span> to view an item]';
-}
-
-const gitCommand = function(options, args) {
-    if(args[0] == 'init')
-        return 'fatal: unable to initialize git repository (permission denied)';
-    else if(options[0] == 'version')
-        return 'git version 2.14.3 (Apple Git-98)';
-
-    return 'fatal: Not a git repository (or any of the parent directories): .git';
-}
-
-const clearCommand = function() {
-    __WEBPACK_IMPORTED_MODULE_1__elements__["b" /* $terminalOutput */].text('');
-}
-
-const listAllCommands = function() {
-    let output = 'Available commands:';
-    for(let commandName in AllCommands) {
-        let command = AllCommands[commandName];
-        if(!command.hidden) {
-            output += '\n' + commandName + '\t';
-            output += '<span class="blue italic">' + (command.helpText ? ' - ' + command.helpText : '') + '</span>';
-        }
-    }
-    return output;
-}
-
-const helpCommand = function(options, args) {
-    if(!args[0]) {
-        return listAllCommands();
-    }
-    let command = AllCommands[args[0]];
-    if(command == undefined)
-        throw new Error('help: '+args[0]+': command not found');
-    return 'Help entry for '+args[0]+': \n  ' + (command.helpEntry ? command.helpEntry : 'No help entry defined.');
-}
-
-const AllCommands = {
-    ls: {
-        execute: lsCommand,
-        possibleOptions: [],
-        helpText: 'lists the menu options',
-        helpEntry: 'Lists the menu options. No available options.'
-    },
-    git: {
-        execute: gitCommand,
-        possibleOptions: [ 'version' ],
-        helpEntry: 'Git is the best source control system.\n  Available options: --version',
-        hidden: true
-    },
-    clear: {
-        execute: clearCommand,
-        helpText: 'clears the output',
-        possibleOptions: []
-    },
-    help: {
-        execute: helpCommand,
-        helpText: 'lists all commands, or displays help for a command',
-        possibleOptions: []
-    }
-};
-/* harmony export (immutable) */ __webpack_exports__["a"] = AllCommands;
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Directory; });
-const DirectoryList = {
-    '~': {
-        items: [ 'about', 'projects', 'resume', 'contact '],
-        projects: {
-            items: [ 'EnemyClouds', 'StudentSignIn', 'TheSwanStation', 'FishNet', 'EcoSPAN' ],
-            EnemyClouds: {
-                items: [ 'hi' ],
-                hi: {
-                    items: [ 'hello' , 'world']
-                }
-            }
-        }
-    }
-};
-/* unused harmony export DirectoryList */
-
-
-let Directory = {};
-Directory.current = '~';
-
-Directory.generateContents = function(name) {
-    let parts = name.split('/');
-    let dir = DirectoryList[Directory.current];
-    let output = '';
-
-    // if first part is the current directory, remove from the array
-    // since dir is already pointing to the current directory
-    if(parts[0] == Directory.current)
-        parts.shift();
-
-    // loop through each part of directory
-    for(let i = 0; i < parts.length; i++) {
-        let part = parts[i];
-        if(part.trim() == '' || part == '.') 
-            continue;
-        if(part == '..' && i > -1) {
-            dir = dir[parts[i]-1];
-            continue;
-        }
-        if(dir[part] == undefined)
-            throw new Error('ls: '+name+': No such directory');
-        dir = dir[part];
-    }
-
-    // loop through the items in the directory
-    for(let i = 0; i < dir.items.length; i++) {
-        output += dir.items[i];
-        if(i % 2 && i != 0 && i != dir.items.length-1) 
-            output += '\n';
-        else
-            output += '\t\t';
-    }
-    return output;
-}
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports) {
-
-module.exports = {"bio":"Hello"}
-
-/***/ }),
-/* 9 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__keyCodes__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__elements__ = __webpack_require__(2);
-
-
-
-
-const stack = { up: [], down: [] };
-
-const handleHistory = function(keycode) {
-    let popping = keycode == __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_UP ? stack.up : stack.down;
-    let pushing = keycode == __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_UP ? stack.down : stack.up;
-    let txt = popping.pop();
-    let input = __WEBPACK_IMPORTED_MODULE_2__elements__["a" /* $commandInput */].val().trim();
-
-    if(txt && txt.length > 0) {
-        __WEBPACK_IMPORTED_MODULE_2__elements__["a" /* $commandInput */].val(txt);
-        pushing.push(txt);
-    }
-    else if(keycode == __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_DOWN && stack.down.length == 0) {
-        __WEBPACK_IMPORTED_MODULE_2__elements__["a" /* $commandInput */].val('');
-    }
-};
-
-const clearDownInputStack = function() {
-    while(stack.down.length > 0) {
-        stack.up.push(TerminalHistory.stack.down.pop());
-    }
-};
-
-const TerminalHistory = {
-    stack: stack,
-    handleHistory: handleHistory,
-    clearDownInputStack: clearDownInputStack
-};
-
-/* harmony default export */ __webpack_exports__["a"] = (TerminalHistory);
-
-/***/ }),
-/* 10 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return addLeadingSlash; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return stripLeadingSlash; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return hasBasename; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return stripBasename; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return stripTrailingSlash; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return parsePath; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return createPath; });
-var addLeadingSlash = function addLeadingSlash(path) {
-  return path.charAt(0) === '/' ? path : '/' + path;
-};
-
-var stripLeadingSlash = function stripLeadingSlash(path) {
-  return path.charAt(0) === '/' ? path.substr(1) : path;
-};
-
-var hasBasename = function hasBasename(path, prefix) {
-  return new RegExp('^' + prefix + '(\\/|\\?|#|$)', 'i').test(path);
-};
-
-var stripBasename = function stripBasename(path, prefix) {
-  return hasBasename(path, prefix) ? path.substr(prefix.length) : path;
-};
-
-var stripTrailingSlash = function stripTrailingSlash(path) {
-  return path.charAt(path.length - 1) === '/' ? path.slice(0, -1) : path;
-};
-
-var parsePath = function parsePath(path) {
-  var pathname = path || '/';
-  var search = '';
-  var hash = '';
-
-  var hashIndex = pathname.indexOf('#');
-  if (hashIndex !== -1) {
-    hash = pathname.substr(hashIndex);
-    pathname = pathname.substr(0, hashIndex);
-  }
-
-  var searchIndex = pathname.indexOf('?');
-  if (searchIndex !== -1) {
-    search = pathname.substr(searchIndex);
-    pathname = pathname.substr(0, searchIndex);
-  }
-
-  return {
-    pathname: pathname,
-    search: search === '?' ? '' : search,
-    hash: hash === '#' ? '' : hash
-  };
-};
-
-var createPath = function createPath(location) {
-  var pathname = location.pathname,
-      search = location.search,
-      hash = location.hash;
-
-
-  var path = pathname || '/';
-
-  if (search && search !== '?') path += search.charAt(0) === '?' ? search : '?' + search;
-
-  if (hash && hash !== '#') path += hash.charAt(0) === '#' ? hash : '#' + hash;
-
-  return path;
-};
-
-/***/ }),
-/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10951,18 +10571,18 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = warning;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(14)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
-/* 12 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return createLocation; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return locationsAreEqual; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_resolve_pathname__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_value_equal__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__PathUtils__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_resolve_pathname__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_value_equal__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__PathUtils__ = __webpack_require__(0);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 
@@ -11030,11 +10650,33 @@ var locationsAreEqual = function locationsAreEqual(a, b) {
 };
 
 /***/ }),
-/* 13 */
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_warning__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
+
+
+const $terminalWindow = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#window');
+/* harmony export (immutable) */ __webpack_exports__["d"] = $terminalWindow;
+
+const $terminalOutput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#output');
+/* harmony export (immutable) */ __webpack_exports__["b"] = $terminalOutput;
+
+const $terminalTitle = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('span#title');
+/* harmony export (immutable) */ __webpack_exports__["c"] = $terminalTitle;
+
+const $commandInput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('input#command');
+/* harmony export (immutable) */ __webpack_exports__["a"] = $commandInput;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_warning__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_warning___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_warning__);
 
 
@@ -11115,7 +10757,24 @@ var createTransitionManager = function createTransitionManager() {
 /* harmony default export */ __webpack_exports__["a"] = (createTransitionManager);
 
 /***/ }),
-/* 14 */
+/* 6 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const arrHas = function(arr, ele) {
+    return arr.indexOf(ele) > -1;
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = arrHas;
+
+
+const htmlEntities = function(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+/* harmony export (immutable) */ __webpack_exports__["b"] = htmlEntities;
+
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -11305,7 +10964,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 15 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11361,10 +11020,10 @@ var invariant = function(condition, format, a, b, c, d, e, f) {
 
 module.exports = invariant;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(14)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
-/* 16 */
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11430,20 +11089,239 @@ var isExtraneousPopstateEvent = function isExtraneousPopstateEvent(event) {
 };
 
 /***/ }),
-/* 17 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createBrowserHistory__ = __webpack_require__(18);
+/* harmony default export */ __webpack_exports__["a"] = ({
+    ENTER: 13,
+    ARROW_UP: 38,
+    ARROW_DOWN: 40,
+});
+
+/***/ }),
+/* 11 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Directory; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__elements__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__resumeViewer__ = __webpack_require__(23);
+
+
+
+const DirectoryList = {
+    '~': {
+        items: [ 'about', 'projects', 'resume', 'contact '],
+        about: {
+            contents: '#about'
+        },
+        projects: {
+            items: [ 'EnemyClouds', 'StudentSignIn', 'TheSwanStation', 'FishNet', 'EcoSPAN' ],
+            EnemyClouds: {
+                items: [ 'hi' ],
+                hi: {
+                    items: [ 'hello' , 'world']
+                }
+            }
+        },
+        resume: {
+            contents: 'Opening resume in PDF viewer...',
+            execute: __WEBPACK_IMPORTED_MODULE_1__resumeViewer__["a" /* openResume */]
+        },
+        contact: {
+            contents: '#contact'
+        }
+    }
+};
+/* harmony export (immutable) */ __webpack_exports__["b"] = DirectoryList;
+
+
+let Directory = {};
+Directory.current = '~';
+Directory.currentDirObject = DirectoryList[Directory.current];
+Directory.prev = '';
+Directory.prevDirObject = null;
+
+Directory.setCurrentDirectory = function(path, dirObject) {
+    if(path.indexOf(Directory.current) < 0 && path.indexOf('~') != 0) {
+        path = Directory.current + '/' + path;
+    }
+    Directory.prev = Directory.current;
+    Directory.prevDirObject = Directory.currentDirObject;
+    Directory.current = path;
+    Directory.currentDirObject = dirObject || Directory.parseDir(path);
+    __WEBPACK_IMPORTED_MODULE_0__elements__["c" /* $terminalTitle */].html('bash ' + path);
+};
+
+Directory.goBack = function() {
+    Directory.setCurrentDirectory(Directory.prev, Directory.prevDirObject);
+}
+Directory.parseDir = function(path) {
+    let parts = path.split('/');
+    let dir = DirectoryList;
+    if(parts[0] != '~')
+        dir = Directory.currentDirObject;
+
+    // loop through each part of directory
+    for(let i = 0; i < parts.length; i++) {
+        let part = parts[i];
+        if(part.trim() == '' || part == '.') 
+            continue;
+        if(dir[part] == undefined)
+            throw new Error(path+': Not a directory');
+        dir = dir[part];
+    }
+    return dir;
+}
+
+Directory.generateContents = function(path) {
+    let output = '';
+    let dir = Directory.parseDir(path);
+
+    // loop through the items in the directory
+    if(!dir.items)
+        throw new Error(path + ': Not a directory');
+    for(let i = 0; i < dir.items.length; i++) {
+        output += dir.items[i];
+        if(i % 2 && i != 0 && i != dir.items.length-1) 
+            output += '\n';
+        else
+            output += '\t\t';
+    }
+    return output;
+}
+
+/***/ }),
+/* 12 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_history__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__keyCodes__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__helpers__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__terminalHistory__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__directorySystem__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__commandSystem__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__elements__ = __webpack_require__(4);
+
+
+
+
+
+
+
+
+
+
+__WEBPACK_IMPORTED_MODULE_0_jquery___default()(function() {
+
+});
+
+__WEBPACK_IMPORTED_MODULE_0_jquery___default()('nav a').click(function(e) {
+    e.preventDefault();
+    openPage(__WEBPACK_IMPORTED_MODULE_0_jquery___default()(this).data('page'));
+    /*$('nav a').removeClass('current');
+    $(this).addClass('current');*/
+});
+
+const openPage = function(page) {
+    switch(page) {
+        case 'home':
+            triggerCommand('cd ~');
+            break;
+        case 'projects':
+        case 'about':
+        case 'resume':
+        case 'contact':
+            let prefix = __WEBPACK_IMPORTED_MODULE_5__directorySystem__["a" /* Directory */].current != '~' ? '~/' : '';
+            triggerCommand('open ' + prefix + page);
+            break;
+    }
+}
+
+__WEBPACK_IMPORTED_MODULE_7__elements__["d" /* $terminalWindow */].on('click', function(e) {
+    let haveSel = getSelection().toString().length > 0;
+    if(!haveSel) {
+        __WEBPACK_IMPORTED_MODULE_7__elements__["a" /* $commandInput */].focus();
+    }
+});
+
+__WEBPACK_IMPORTED_MODULE_7__elements__["a" /* $commandInput */].on('keydown', function(e) {
+    let txt = '';
+    switch(e.which) {
+        case __WEBPACK_IMPORTED_MODULE_2__keyCodes__["a" /* default */].ENTER:
+            handleEnter(this.value);
+            break;
+        case __WEBPACK_IMPORTED_MODULE_2__keyCodes__["a" /* default */].ARROW_UP:
+        case __WEBPACK_IMPORTED_MODULE_2__keyCodes__["a" /* default */].ARROW_DOWN:
+            e.preventDefault();
+            __WEBPACK_IMPORTED_MODULE_4__terminalHistory__["a" /* default */].handleHistory(e.which);
+            break;
+    }
+});
+
+const triggerCommand = function(command) {
+    __WEBPACK_IMPORTED_MODULE_7__elements__["a" /* $commandInput */].val(command);
+    handleEnter(command);
+}
+
+const handleEnter = function(value) {
+    __WEBPACK_IMPORTED_MODULE_4__terminalHistory__["a" /* default */].clearDownInputStack();
+    handleInput(value);
+    __WEBPACK_IMPORTED_MODULE_7__elements__["d" /* $terminalWindow */].scrollTop(__WEBPACK_IMPORTED_MODULE_7__elements__["d" /* $terminalWindow */].height() + __WEBPACK_IMPORTED_MODULE_7__elements__["b" /* $terminalOutput */].height());
+};
+
+const handleInput = function(input) {
+    let output;
+    input = Object(__WEBPACK_IMPORTED_MODULE_3__helpers__["b" /* htmlEntities */])(input);
+
+    try {
+        output = Object(__WEBPACK_IMPORTED_MODULE_6__commandSystem__["a" /* processCommand */])(input);
+    } catch(e) {
+        output = e.message;
+    }
+
+    __WEBPACK_IMPORTED_MODULE_7__elements__["a" /* $commandInput */].val('');
+    let fullOutput = '$ ' + input + '\n';
+    if(output.length > 0 && output != false && typeof output != 'function') {
+        let text = '';
+        if(__WEBPACK_IMPORTED_MODULE_7__elements__["b" /* $terminalOutput */].text() != '') {
+            text = '\n'
+        }
+        fullOutput += output + '\n';
+    }
+    if(output != false) {
+        __WEBPACK_IMPORTED_MODULE_7__elements__["b" /* $terminalOutput */].append(fullOutput);
+    }
+
+    if(typeof output == 'function') {
+        output.call();
+    }
+
+    if(input.length > 0) {
+        __WEBPACK_IMPORTED_MODULE_4__terminalHistory__["a" /* default */].stack.up.push(input);
+    }
+};
+
+/***/ }),
+/* 13 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createBrowserHistory__ = __webpack_require__(14);
 /* unused harmony reexport createBrowserHistory */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__createHashHistory__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__createHashHistory__ = __webpack_require__(17);
 /* unused harmony reexport createHashHistory */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__createMemoryHistory__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__createMemoryHistory__ = __webpack_require__(18);
 /* unused harmony reexport createMemoryHistory */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__LocationUtils__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__LocationUtils__ = __webpack_require__(3);
 /* unused harmony reexport createLocation */
 /* unused harmony reexport locationsAreEqual */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__PathUtils__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__PathUtils__ = __webpack_require__(0);
 /* unused harmony reexport parsePath */
 /* unused harmony reexport createPath */
 
@@ -11457,18 +11335,18 @@ var isExtraneousPopstateEvent = function isExtraneousPopstateEvent(event) {
 
 
 /***/ }),
-/* 18 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_warning__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_warning__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_warning___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_warning__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_invariant__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_invariant__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_invariant___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_invariant__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__LocationUtils__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__PathUtils__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__createTransitionManager__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__DOMUtils__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__LocationUtils__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__PathUtils__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__createTransitionManager__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__DOMUtils__ = __webpack_require__(9);
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -11761,7 +11639,7 @@ var createBrowserHistory = function createBrowserHistory() {
 /* unused harmony default export */ var _unused_webpack_default_export = (createBrowserHistory);
 
 /***/ }),
-/* 19 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11837,7 +11715,7 @@ function resolvePathname(to) {
 /* harmony default export */ __webpack_exports__["a"] = (resolvePathname);
 
 /***/ }),
-/* 20 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11881,18 +11759,18 @@ function valueEqual(a, b) {
 /* harmony default export */ __webpack_exports__["a"] = (valueEqual);
 
 /***/ }),
-/* 21 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_warning__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_warning__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_warning___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_warning__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_invariant__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_invariant__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_invariant___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_invariant__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__LocationUtils__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__PathUtils__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__createTransitionManager__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__DOMUtils__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__LocationUtils__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__PathUtils__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__createTransitionManager__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__DOMUtils__ = __webpack_require__(9);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 
@@ -12202,15 +12080,15 @@ var createHashHistory = function createHashHistory() {
 /* unused harmony default export */ var _unused_webpack_default_export = (createHashHistory);
 
 /***/ }),
-/* 22 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_warning__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_warning__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_warning___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_warning__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__PathUtils__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__LocationUtils__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__createTransitionManager__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__PathUtils__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__LocationUtils__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__createTransitionManager__ = __webpack_require__(5);
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -12368,6 +12246,274 @@ var createMemoryHistory = function createMemoryHistory() {
 };
 
 /* unused harmony default export */ var _unused_webpack_default_export = (createMemoryHistory);
+
+/***/ }),
+/* 19 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__keyCodes__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__elements__ = __webpack_require__(4);
+
+
+
+
+const stack = { up: [], down: [] };
+
+const handleHistory = function(keycode) {
+    let popping = keycode == __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_UP ? stack.up : stack.down;
+    let pushing = keycode == __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_UP ? stack.down : stack.up;
+    let txt = popping.pop();
+    let input = __WEBPACK_IMPORTED_MODULE_2__elements__["a" /* $commandInput */].val().trim();
+
+    if(txt && txt.length > 0) {
+        __WEBPACK_IMPORTED_MODULE_2__elements__["a" /* $commandInput */].val(txt);
+        pushing.push(txt);
+    }
+    else if(keycode == __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_DOWN && stack.down.length == 0) {
+        __WEBPACK_IMPORTED_MODULE_2__elements__["a" /* $commandInput */].val('');
+    }
+};
+
+const clearDownInputStack = function() {
+    while(stack.down.length > 0) {
+        stack.up.push(TerminalHistory.stack.down.pop());
+    }
+};
+
+const TerminalHistory = {
+    stack: stack,
+    handleHistory: handleHistory,
+    clearDownInputStack: clearDownInputStack
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (TerminalHistory);
+
+/***/ }),
+/* 20 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__commands__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__helpers__ = __webpack_require__(6);
+
+
+
+const processCommand = function(input) {
+    input = input.trim();
+    if(input == '')
+        return '';
+    let parts = input.split(' ');
+    // remove blank "parts" so double spaces don't screw things up
+    for(let i = 0; i < parts.length; i++) {
+        if(parts[i].trim() == '')
+            parts.splice(i, 1);
+    }
+    const commandName = parts[0];
+    const command = __WEBPACK_IMPORTED_MODULE_0__commands__["a" /* AllCommands */][commandName];
+    const options = [];
+    const args = [];
+
+    if(command === undefined) {
+        throw new Error('-bash: '+commandName+': command not found');
+    }
+
+    parts = parts.splice(1);
+    // parse options and arguments
+    for(let i = 0; i < parts.length; i++) {
+        let part = parts[i];
+        if(part.indexOf('--') == 0 || part.indexOf('-') == 0) {
+            // get rid of the leading dashes
+            part = part.indexOf('--') == 0 ? part.slice(2) : part.slice(1);
+            // make sure option is possible
+            if(!Object(__WEBPACK_IMPORTED_MODULE_1__helpers__["a" /* arrHas */])(command.possibleOptions, part)) {
+                throw new Error(commandName + ' - Unknown option: '+part);
+            }
+            options.push(part);
+        }
+        else {
+            args.push(part);
+        }
+    }
+
+    // console.log("ops=",options);
+    // console.log("args=",args);
+
+    let commandResult = command.execute(options, args, input);
+    return commandResult ? commandResult : '';
+};
+/* harmony export (immutable) */ __webpack_exports__["a"] = processCommand;
+
+
+/***/ }),
+/* 21 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__helpers__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__elements__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__directorySystem__ = __webpack_require__(11);
+
+
+
+
+
+const info = __webpack_require__(22);
+
+const defaultOutput = __WEBPACK_IMPORTED_MODULE_2__elements__["b" /* $terminalOutput */].html();
+
+const lsCommand = function(options, args, input) {
+    let output = '';
+    let dir = __WEBPACK_IMPORTED_MODULE_3__directorySystem__["a" /* Directory */].current;
+    if(args[0] !== undefined && args[0].trim() != '') {
+        dir = args[0];
+    }
+    let precedingDir = (dir != __WEBPACK_IMPORTED_MODULE_3__directorySystem__["a" /* Directory */].current ? dir + '/' : '').replace('//','/');
+    return __WEBPACK_IMPORTED_MODULE_3__directorySystem__["a" /* Directory */].generateContents(dir) + '\n[type <b>open <i>'+precedingDir+'item-name</i></b> to view an item]';
+};
+
+const gitCommand = function(options, args) {
+    if(args[0] == 'init')
+        return 'fatal: unable to initialize git repository (permission denied)';
+    else if(options[0] == 'version')
+        return 'git version 2.14.3 (Apple Git-98)';
+
+    return 'fatal: Not a git repository (or any of the parent directories): .git';
+};
+
+const clearCommand = function() {
+    __WEBPACK_IMPORTED_MODULE_2__elements__["b" /* $terminalOutput */].html(defaultOutput);
+    return false;
+};
+
+const listAllCommands = function() {
+    let output = 'Available commands:';
+    for(let commandName in AllCommands) {
+        let command = AllCommands[commandName];
+        if(!command.hidden) {
+            output += '\n' + commandName + '\t';
+            output += '<span class="grey">' + (command.helpText ? ' - ' + command.helpText : '') + '</span>';
+        }
+    }
+    return output;
+};
+
+const helpCommand = function(options, args) {
+    if(!args[0]) {
+        return listAllCommands();
+    }
+    let command = AllCommands[args[0]];
+    if(command == undefined)
+        throw new Error('help: '+args[0]+': command not found');
+    return 'Help entry for '+args[0]+': \n  ' + (command.helpEntry ? command.helpEntry : 'No help entry defined.');
+};
+
+const openCommand = function(options, args) {
+    if(args.length == 0)
+        return true;
+    let path = args[0];
+
+    let dir = __WEBPACK_IMPORTED_MODULE_3__directorySystem__["a" /* Directory */].parseDir(path);
+    let output = '';
+
+    // if it's a directory
+    if(dir.items) {
+        cdCommand(null, [ path ]);
+        output = lsCommand(null, [ '' ]);
+    }
+
+    // if it is a file
+    if(dir.contents) {
+        if(dir.contents.indexOf('#') == 0) 
+            output += __WEBPACK_IMPORTED_MODULE_0_jquery___default()(dir.contents).html().trim();
+        else
+            output += dir.contents
+    }
+    if(typeof dir.execute == 'function') {
+        return dir.execute;
+    }
+    return output;
+};
+
+const cdCommand = function(options, args) {
+    if(args.length == 0)
+        return true;
+
+    let path = args[0];
+    if(path == '~') { // navigating to home
+        __WEBPACK_IMPORTED_MODULE_3__directorySystem__["a" /* Directory */].setCurrentDirectory('~', __WEBPACK_IMPORTED_MODULE_3__directorySystem__["b" /* DirectoryList */]['~']);
+        return true;
+    }
+    if(path == '..' && __WEBPACK_IMPORTED_MODULE_3__directorySystem__["a" /* Directory */].current != '~') { // navigating up
+        __WEBPACK_IMPORTED_MODULE_3__directorySystem__["a" /* Directory */].goBack();
+        return true;
+    }
+    let dir = __WEBPACK_IMPORTED_MODULE_3__directorySystem__["a" /* Directory */].parseDir(path);
+    if(!dir.items)
+        throw new Error(path+': Not a directory (use <b>open</b> instead)');
+    __WEBPACK_IMPORTED_MODULE_3__directorySystem__["a" /* Directory */].setCurrentDirectory(path, dir);
+    return true;
+};
+
+const AllCommands = {
+    cd: {
+        execute: cdCommand,
+        helpText: 'changes to a directory',
+        possibleOptions: []
+    }, 
+    ls: {
+        execute: lsCommand,
+        possibleOptions: [],
+        helpText: 'lists the menu options',
+        helpEntry: 'Lists the menu options. No available options.'
+    },
+    clear: {
+        execute: clearCommand,
+        helpText: 'clears the output',
+        possibleOptions: []
+    },
+    git: {
+        execute: gitCommand,
+        possibleOptions: [ 'version', 'm' ],
+        helpEntry: 'Git is the best source control system.\n  Available options: --version',
+        hidden: true
+    },
+    help: {
+        execute: helpCommand,
+        helpText: 'lists all commands, or displays help for a command',
+        helpEntry: 'Lists all commands, or displays help for a command.\n  Available options: --hidden (show hidden commands)',
+        possibleOptions: [ 'hidden' ]
+    },
+    open: {
+        execute: openCommand,
+        helpText: 'opens a directory or file and displays its contents',
+        possibleOptions: []
+    }
+};
+/* harmony export (immutable) */ __webpack_exports__["a"] = AllCommands;
+
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports) {
+
+module.exports = {"bio":"Hello"}
+
+/***/ }),
+/* 23 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+const openResume = function() {
+
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = openResume;
+
 
 /***/ })
 /******/ ]);

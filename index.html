@@ -6,24 +6,35 @@
 </head>
 <body>
     <header>
-        <h1>Nathaniel Johnson</h1>
+        <h1><img src="img/me.jpg" /> <br>Nathaniel Johnson</h1>
         <nav>
             <ul>
-                <li><a href="#home" class="current">home ~/</a></li>
-                <li><a href="#about">about</a></li>
-                <li><a href="#projects">projects</a></li>
-                <li><a href="#resume">resume</a></li>
-                <li><a href="#contact">contact</a></li>
+                <li><a href="#" data-page="home" class="current">home</a></li>
+                <li><a href="#" data-page="about">about</a></li>
+                <li><a href="#" data-page="projects">projects</a></li>
+                <li><a href="#" data-page="resume">resume</a></li>
+                <li><a href="#" data-page="contact">contact</a></li>
             </ul>
         </nav>
     </header>
+
+    <!-- hidden, used in terminal -->
+    <div class="pages">
+        <div id="about">
+            <b>About Me</b> <br>I'm a 19 year old student studying Computer Science at Eastern Michigan University. I am experienced in Java, JavaScript, PHP, MySQL, HTML, and CSS. I'm currently learning React/React Native, Node.js, and C++. I enjoy working on side projects, building computerized Christmas light shows, and watching sci-fi TV series.
+        </div>
+        <div id="contact">
+            <b>Contact Info</b> - Let's get in touch! <br>email: <a href="mailto:njohns48@emich.edu">njohns48@emich.edu</a><br>phone: 810.391.6424
+        </div>
+    </div>
+
     <div class="terminal">
-        <img src="img/terminal.png" class="bg" />
+        <img src="img/terminal.png" class="bg" style="max-width:800px" />
         <div class="bar">
-            <span id="title">bash ~/</span>
+            <span id="title">bash ~</span>
         </div>
         <div class="window" id="window">
-            <div id="output">Welcome to :: nathanieljohnson.me ::<br>To navigate, either click the links above or use commands.<br>- Type <span class="blue">ls</span> to view menu options<br>- Type <span class="blue">help</span> for a list of available commands</div>
+            <div id="output">Welcome to :: nathanieljohnson.me ::<br>Navigate by using commands or clicking links above<br>Type <span class="blue">ls</span> for item listing, or <span class="blue">help</span> for a list of commands<br></div>
             <div class="command-input">
                 $ <input type="text" id="command" autofocus spellcheck="false" autocomplete="false" />
             </div>

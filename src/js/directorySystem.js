@@ -1,6 +1,12 @@
+import { $terminalTitle } from './elements';
+import { openResume } from './resumeViewer';
+
 export const DirectoryList = {
     '~': {
         items: [ 'about', 'projects', 'resume', 'contact '],
+        about: {
+            contents: '#about'
+        },
         projects: {
             items: [ 'EnemyClouds', 'StudentSignIn', 'TheSwanStation', 'FishNet', 'EcoSPAN' ],
             EnemyClouds: {
@@ -9,38 +15,62 @@ export const DirectoryList = {
                     items: [ 'hello' , 'world']
                 }
             }
+        },
+        resume: {
+            contents: 'Opening resume in PDF viewer...',
+            execute: openResume
+        },
+        contact: {
+            contents: '#contact'
         }
     }
 };
 
 export let Directory = {};
 Directory.current = '~';
+Directory.currentDirObject = DirectoryList[Directory.current];
+Directory.prev = '';
+Directory.prevDirObject = null;
 
-Directory.generateContents = function(name) {
-    let parts = name.split('/');
-    let dir = DirectoryList[Directory.current];
-    let output = '';
+Directory.setCurrentDirectory = function(path, dirObject) {
+    if(path.indexOf(Directory.current) < 0 && path.indexOf('~') != 0) {
+        path = Directory.current + '/' + path;
+    }
+    Directory.prev = Directory.current;
+    Directory.prevDirObject = Directory.currentDirObject;
+    Directory.current = path;
+    Directory.currentDirObject = dirObject || Directory.parseDir(path);
+    $terminalTitle.html('bash ' + path);
+};
 
-    // if first part is the current directory, remove from the array
-    // since dir is already pointing to the current directory
-    if(parts[0] == Directory.current)
-        parts.shift();
+Directory.goBack = function() {
+    Directory.setCurrentDirectory(Directory.prev, Directory.prevDirObject);
+}
+Directory.parseDir = function(path) {
+    let parts = path.split('/');
+    let dir = DirectoryList;
+    if(parts[0] != '~')
+        dir = Directory.currentDirObject;
 
     // loop through each part of directory
     for(let i = 0; i < parts.length; i++) {
         let part = parts[i];
         if(part.trim() == '' || part == '.') 
             continue;
-        if(part == '..' && i > -1) {
-            dir = dir[parts[i]-1];
-            continue;
-        }
         if(dir[part] == undefined)
-            throw new Error('ls: '+name+': No such directory');
+            throw new Error(path+': Not a directory');
         dir = dir[part];
     }
+    return dir;
+}
+
+Directory.generateContents = function(path) {
+    let output = '';
+    let dir = Directory.parseDir(path);
 
     // loop through the items in the directory
+    if(!dir.items)
+        throw new Error(path + ': Not a directory');
     for(let i = 0; i < dir.items.length; i++) {
         output += dir.items[i];
         if(i % 2 && i != 0 && i != dir.items.length-1) 

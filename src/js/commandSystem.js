@@ -38,8 +38,8 @@ export const processCommand = function(input) {
         }
     }
 
-    console.log("ops=",options);
-    console.log("args=",args);
+    // console.log("ops=",options);
+    // console.log("args=",args);
 
     let commandResult = command.execute(options, args, input);
     return commandResult ? commandResult : '';

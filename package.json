@@ -20,7 +20,8 @@
   },
   "homepage": "https://github.com/nathan815/nathan815.github.io#readme",
   "devDependencies": {
-    "webpack": "^3.10.0"
+    "webpack": "^3.10.0",
+    "webpack-notifier": "^1.5.1"
   },
   "dependencies": {
     "history": "^4.7.2",
