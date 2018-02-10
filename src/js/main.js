@@ -12,7 +12,7 @@ $(function() {
 
 });
 
-$('nav a').click(function(e) {
+$('nav a').on('click', function(e) {
     e.preventDefault();
     openPage($(this).data('page'));
     /*$('nav a').removeClass('current');

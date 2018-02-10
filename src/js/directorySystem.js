@@ -58,7 +58,7 @@ Directory.parseDir = function(path) {
         if(part.trim() == '' || part == '.') 
             continue;
         if(dir[part] == undefined)
-            throw new Error(path+': Not a directory');
+            throw new Error(path+': No such file or directory');
         dir = dir[part];
     }
     return dir;
@@ -70,7 +70,7 @@ Directory.generateContents = function(path) {
 
     // loop through the items in the directory
     if(!dir.items)
-        throw new Error(path + ': Not a directory');
+        throw new Error(path + ': No such directory');
     for(let i = 0; i < dir.items.length; i++) {
         output += dir.items[i];
         if(i % 2 && i != 0 && i != dir.items.length-1) 

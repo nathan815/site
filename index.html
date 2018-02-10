@@ -2,47 +2,84 @@
 <html>
 <head>
     <title>Nathaniel Johnson</title>
+    <link href="css/mac.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
 </head>
 <body>
-    <header>
-        <h1><img src="img/me.jpg" /> <br>Nathaniel Johnson</h1>
-        <nav>
-            <ul>
-                <li><a href="#" data-page="home" class="current">home</a></li>
-                <li><a href="#" data-page="about">about</a></li>
-                <li><a href="#" data-page="projects">projects</a></li>
-                <li><a href="#" data-page="resume">resume</a></li>
-                <li><a href="#" data-page="contact">contact</a></li>
-            </ul>
-        </nav>
-    </header>
+    <div class="container">
+        <header>
+            <h1><img src="img/me.jpg" /> <br>Nathaniel Johnson</h1>
+            <nav>
+                <ul>
+                    <li><a href="#" data-page="home" title="cd ~/">home</a></li>
+                    <li><a href="#" data-page="about" title="open ~/about">about</a></li>
+                    <li><a href="#" data-page="projects" title="open ~/projects">projects</a></li>
+                    <li><a href="#" data-page="resume" title="open ~/resume">resume</a></li>
+                    <li><a href="#" data-page="contact" title="open ~/contact">contact</a></li>
+                </ul>
+            </nav>
+        </header>
 
-    <!-- hidden, used in terminal -->
-    <div class="pages">
-        <div id="about">
-            <b>About Me</b> <br>I'm a 19 year old student studying Computer Science at Eastern Michigan University. I am experienced in Java, JavaScript, PHP, MySQL, HTML, and CSS. I'm currently learning React/React Native, Node.js, and C++. I enjoy working on side projects, building computerized Christmas light shows, and watching sci-fi TV series.
-        </div>
-        <div id="contact">
-            <b>Contact Info</b> - Let's get in touch! <br>email: <a href="mailto:njohns48@emich.edu">njohns48@emich.edu</a><br>phone: 810.391.6424
-        </div>
-    </div>
-
-    <div class="terminal">
-        <img src="img/terminal.png" class="bg" style="max-width:800px" />
-        <div class="bar">
-            <span id="title">bash ~</span>
-        </div>
-        <div class="window" id="window">
-            <div id="output">Welcome to :: nathanieljohnson.me ::<br>Navigate by using commands or clicking links above<br>Type <span class="blue">ls</span> for item listing, or <span class="blue">help</span> for a list of commands<br></div>
-            <div class="command-input">
-                $ <input type="text" id="command" autofocus spellcheck="false" autocomplete="false" />
+        <!-- hidden, used in terminal -->
+        <div class="pages">
+            <div id="about">
+                <b>About Me</b> <br>I'm a 19 year old student studying Computer Science at Eastern Michigan University. I am experienced in Java, JavaScript, PHP, MySQL, HTML, and CSS. I'm currently learning React/React Native, Node.js, and C++. I enjoy working on side projects, building computerized Christmas light shows, and watching sci-fi TV series.
+            </div>
+            <div id="contact">
+                <b>Contact Info</b> - Let's get in touch! <br>email: <a href="mailto:njohns48@emich.edu">njohns48@emich.edu</a><br>phone: 810.391.6424
             </div>
         </div>
-    </div>
-    <footer>
-        &lt; <a href="https://github.com/nathan815/site">hosted on {github pages}</a> /&gt;
-    </footer>
+
+        <div class="terminal mac-window">
+            <div class="titlebar">
+              <div class="buttons">
+                <div class="close">
+                  <a class="closebutton"><span><strong>x</strong></span></a>
+                </div>
+                <div class="minimize" class="disabled">
+                  <a class="minimizebutton"><span><strong>&ndash;</strong></span></a>
+                </div>
+                <div class="zoom" class="disabled">
+                  <a class="zoombutton"><span><strong>+</strong></span></a>
+                </div>
+              </div>
+              <span id="title">bash ~</span>
+            </div>
+            <div class="content" id="window">
+                <div id="output">Welcome to :: nathanieljohnson.me ::<br>Navigate by using commands or clicking links above<br>Type <span class="blue">ls</span> for item listing, or <span class="blue">help</span> for a list of commands<br></div>
+                <div class="command-input">
+                    $ <input type="text" id="command" autofocus spellcheck="false" autocomplete="false" />
+                </div>
+            </div>
+        </div>
+        <footer>
+            &lt; <a href="https://github.com/nathan815/site">hosted on {github pages}</a> /&gt;
+        </footer>
+
+        <div class="mac-window" id="resume-viewer-container">
+          <div class="titlebar">
+            <div class="buttons">
+              <div class="close" id="resume-close">
+                <a class="closebutton"><span><strong>x</strong></span></a>
+                <!-- close button link -->
+              </div>
+              <div class="minimize" class="disabled">
+                <a class="minimizebutton"><span><strong>&ndash;</strong></span></a>
+                <!-- minimize button link -->
+              </div>
+              <div class="zoom" class="disabled">
+                <a class="zoombutton"><span><strong>+</strong></span></a>
+                <!-- zoom button link -->
+              </div>
+            </div>
+            Nathaniel's Resume
+          </div>
+          <div class="content">
+            <div id="resume-viewer"></div>
+          </div>
+        </div>
+    </div><!--/.container-->
+
     <script src="dist/bundle.js"></script>
 </body>
 </html>

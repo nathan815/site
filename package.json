@@ -1,5 +1,5 @@
 {
-  "name": "nathan815.github.io",
+  "name": "nathanieljohnson.me",
   "version": "1.0.0",
   "description": "Personal website",
   "main": "index.js",
@@ -10,21 +10,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nathan815/nathan815.github.io.git"
+    "url": "git+https://github.com/nathan815/site.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/nathan815/nathan815.github.io/issues"
+    "url": "https://github.com/nathan815/site/issues"
   },
-  "homepage": "https://github.com/nathan815/nathan815.github.io#readme",
+  "homepage": "http://nathanieljohnson.me",
   "devDependencies": {
     "webpack": "^3.10.0",
     "webpack-notifier": "^1.5.1"
   },
   "dependencies": {
     "history": "^4.7.2",
-    "jquery": "^3.3.1"
+    "jquery": "^3.3.1",
+    "pdfobject": "^2.0.201604172"
   }
 }

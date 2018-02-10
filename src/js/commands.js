@@ -3,8 +3,6 @@ import { arrHas } from './helpers';
 import { $terminalOutput } from './elements';
 import { Directory, DirectoryList } from './directorySystem';
 
-const info = require('./../../information.json');
-
 const defaultOutput = $terminalOutput.html();
 
 const lsCommand = function(options, args, input) {
@@ -61,13 +59,14 @@ const openCommand = function(options, args) {
     let dir = Directory.parseDir(path);
     let output = '';
 
-    // if it's a directory
+    // if it's a directory, cd && ls
     if(dir.items) {
         cdCommand(null, [ path ]);
         output = lsCommand(null, [ '' ]);
     }
 
-    // if it is a file
+    // if it is a "file", display its contents
+    // or execute its function
     if(dir.contents) {
         if(dir.contents.indexOf('#') == 0) 
             output += $(dir.contents).html().trim();
@@ -103,7 +102,7 @@ const cdCommand = function(options, args) {
 export const AllCommands = {
     cd: {
         execute: cdCommand,
-        helpText: 'changes to a directory',
+        helpText: 'changes current working directory',
         possibleOptions: []
     }, 
     ls: {
