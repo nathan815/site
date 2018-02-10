@@ -10589,15 +10589,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__keyCodes__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_browser_cookies__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_browser_cookies__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__helpers__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__bgColorSystem__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__terminalHistory__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__directorySystem__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__commandSystem__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__elements__ = __webpack_require__(1);
-
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__helpers__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__bgColorSystem__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__terminalHistory__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__directorySystem__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__commandSystem__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__elements__ = __webpack_require__(1);
 
 
 
@@ -10611,29 +10608,20 @@ const main = function() {
 
     // have to focus here instead of autofocus attribute due to
     // a firefox bug that causes a FOUC when using autofocus attribute
-    __WEBPACK_IMPORTED_MODULE_8__elements__["a" /* $commandInput */].focus();
+    __WEBPACK_IMPORTED_MODULE_7__elements__["a" /* $commandInput */].focus();
 
     // fill in last commands when page loads
     // maintains a sort of state
-    let lastCommands = __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.get('lastCommands');
-    if(lastCommands) {
-        lastCommands = lastCommands.split(__WEBPACK_IMPORTED_MODULE_7__commandSystem__["a" /* COMMAND_COOKIE_ARR_DIVIDER */]);
-        for(let i = 0; i < lastCommands.length; i++) {
-            // only run command if it's not open resume, or it is open resume and the last one
-            if(lastCommands[i].indexOf('resume') < 0 || i == lastCommands.length-1)
-                triggerCommand(lastCommands[i]);
-        }
-        __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.erase('lastCommands');
-    }
+    Object(__WEBPACK_IMPORTED_MODULE_6__commandSystem__["a" /* fillLastCommands */])(triggerCommand);
 
-    __WEBPACK_IMPORTED_MODULE_8__elements__["d" /* $terminalWindow */].on('click', function(e) {
+    __WEBPACK_IMPORTED_MODULE_7__elements__["d" /* $terminalWindow */].on('click', function(e) {
         let haveSel = getSelection().toString().length > 0;
         if(!haveSel) {
-            __WEBPACK_IMPORTED_MODULE_8__elements__["a" /* $commandInput */].focus();
+            __WEBPACK_IMPORTED_MODULE_7__elements__["a" /* $commandInput */].focus();
         }
     });
 
-    __WEBPACK_IMPORTED_MODULE_8__elements__["a" /* $commandInput */].on('keydown', function(e) {
+    __WEBPACK_IMPORTED_MODULE_7__elements__["a" /* $commandInput */].on('keydown', function(e) {
         let txt = '';
         switch(e.which) {
             case __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ENTER:
@@ -10642,7 +10630,7 @@ const main = function() {
             case __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_UP:
             case __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_DOWN:
                 e.preventDefault();
-                __WEBPACK_IMPORTED_MODULE_5__terminalHistory__["a" /* default */].handleHistory(e.which);
+                __WEBPACK_IMPORTED_MODULE_4__terminalHistory__["a" /* default */].handleHistory(e.which);
                 break;
         }
     });
@@ -10652,11 +10640,11 @@ const main = function() {
         openPage(__WEBPACK_IMPORTED_MODULE_0_jquery___default()(this).data('page'));
     });
 
-    __WEBPACK_IMPORTED_MODULE_0_jquery___default()('.terminal .buttons div').on('click', __WEBPACK_IMPORTED_MODULE_4__bgColorSystem__["a" /* default */]);
+    __WEBPACK_IMPORTED_MODULE_0_jquery___default()('.terminal .buttons div').on('click', __WEBPACK_IMPORTED_MODULE_3__bgColorSystem__["a" /* default */]);
 };
 
 const triggerCommand = function(command) {
-    __WEBPACK_IMPORTED_MODULE_8__elements__["a" /* $commandInput */].val(command);
+    __WEBPACK_IMPORTED_MODULE_7__elements__["a" /* $commandInput */].val(command);
     handleEnter(command);
 };
 
@@ -10669,7 +10657,7 @@ const openPage = function(page) {
         case 'about':
         case 'resume':
         case 'contact':
-            let prefix = __WEBPACK_IMPORTED_MODULE_6__directorySystem__["a" /* Directory */].current != '~' ? '~/' : '';
+            let prefix = __WEBPACK_IMPORTED_MODULE_5__directorySystem__["a" /* Directory */].current != '~' ? '~/' : '';
             triggerCommand('open ' + prefix + page);
             break;
     }
@@ -10681,32 +10669,32 @@ const openPage = function(page) {
 }
 
 const handleEnter = function(value) {
-    __WEBPACK_IMPORTED_MODULE_5__terminalHistory__["a" /* default */].clearDownInputStack();
+    __WEBPACK_IMPORTED_MODULE_4__terminalHistory__["a" /* default */].clearDownInputStack();
     handleInput(value);
-    __WEBPACK_IMPORTED_MODULE_8__elements__["d" /* $terminalWindow */].scrollTop(__WEBPACK_IMPORTED_MODULE_8__elements__["d" /* $terminalWindow */].height() + __WEBPACK_IMPORTED_MODULE_8__elements__["b" /* $terminalOutput */].height());
+    __WEBPACK_IMPORTED_MODULE_7__elements__["d" /* $terminalWindow */].scrollTop(__WEBPACK_IMPORTED_MODULE_7__elements__["d" /* $terminalWindow */].height() + __WEBPACK_IMPORTED_MODULE_7__elements__["b" /* $terminalOutput */].height());
 };
 
 const handleInput = function(input) {
     let output;
-    input = Object(__WEBPACK_IMPORTED_MODULE_3__helpers__["b" /* htmlEntities */])(input);
+    input = Object(__WEBPACK_IMPORTED_MODULE_2__helpers__["b" /* htmlEntities */])(input);
 
     try {
-        output = Object(__WEBPACK_IMPORTED_MODULE_7__commandSystem__["b" /* processCommand */])(input);
+        output = Object(__WEBPACK_IMPORTED_MODULE_6__commandSystem__["b" /* processCommand */])(input);
     } catch(e) {
         output = e.message;
     }
 
-    __WEBPACK_IMPORTED_MODULE_8__elements__["a" /* $commandInput */].val('');
+    __WEBPACK_IMPORTED_MODULE_7__elements__["a" /* $commandInput */].val('');
     let fullOutput = '$ ' + input + '\n';
     if(output.length > 0 && output != false && typeof output != 'function') {
         let text = '';
-        if(__WEBPACK_IMPORTED_MODULE_8__elements__["b" /* $terminalOutput */].text() != '') {
+        if(__WEBPACK_IMPORTED_MODULE_7__elements__["b" /* $terminalOutput */].text() != '') {
             text = '\n'
         }
         fullOutput += output + '\n';
     }
     if(output != false) {
-        __WEBPACK_IMPORTED_MODULE_8__elements__["b" /* $terminalOutput */].append(fullOutput);
+        __WEBPACK_IMPORTED_MODULE_7__elements__["b" /* $terminalOutput */].append(fullOutput);
     }
 
     if(typeof output == 'function') {
@@ -10714,7 +10702,7 @@ const handleInput = function(input) {
     }
 
     if(input.length > 0) {
-        __WEBPACK_IMPORTED_MODULE_5__terminalHistory__["a" /* default */].stack.up.push(input);
+        __WEBPACK_IMPORTED_MODULE_4__terminalHistory__["a" /* default */].stack.up.push(input);
     }
 };
 
@@ -11100,8 +11088,24 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 
+const COMMAND_COOKIE_NAME = 'lastCommands';
 const COMMAND_COOKIE_ARR_DIVIDER = ';__;';
-/* harmony export (immutable) */ __webpack_exports__["a"] = COMMAND_COOKIE_ARR_DIVIDER;
+
+const fillLastCommands = function(callback) {
+    let lastCommands = __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.get(COMMAND_COOKIE_NAME);
+    if(!lastCommands) {
+        return;
+    }
+    lastCommands = lastCommands.split(COMMAND_COOKIE_ARR_DIVIDER);
+    for(let i = 0; i < lastCommands.length; i++) {
+        // only run open resume command if it is the last one
+        if(lastCommands[i].indexOf('resume') < 0 || i == lastCommands.length-1) {
+            callback(lastCommands[i]);
+        }
+    }
+    __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.erase(COMMAND_COOKIE_NAME);
+};
+/* harmony export (immutable) */ __webpack_exports__["a"] = fillLastCommands;
 
 
 const processCommand = function(input) {
@@ -11142,10 +11146,10 @@ const processCommand = function(input) {
     }
 
     // set last command in cookie
-    let lastCommands = __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.get('lastCommands') || '';
+    let lastCommands = __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.get(COMMAND_COOKIE_NAME) || '';
     lastCommands = lastCommands.split(COMMAND_COOKIE_ARR_DIVIDER);
     lastCommands.push(input);
-    __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.set('lastCommands', lastCommands.join(COMMAND_COOKIE_ARR_DIVIDER));
+    __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.set(COMMAND_COOKIE_NAME, lastCommands.join(COMMAND_COOKIE_ARR_DIVIDER));
 
     // console.log("ops=",options);
     // console.log("args=",args);

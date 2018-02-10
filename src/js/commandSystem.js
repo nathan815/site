@@ -2,7 +2,23 @@ import { AllCommands } from './commands';
 import { arrHas } from './helpers';
 import cookies from 'browser-cookies';
 
-export const COMMAND_COOKIE_ARR_DIVIDER = ';__;';
+const COMMAND_COOKIE_NAME = 'lastCommands';
+const COMMAND_COOKIE_ARR_DIVIDER = ';__;';
+
+export const fillLastCommands = function(callback) {
+    let lastCommands = cookies.get(COMMAND_COOKIE_NAME);
+    if(!lastCommands) {
+        return;
+    }
+    lastCommands = lastCommands.split(COMMAND_COOKIE_ARR_DIVIDER);
+    for(let i = 0; i < lastCommands.length; i++) {
+        // only run open resume command if it is the last one
+        if(lastCommands[i].indexOf('resume') < 0 || i == lastCommands.length-1) {
+            callback(lastCommands[i]);
+        }
+    }
+    cookies.erase(COMMAND_COOKIE_NAME);
+};
 
 export const processCommand = function(input) {
     input = input.trim();
@@ -42,10 +58,10 @@ export const processCommand = function(input) {
     }
 
     // set last command in cookie
-    let lastCommands = cookies.get('lastCommands') || '';
+    let lastCommands = cookies.get(COMMAND_COOKIE_NAME) || '';
     lastCommands = lastCommands.split(COMMAND_COOKIE_ARR_DIVIDER);
     lastCommands.push(input);
-    cookies.set('lastCommands', lastCommands.join(COMMAND_COOKIE_ARR_DIVIDER));
+    cookies.set(COMMAND_COOKIE_NAME, lastCommands.join(COMMAND_COOKIE_ARR_DIVIDER));
 
     // console.log("ops=",options);
     // console.log("args=",args);

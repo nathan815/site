@@ -1,11 +1,10 @@
 import $ from 'jquery';
 import KeyCodes from './keyCodes';
-import cookies from 'browser-cookies';
 import { htmlEntities } from './helpers';
 import changeBgColor from './bgColorSystem';
 import TerminalHistory from './terminalHistory';
 import { Directory } from './directorySystem';
-import { processCommand, COMMAND_COOKIE_ARR_DIVIDER } from './commandSystem';
+import { processCommand, fillLastCommands } from './commandSystem';
 import { $terminalWindow, $terminalOutput, $commandInput } from './elements';
 
 const main = function() {
@@ -16,16 +15,7 @@ const main = function() {
 
     // fill in last commands when page loads
     // maintains a sort of state
-    let lastCommands = cookies.get('lastCommands');
-    if(lastCommands) {
-        lastCommands = lastCommands.split(COMMAND_COOKIE_ARR_DIVIDER);
-        for(let i = 0; i < lastCommands.length; i++) {
-            // only run command if it's not open resume, or it is open resume and the last one
-            if(lastCommands[i].indexOf('resume') < 0 || i == lastCommands.length-1)
-                triggerCommand(lastCommands[i]);
-        }
-        cookies.erase('lastCommands');
-    }
+    fillLastCommands(triggerCommand);
 
     $terminalWindow.on('click', function(e) {
         let haveSel = getSelection().toString().length > 0;
