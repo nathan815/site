@@ -42,12 +42,13 @@ Directory.setCurrentDirectory = function(path, dirObject) {
     Directory.prevDirObject = Directory.currentDirObject;
     Directory.current = path;
     Directory.currentDirObject = dirObject || Directory.parseDir(path);
-    $terminalTitle.html('bash ' + path);
+    $terminalTitle.html(path);
 };
 
 Directory.goBack = function() {
     Directory.setCurrentDirectory(Directory.prev, Directory.prevDirObject);
-}
+};
+
 Directory.parseDir = function(path) {
     let parts = path.split('/');
     let dir = DirectoryList;
@@ -64,7 +65,7 @@ Directory.parseDir = function(path) {
         dir = dir[part];
     }
     return dir;
-}
+};
 
 Directory.generateContents = function(path) {
     let output = '';
@@ -81,4 +82,4 @@ Directory.generateContents = function(path) {
             output += '\t\t';
     }
     return output;
-}
+};

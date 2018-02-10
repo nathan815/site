@@ -115,6 +115,18 @@ export const AllCommands = {
         helpText: 'lists the items in a directory',
         helpEntry: 'Lists the items in a directory. If no directory is specified, it defaults to current directory.'
     },
+    open: {
+        execute: openCommand,
+        helpText: 'opens a directory or file and displays its contents',
+        helpEntry: 'Opens a directory or file. \nIf a directory is specified, this will cd to the directory and then execute ls. If an all-text file is specified, it will output its contents to the terminal. Other files will be opened in the default GUI application.',
+        possibleOptions: []
+    },
+    help: {
+        execute: helpCommand,
+        helpText: 'lists all commands, or displays help for a command',
+        helpEntry: 'Lists all commands, or displays help for a command.\n  Available options: --hidden (show hidden commands)',
+        possibleOptions: [ 'hidden' ]
+    },
     clear: {
         execute: clearCommand,
         helpText: 'clears the output',
@@ -127,16 +139,4 @@ export const AllCommands = {
         helpEntry: 'Git is the best version control system.\n  Available options: --version',
         hidden: true
     },
-    help: {
-        execute: helpCommand,
-        helpText: 'lists all commands, or displays help for a command',
-        helpEntry: 'Lists all commands, or displays help for a command.\n  Available options: --hidden (show hidden commands)',
-        possibleOptions: [ 'hidden' ]
-    },
-    open: {
-        execute: openCommand,
-        helpText: 'opens a directory or file and displays its contents',
-        helpEntry: 'Opens a directory or file. \nIf a directory is specified, this will cd to the directory and then execute ls. If an all-text file is specified, it will output its contents to the terminal. Other files will be opened in the default GUI application.',
-        possibleOptions: []
-    }
 };

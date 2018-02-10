@@ -15,6 +15,10 @@ const main = function() {
         }
     });
 
+    // have to focus here instead of autofocus attribute due to
+    // a firefox bug that causes a FOUC when using autofocus attribute
+    $commandInput.focus();
+
     $commandInput.on('keydown', function(e) {
         let txt = '';
         switch(e.which) {

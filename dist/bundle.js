@@ -10449,7 +10449,7 @@ const $terminalWindow = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#wind
 const $terminalOutput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#output');
 /* harmony export (immutable) */ __webpack_exports__["b"] = $terminalOutput;
 
-const $terminalTitle = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('span#title');
+const $terminalTitle = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('span#current-directory');
 /* harmony export (immutable) */ __webpack_exports__["c"] = $terminalTitle;
 
 const $commandInput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('input#command');
@@ -10538,12 +10538,13 @@ Directory.setCurrentDirectory = function(path, dirObject) {
     Directory.prevDirObject = Directory.currentDirObject;
     Directory.current = path;
     Directory.currentDirObject = dirObject || Directory.parseDir(path);
-    __WEBPACK_IMPORTED_MODULE_0__elements__["c" /* $terminalTitle */].html('bash ' + path);
+    __WEBPACK_IMPORTED_MODULE_0__elements__["c" /* $terminalTitle */].html(path);
 };
 
 Directory.goBack = function() {
     Directory.setCurrentDirectory(Directory.prev, Directory.prevDirObject);
-}
+};
+
 Directory.parseDir = function(path) {
     let parts = path.split('/');
     let dir = DirectoryList;
@@ -10560,7 +10561,7 @@ Directory.parseDir = function(path) {
         dir = dir[part];
     }
     return dir;
-}
+};
 
 Directory.generateContents = function(path) {
     let output = '';
@@ -10577,7 +10578,7 @@ Directory.generateContents = function(path) {
             output += '\t\t';
     }
     return output;
-}
+};
 
 /***/ }),
 /* 5 */
@@ -10610,6 +10611,10 @@ const main = function() {
             __WEBPACK_IMPORTED_MODULE_7__elements__["a" /* $commandInput */].focus();
         }
     });
+
+    // have to focus here instead of autofocus attribute due to
+    // a firefox bug that causes a FOUC when using autofocus attribute
+    __WEBPACK_IMPORTED_MODULE_7__elements__["a" /* $commandInput */].focus();
 
     __WEBPACK_IMPORTED_MODULE_7__elements__["a" /* $commandInput */].on('keydown', function(e) {
         let txt = '';
@@ -11248,6 +11253,18 @@ const AllCommands = {
         helpText: 'lists the items in a directory',
         helpEntry: 'Lists the items in a directory. If no directory is specified, it defaults to current directory.'
     },
+    open: {
+        execute: openCommand,
+        helpText: 'opens a directory or file and displays its contents',
+        helpEntry: 'Opens a directory or file. \nIf a directory is specified, this will cd to the directory and then execute ls. If an all-text file is specified, it will output its contents to the terminal. Other files will be opened in the default GUI application.',
+        possibleOptions: []
+    },
+    help: {
+        execute: helpCommand,
+        helpText: 'lists all commands, or displays help for a command',
+        helpEntry: 'Lists all commands, or displays help for a command.\n  Available options: --hidden (show hidden commands)',
+        possibleOptions: [ 'hidden' ]
+    },
     clear: {
         execute: clearCommand,
         helpText: 'clears the output',
@@ -11260,18 +11277,6 @@ const AllCommands = {
         helpEntry: 'Git is the best version control system.\n  Available options: --version',
         hidden: true
     },
-    help: {
-        execute: helpCommand,
-        helpText: 'lists all commands, or displays help for a command',
-        helpEntry: 'Lists all commands, or displays help for a command.\n  Available options: --hidden (show hidden commands)',
-        possibleOptions: [ 'hidden' ]
-    },
-    open: {
-        execute: openCommand,
-        helpText: 'opens a directory or file and displays its contents',
-        helpEntry: 'Opens a directory or file. \nIf a directory is specified, this will cd to the directory and then execute ls. If an all-text file is specified, it will output its contents to the terminal. Other files will be opened in the default GUI application.',
-        possibleOptions: []
-    }
 };
 /* harmony export (immutable) */ __webpack_exports__["a"] = AllCommands;
 

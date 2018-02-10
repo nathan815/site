@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css?family=Anonymous+Pro|Raleway');
+@import url('https://fonts.googleapis.com/css?family=Raleway');
 
 body {
     background: #0e4e83 url('../img/fabric-light.png') fixed;
-    font-family: Monaco, 'Anonymous Pro', Courier, monospace;
+    font-family: Menlo, Monaco, 'Courier New', Courier, monospace;
     padding: 0;
     margin: 0;
     transition: background 0.4s ease-in;
@@ -48,7 +48,7 @@ header h1 {
 header img {
     width: 100px;
     border-radius: 50%;
-    box-shadow: 0 0 5px #333;
+    box-shadow: 0 0 3px rgba(0,0,0,0.4);
 }
 header nav ul {
     list-style: none;
@@ -83,6 +83,8 @@ footer {
     margin: 30px auto;
     background: #263238;
     opacity: 0.95;
+    line-height: 18px;
+    color: #fafafa;
 }
 .terminal .blue,
 .terminal b {
@@ -149,8 +151,11 @@ footer {
     padding-top: 2px;
 }
 #resume-viewer-container .content a {
-    color: #888;
+    color: #008CBA;
+}
+#resume-viewer-container .content a.download {
     font-size: 13px;
+    color: #888;
 }
 #resume-viewer {
     width: 97%;
