@@ -1,36 +1,44 @@
 import $ from 'jquery';
 import KeyCodes from './keyCodes';
 import { htmlEntities } from './helpers';
+import changeBgColor from './bgColorSystem';
 import TerminalHistory from './terminalHistory';
 import { Directory } from './directorySystem';
 import { processCommand } from './commandSystem';
 import { $terminalWindow, $terminalOutput, $commandInput } from './elements';
 
-$terminalWindow.on('click', function(e) {
-    let haveSel = getSelection().toString().length > 0;
-    if(!haveSel) {
-        $commandInput.focus();
-    }
-});
+const main = function() {
+    $terminalWindow.on('click', function(e) {
+        let haveSel = getSelection().toString().length > 0;
+        if(!haveSel) {
+            $commandInput.focus();
+        }
+    });
 
-$commandInput.on('keydown', function(e) {
-    let txt = '';
-    switch(e.which) {
-        case KeyCodes.ENTER:
-            handleEnter(this.value);
-            break;
-        case KeyCodes.ARROW_UP:
-        case KeyCodes.ARROW_DOWN:
-            e.preventDefault();
-            TerminalHistory.handleHistory(e.which);
-            break;
-    }
-});
+    $commandInput.on('keydown', function(e) {
+        let txt = '';
+        switch(e.which) {
+            case KeyCodes.ENTER:
+                handleEnter(this.value);
+                break;
+            case KeyCodes.ARROW_UP:
+            case KeyCodes.ARROW_DOWN:
+                e.preventDefault();
+                TerminalHistory.handleHistory(e.which);
+                break;
+        }
+    });
 
-$('nav a').on('click', function(e) {
-    e.preventDefault();
-    openPage($(this).data('page'));
-});
+    $('nav a').on('click', function(e) {
+        e.preventDefault();
+        openPage($(this).data('page'));
+    });
+
+    $('.terminal .buttons div').on('click', changeBgColor);
+};
+
+// start up
+main();
 
 const openPage = function(page) {
     switch(page) {
@@ -44,6 +52,11 @@ const openPage = function(page) {
             let prefix = Directory.current != '~' ? '~/' : '';
             triggerCommand('open ' + prefix + page);
             break;
+    }
+    if(page != 'resume' && $(window).width() < 500) {
+        $('html, body').animate({
+            scrollTop: $('nav').offset().top
+        }, 500);
     }
 }
 

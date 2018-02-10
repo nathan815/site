@@ -1,11 +1,22 @@
 @import url('https://fonts.googleapis.com/css?family=Anonymous+Pro|Raleway');
 
 body {
-    background: #0C64AB url('../img/fabric-light.png') fixed;
+    background: #0e4e83 url('../img/fabric-light.png') fixed;
     font-family: Monaco, 'Anonymous Pro', Courier, monospace;
     padding: 0;
     margin: 0;
+    transition: background 0.4s ease-in;
 }
+body.red {
+    background-color: #7b1111;
+}
+body.yellow {
+    background-color: #715e04;
+}
+body.green {
+    background-color: #005a1d;
+}
+
 a {
     color: #fff;
     text-decoration: none;
@@ -49,10 +60,6 @@ header nav ul li {
     display: inline-block;
     margin-right: 10px;
 }
-/*header nav ul li a.current {
-    font-weight: bold;
-    text-shadow: 0 0 5px #222;
-}*/
 footer {
     font-size: 13px;
     margin: 70px 0 40px;
@@ -102,6 +109,9 @@ footer {
     white-space: pre-wrap;
     word-break: keep-all;
 }
+.terminal .content a {
+    color: #1DCF5B;
+}
 
 .terminal input {
     background: none;
@@ -114,11 +124,7 @@ footer {
     padding: 0;
     margin: 0;
 }
-@media(max-width: 645px) {
-    .terminal input {
-        width: 94%;
-    }
-}
+
 .terminal .command-input {
     user-select: none;
 }
@@ -135,12 +141,32 @@ footer {
     height: auto;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     margin-bottom: 40px;
+    text-align: center;
 }
 #resume-viewer-container .content {
     width: 100%;
-    height: 950px;
+    max-height: 955px;
+    padding-top: 2px;
+}
+#resume-viewer-container .content a {
+    color: #888;
+    font-size: 13px;
 }
 #resume-viewer {
     width: 97%;
-    height: 100%;
+    height: 98%;
+}
+
+/* Media query for phones */
+
+@media(max-width: 645px) {
+    .terminal input {
+        width: 94%;
+    }
+    header img {
+        width: 70px;
+    }
+    header h1 {
+        font-size: 30px;
+    }
 }

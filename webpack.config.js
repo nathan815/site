@@ -8,6 +8,6 @@ module.exports = {
     path: path.resolve(__dirname, 'dist')
   },
   plugins: [
-    new WebpackNotifierPlugin({skipFirstNotification: true})
+    new WebpackNotifierPlugin()
   ]
 }; 

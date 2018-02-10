@@ -4,6 +4,7 @@
     <title>Nathaniel Johnson</title>
     <link href="css/mac.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
     <div class="container">
@@ -23,61 +24,52 @@
         <!-- hidden, used in terminal -->
         <div class="pages">
             <div id="about">
-                <b>About Me &gt;</b> I'm a 19 year old student studying Computer Science at Eastern Michigan University with experience in Java, JavaScript, PHP, MySQL, HTML, and CSS. I'm currently learning React/React Native, Node.js, and C++. I enjoy working on side projects, attending hackathons, building computerized Christmas light displays, and watching science fiction TV shows.
+                <b>:: About Me ::</b> <br>I'm a 19 year old student studying Computer Science at Eastern Michigan University with experience in Java, JavaScript, PHP, MySQL, HTML, and CSS. I'm currently learning React/React Native, Node.js, Swift, and C++. <br><br>I enjoy working on side projects, competing in hackathons, building computerized Christmas light displays, and watching science fiction TV shows. Additionally, I mentor and volunteer for FIRST Robotics and am a participant in Business Professionals of America.
             </div>
             <div id="contact">
-                <b>Contact Info</b> - Let's get in touch! <br>email= <a href="mailto:njohns48@emich.edu">njohns48@emich.edu</a><br>phone= 810.391.6424<br>github= <a href="http://github.com/nathan815">nathan815</a> <br>linkedin= <a href="http://linkedin.com/in/nathanielcjohnson">nathanielcjohnson</a>
+                <b>:: Contact Info ::</b> <br>let's get in touch! <br>email= <a href="mailto:njohns48@emich.edu">njohns48@emich.edu</a><br>phone= 810.391.6424<br>github= <a href="http://github.com/nathan815">nathan815</a> <br>linkedin= <a href="http://linkedin.com/in/nathanielcjohnson">nathanielcjohnson</a>
+            </div>
+            <div id="site-info">
+                <b>:: Site Info ::</b> 
             </div>
         </div>
 
         <div class="terminal mac-window">
             <div class="titlebar">
-              <div class="buttons">
-                <div class="close">
-                  <a class="closebutton"><span><strong>x</strong></span></a>
+                <div class="buttons">
+                    <div class="close" data-color="red"><span>&times;</span></div>
+                    <div class="minimize" data-color="yellow"><span>&ndash;</span></div>
+                    <div class="zoom" data-color="green"><span>+</span></div>
                 </div>
-                <div class="minimize" class="disabled">
-                  <a class="minimizebutton"><span><strong>&ndash;</strong></span></a>
-                </div>
-                <div class="zoom" class="disabled">
-                  <a class="zoombutton"><span><strong>+</strong></span></a>
-                </div>
-              </div>
-              <span id="title">bash ~</span>
+                <span id="title">bash ~</span>
             </div>
             <div class="content" id="window">
-                <div id="output">Welcome to :: nathanieljohnson.me ::<br>Navigate by using commands or clicking links above<br>Type <span class="blue">ls</span> for item listing, or <span class="blue">help</span> for a list of commands<br></div>
+                <div id="output">Welcome to nathanieljohnson.me<br>Navigate by using commands or clicking links above<br>Type <span class="blue">ls</span> for item listing, or <span class="blue">help</span> for a list of commands<br></div>
                 <div class="command-input">
-                    $ <input type="text" id="command" autofocus spellcheck="false" autocomplete="false" />
+                    $ <input type="text" id="command" autofocus spellcheck="false" autocomplete="false" autocorrect="off" autocapitalize="off" />
                 </div>
             </div>
         </div>
+
         <footer>
             &lt; <a href="https://github.com/nathan815/site">hosted on {github pages}</a> /&gt;
         </footer>
 
         <div class="mac-window" id="resume-viewer-container">
-          <div class="titlebar">
-            <div class="buttons">
-              <div class="close" id="resume-close">
-                <a class="closebutton"><span><strong>x</strong></span></a>
-                <!-- close button link -->
-              </div>
-              <div class="minimize" class="disabled">
-                <a class="minimizebutton"><span><strong>&ndash;</strong></span></a>
-                <!-- minimize button link -->
-              </div>
-              <div class="zoom" class="disabled">
-                <a class="zoombutton"><span><strong>+</strong></span></a>
-                <!-- zoom button link -->
-              </div>
+            <div class="titlebar">
+                <div class="buttons">
+                    <div class="close" id="resume-close"><span>&times;</span></div>
+                    <div class="minimize"><span>&ndash;</span></div>
+                    <div class="zoom"><span>+</span></div>
+                </div>
+                Nathaniel's Resume
             </div>
-            Nathaniel's Resume
-          </div>
-          <div class="content">
-            <div id="resume-viewer"></div>
-          </div>
+            <div class="content">
+                <a href="resume.pdf"><b>download resume.pdf</b></a>
+                <div id="resume-viewer"></div>
+            </div>
         </div>
+
     </div><!--/.container-->
 
     <script src="dist/bundle.js"></script>

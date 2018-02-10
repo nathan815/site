@@ -1,10 +1,21 @@
 import $ from 'jquery';
 import PDFObject from 'pdfobject';
 
+const $resumeContainer = $('#resume-viewer-container');
+const $resumeContent = $('#resume-viewer-container .content');
+const $resumeClose = $('#resume-close');
+const $resumeViewer = $('#resume-viewer');
+
 export const openResume = function() {
-    $('#resume-close').off('click').on('click', function() {
-        $('#resume-viewer-container').hide(250);
+    $('html,body').animate({
+        scrollTop: 140
     });
-    $('#resume-viewer-container').show(250);
-    PDFObject.embed("resume.pdf", "#resume-viewer");
+    $resumeClose.off('click').on('click', function() {
+        $resumeContainer.fadeOut(250);
+    });
+    $resumeContent.css('height',$(window).width()+50);
+    $resumeContainer.fadeIn(250);
+    PDFObject.embed("resume.pdf", "#resume-viewer", {
+        fallbackLink: "<p>This browser does not support inline PDFs. <a href='[url]'>Click To View PDF &raquo;</a></p>"
+    });
 };

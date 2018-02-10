@@ -3,7 +3,7 @@ import { openResume } from './resumeViewer';
 
 export const DirectoryList = {
     '~': {
-        items: [ 'about', 'projects', 'resume', 'contact '],
+        items: [ 'about', 'projects', 'resume', 'contact', 'site-info'],
         about: {
             contents: '#about'
         },
@@ -21,7 +21,10 @@ export const DirectoryList = {
         },
         contact: {
             contents: '#contact'
-        }
+        },
+        ['site-info']: {
+            contents: '#site-info'
+        },
     }
 };
 

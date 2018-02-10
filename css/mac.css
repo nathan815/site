@@ -58,85 +58,68 @@
 .mac-window .buttons a {
   text-decoration: none;
 }
-.mac-window .buttons:hover a {
+.mac-window .buttons:hover div span {
   visibility: visible;
 }
 
-.mac-window .close {
-  background: #ff5c5c;
-  font-size: 9pt;
+.mac-window .buttons div {
+  font-size: 13px;
   width: 11px;
   height: 11px;
-  border: 1px solid #e33e41;
   border-radius: 50%;
+  border: 1px solid;
   display: inline-block;
+  text-align: center;
 }
 
-.mac-window .close:active {
+.mac-window .buttons .close {
+  background: #ff5c5c;
+  border-color: #e33e41;
+  /*transform:rotate(45deg);*/
+  color: #820005;
+}
+.mac-window .buttons .close:active {
   background: #c14645;
-  border: 1px solid #b03537;
-}
-
-.mac-window .close:active .closebutton {
+  border-color: #b03537;
   color: #4e0002;
 }
 
-.mac-window .closebutton {
-  color: #820005;
+.mac-window .buttons .close span {
   visibility: hidden;
-  cursor: default;
 }
 
-.mac-window .minimize {
+.mac-window .buttons .minimize {
   background: #ffbd4c;
-  font-size: 9pt;
-  line-height: 11px;
-  width: 11px;
-  height: 11px;
-  border: 1px solid #e09e3e;
-  border-radius: 50%;
-  display: inline-block;
+  border-color: #e09e3e;
   margin-left: 4px;
+  color: #9a5518;
 }
 
-.mac-window .minimize:active {
+.mac-window .buttons .minimize:active {
   background: #c08e38;
   border: 1px solid #af7c33;
-}
-
-.mac-window .minimize:active .minimizebutton {
   color: #5a2607;
 }
 
-.mac-window .minimizebutton {
-  color: #9a5518;
+.mac-window .buttons .minimize span {
   visibility: hidden;
   cursor: default;
 }
 
-.mac-window .zoom {
+.mac-window .buttons .zoom {
   background: #00ca56;
-  font-size: 9pt;
-  line-height: 11px;
-  width: 11px;
-  height: 11px;
-  border: 1px solid #14ae46;
-  border-radius: 50%;
-  display: inline-block;
+  border-color: #14ae46;
   margin-left: 4px;
+  color: #006519;
 }
 
-.mac-window .zoom:active {
+.mac-window .buttons .zoom:active {
   background: #029740;
   border: 1px solid #128435;
-}
-
-.mac-window .zoom:active .zoombutton {
   color: #003107;
 }
 
-.mac-window .zoombutton {
-  color: #006519;
+.mac-window .buttons .zoom span {
   visibility: hidden;
   cursor: default;
 }

@@ -29,26 +29,28 @@ const clearCommand = function() {
     return false;
 };
 
-const listAllCommands = function() {
+const listAllCommands = function(showHidden) {
     let output = 'Available commands:';
     for(let commandName in AllCommands) {
         let command = AllCommands[commandName];
-        if(!command.hidden) {
+        if(!command.hidden || showHidden) {
             output += '\n' + commandName + '\t';
             output += '<span class="grey">' + (command.helpText ? ' - ' + command.helpText : '') + '</span>';
         }
     }
+    output += '\n[run help with a command name to view its help entry]';
     return output;
 };
 
 const helpCommand = function(options, args) {
+    let showHidden = options.indexOf('hidden') > -1;
     if(!args[0]) {
-        return listAllCommands();
+        return listAllCommands(showHidden);
     }
     let command = AllCommands[args[0]];
     if(command == undefined)
         throw new Error('help: '+args[0]+': command not found');
-    return 'Help entry for '+args[0]+': \n  ' + (command.helpEntry ? command.helpEntry : 'No help entry defined.');
+    return 'Help entry for '+args[0]+': \n' + (command.helpEntry ? command.helpEntry : 'No help entry defined.');
 };
 
 const openCommand = function(options, args) {
@@ -61,20 +63,22 @@ const openCommand = function(options, args) {
 
     // if it's a directory, cd && ls
     if(dir.items) {
+        output += '[ran <b>cd ' + path + '</b> then <b>ls</b>]\n';
         cdCommand(null, [ path ]);
-        output = lsCommand(null, [ '' ]);
+        output += lsCommand(null, [ '' ]);
+        return output;
     }
 
     // if it is a "file", display its contents
     // or execute its function
+    if(typeof dir.execute == 'function') {
+        return dir.execute;
+    }
     if(dir.contents) {
         if(dir.contents.indexOf('#') == 0) 
             output += $(dir.contents).html().trim();
         else
-            output += dir.contents
-    }
-    if(typeof dir.execute == 'function') {
-        return dir.execute;
+            output += dir.contents;
     }
     return output;
 };
@@ -108,8 +112,8 @@ export const AllCommands = {
     ls: {
         execute: lsCommand,
         possibleOptions: [],
-        helpText: 'lists the menu options',
-        helpEntry: 'Lists the menu options. No available options.'
+        helpText: 'lists the items in a directory',
+        helpEntry: 'Lists the items in a directory. If no directory is specified, it defaults to current directory.'
     },
     clear: {
         execute: clearCommand,
@@ -119,7 +123,8 @@ export const AllCommands = {
     git: {
         execute: gitCommand,
         possibleOptions: [ 'version', 'm' ],
-        helpEntry: 'Git is the best source control system.\n  Available options: --version',
+        helpText: 'the best version control system',
+        helpEntry: 'Git is the best version control system.\n  Available options: --version',
         hidden: true
     },
     help: {
@@ -131,6 +136,7 @@ export const AllCommands = {
     open: {
         execute: openCommand,
         helpText: 'opens a directory or file and displays its contents',
+        helpEntry: 'Opens a directory or file. \nIf a directory is specified, this will cd to the directory and then execute ls. If an all-text file is specified, it will output its contents to the terminal. Other files will be opened in the default GUI application.',
         possibleOptions: []
     }
 };
