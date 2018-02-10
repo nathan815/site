@@ -3,7 +3,7 @@ import { arrHas } from './helpers';
 import { $terminalOutput } from './elements';
 import { Directory, DirectoryList } from './directorySystem';
 
-const defaultOutput = $terminalOutput.html();
+const defaultOutput = $('#default-output').html();
 
 const lsCommand = function(options, args, input) {
     let output = '';
@@ -12,7 +12,7 @@ const lsCommand = function(options, args, input) {
         dir = args[0];
     }
     let precedingDir = (dir != Directory.current ? dir + '/' : '').replace('//','/');
-    return Directory.generateContents(dir) + '\n[type <b>open <i>'+precedingDir+'item-name</i></b> to view an item]';
+    return Directory.generateContents(dir) + '\n[type <span class="blue">open <i>'+precedingDir+'item-name</i></span> to view an item]';
 };
 
 const gitCommand = function(options, args) {
@@ -63,7 +63,7 @@ const openCommand = function(options, args) {
 
     // if it's a directory, cd && ls
     if(dir.items) {
-        output += '[ran <b>cd ' + path + '</b> then <b>ls</b>]\n';
+        output += '[ran <span class="blue">cd ' + path + '</span> then <span class="blue">ls</span>]\n';
         cdCommand(null, [ path ]);
         output += lsCommand(null, [ '' ]);
         return output;
@@ -98,7 +98,7 @@ const cdCommand = function(options, args) {
     }
     let dir = Directory.parseDir(path);
     if(!dir.items)
-        throw new Error(path+': Not a directory (use <b>open</b> instead)');
+        throw new Error(path+': Not a directory (use <span class="blue">open</span> instead)');
     Directory.setCurrentDirectory(path, dir);
     return true;
 };

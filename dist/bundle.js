@@ -10502,7 +10502,7 @@ const DirectoryList = {
             contents: '#about'
         },
         projects: {
-            items: [ 'EnemyClouds', 'StudentSignIn', 'TheSwanStation', 'FishNet', 'EcoSPAN' ],
+            items: [ 'EnemyClouds', 'StudentSignIn', 'TheSwanStation', 'FishNet', 'EcoSpan' ],
             EnemyClouds: {
                 items: [ 'hi' ],
                 hi: {
@@ -11141,7 +11141,7 @@ const processCommand = function(input) {
 
 
 
-const defaultOutput = __WEBPACK_IMPORTED_MODULE_2__elements__["b" /* $terminalOutput */].html();
+const defaultOutput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('#default-output').html();
 
 const lsCommand = function(options, args, input) {
     let output = '';
@@ -11150,7 +11150,7 @@ const lsCommand = function(options, args, input) {
         dir = args[0];
     }
     let precedingDir = (dir != __WEBPACK_IMPORTED_MODULE_3__directorySystem__["a" /* Directory */].current ? dir + '/' : '').replace('//','/');
-    return __WEBPACK_IMPORTED_MODULE_3__directorySystem__["a" /* Directory */].generateContents(dir) + '\n[type <b>open <i>'+precedingDir+'item-name</i></b> to view an item]';
+    return __WEBPACK_IMPORTED_MODULE_3__directorySystem__["a" /* Directory */].generateContents(dir) + '\n[type <span class="blue">open <i>'+precedingDir+'item-name</i></span> to view an item]';
 };
 
 const gitCommand = function(options, args) {
@@ -11201,7 +11201,7 @@ const openCommand = function(options, args) {
 
     // if it's a directory, cd && ls
     if(dir.items) {
-        output += '[ran <b>cd ' + path + '</b> then <b>ls</b>]\n';
+        output += '[ran <span class="blue">cd ' + path + '</span> then <span class="blue">ls</span>]\n';
         cdCommand(null, [ path ]);
         output += lsCommand(null, [ '' ]);
         return output;
@@ -11236,7 +11236,7 @@ const cdCommand = function(options, args) {
     }
     let dir = __WEBPACK_IMPORTED_MODULE_3__directorySystem__["a" /* Directory */].parseDir(path);
     if(!dir.items)
-        throw new Error(path+': Not a directory (use <b>open</b> instead)');
+        throw new Error(path+': Not a directory (use <span class="blue">open</span> instead)');
     __WEBPACK_IMPORTED_MODULE_3__directorySystem__["a" /* Directory */].setCurrentDirectory(path, dir);
     return true;
 };

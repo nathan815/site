@@ -8,7 +8,7 @@ export const DirectoryList = {
             contents: '#about'
         },
         projects: {
-            items: [ 'EnemyClouds', 'StudentSignIn', 'TheSwanStation', 'FishNet', 'EcoSPAN' ],
+            items: [ 'EnemyClouds', 'StudentSignIn', 'TheSwanStation', 'FishNet', 'EcoSpan' ],
             EnemyClouds: {
                 items: [ 'hi' ],
                 hi: {
