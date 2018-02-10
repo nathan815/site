@@ -118,7 +118,7 @@ export const AllCommands = {
     open: {
         execute: openCommand,
         helpText: 'opens a directory or file and displays its contents',
-        helpEntry: 'Opens a directory or file. \nIf a directory is specified, this will cd to the directory and then execute ls. If an all-text file is specified, it will output its contents to the terminal. Other files will be opened in the default GUI application.',
+        helpEntry: 'Opens a directory or file. \nIf a directory is specified, this will cd to the directory and then execute ls. If a text file is specified, it will output its contents to the terminal. Other files will be opened in the default GUI application.',
         possibleOptions: []
     },
     help: {

@@ -1,23 +1,36 @@
 import $ from 'jquery';
 import KeyCodes from './keyCodes';
+import cookies from 'browser-cookies';
 import { htmlEntities } from './helpers';
 import changeBgColor from './bgColorSystem';
 import TerminalHistory from './terminalHistory';
 import { Directory } from './directorySystem';
-import { processCommand } from './commandSystem';
+import { processCommand, COMMAND_COOKIE_ARR_DIVIDER } from './commandSystem';
 import { $terminalWindow, $terminalOutput, $commandInput } from './elements';
 
 const main = function() {
+
+    // have to focus here instead of autofocus attribute due to
+    // a firefox bug that causes a FOUC when using autofocus attribute
+    $commandInput.focus();
+
+    // fill in last commands when page loads
+    // maintains a sort of state
+    let lastCommands = cookies.get('lastCommands');
+    if(lastCommands) {
+        lastCommands = lastCommands.split(COMMAND_COOKIE_ARR_DIVIDER);
+        for(let i = 0; i < lastCommands.length; i++) {
+            triggerCommand(lastCommands[i]);
+        }
+        cookies.erase('lastCommands');
+    }
+
     $terminalWindow.on('click', function(e) {
         let haveSel = getSelection().toString().length > 0;
         if(!haveSel) {
             $commandInput.focus();
         }
     });
-
-    // have to focus here instead of autofocus attribute due to
-    // a firefox bug that causes a FOUC when using autofocus attribute
-    $commandInput.focus();
 
     $commandInput.on('keydown', function(e) {
         let txt = '';
@@ -41,8 +54,10 @@ const main = function() {
     $('.terminal .buttons div').on('click', changeBgColor);
 };
 
-// start up
-main();
+const triggerCommand = function(command) {
+    $commandInput.val(command);
+    handleEnter(command);
+};
 
 const openPage = function(page) {
     switch(page) {
@@ -62,11 +77,6 @@ const openPage = function(page) {
             scrollTop: $('nav').offset().top
         }, 500);
     }
-}
-
-const triggerCommand = function(command) {
-    $commandInput.val(command);
-    handleEnter(command);
 }
 
 const handleEnter = function(value) {
@@ -106,3 +116,6 @@ const handleInput = function(input) {
         TerminalHistory.stack.up.push(input);
     }
 };
+
+// start up
+main();

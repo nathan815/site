@@ -1,5 +1,8 @@
 import { AllCommands } from './commands';
 import { arrHas } from './helpers';
+import cookies from 'browser-cookies';
+
+export const COMMAND_COOKIE_ARR_DIVIDER = ';__;';
 
 export const processCommand = function(input) {
     input = input.trim();
@@ -37,6 +40,12 @@ export const processCommand = function(input) {
             args.push(part);
         }
     }
+
+    // set last command in cookie
+    let lastCommands = cookies.get('lastCommands') || '';
+    lastCommands = lastCommands.split(COMMAND_COOKIE_ARR_DIVIDER);
+    lastCommands.push(input);
+    cookies.set('lastCommands', lastCommands.join(COMMAND_COOKIE_ARR_DIVIDER));
 
     // console.log("ops=",options);
     // console.log("args=",args);

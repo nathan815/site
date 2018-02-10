@@ -10589,12 +10589,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__keyCodes__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__helpers__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__bgColorSystem__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__terminalHistory__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__directorySystem__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__commandSystem__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__elements__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_browser_cookies__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_browser_cookies__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__helpers__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__bgColorSystem__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__terminalHistory__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__directorySystem__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__commandSystem__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__elements__ = __webpack_require__(1);
+
 
 
 
@@ -10605,18 +10608,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 const main = function() {
-    __WEBPACK_IMPORTED_MODULE_7__elements__["d" /* $terminalWindow */].on('click', function(e) {
-        let haveSel = getSelection().toString().length > 0;
-        if(!haveSel) {
-            __WEBPACK_IMPORTED_MODULE_7__elements__["a" /* $commandInput */].focus();
-        }
-    });
 
     // have to focus here instead of autofocus attribute due to
     // a firefox bug that causes a FOUC when using autofocus attribute
-    __WEBPACK_IMPORTED_MODULE_7__elements__["a" /* $commandInput */].focus();
+    __WEBPACK_IMPORTED_MODULE_8__elements__["a" /* $commandInput */].focus();
 
-    __WEBPACK_IMPORTED_MODULE_7__elements__["a" /* $commandInput */].on('keydown', function(e) {
+    // fill in last commands when page loads
+    // maintains a sort of state
+    let lastCommands = __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.get('lastCommands');
+    if(lastCommands) {
+        lastCommands = lastCommands.split(__WEBPACK_IMPORTED_MODULE_7__commandSystem__["a" /* COMMAND_COOKIE_ARR_DIVIDER */]);
+        for(let i = 0; i < lastCommands.length; i++) {
+            triggerCommand(lastCommands[i]);
+        }
+        __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.erase('lastCommands');
+    }
+
+    __WEBPACK_IMPORTED_MODULE_8__elements__["d" /* $terminalWindow */].on('click', function(e) {
+        let haveSel = getSelection().toString().length > 0;
+        if(!haveSel) {
+            __WEBPACK_IMPORTED_MODULE_8__elements__["a" /* $commandInput */].focus();
+        }
+    });
+
+    __WEBPACK_IMPORTED_MODULE_8__elements__["a" /* $commandInput */].on('keydown', function(e) {
         let txt = '';
         switch(e.which) {
             case __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ENTER:
@@ -10625,7 +10640,7 @@ const main = function() {
             case __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_UP:
             case __WEBPACK_IMPORTED_MODULE_1__keyCodes__["a" /* default */].ARROW_DOWN:
                 e.preventDefault();
-                __WEBPACK_IMPORTED_MODULE_4__terminalHistory__["a" /* default */].handleHistory(e.which);
+                __WEBPACK_IMPORTED_MODULE_5__terminalHistory__["a" /* default */].handleHistory(e.which);
                 break;
         }
     });
@@ -10635,11 +10650,13 @@ const main = function() {
         openPage(__WEBPACK_IMPORTED_MODULE_0_jquery___default()(this).data('page'));
     });
 
-    __WEBPACK_IMPORTED_MODULE_0_jquery___default()('.terminal .buttons div').on('click', __WEBPACK_IMPORTED_MODULE_3__bgColorSystem__["a" /* default */]);
+    __WEBPACK_IMPORTED_MODULE_0_jquery___default()('.terminal .buttons div').on('click', __WEBPACK_IMPORTED_MODULE_4__bgColorSystem__["a" /* default */]);
 };
 
-// start up
-main();
+const triggerCommand = function(command) {
+    __WEBPACK_IMPORTED_MODULE_8__elements__["a" /* $commandInput */].val(command);
+    handleEnter(command);
+};
 
 const openPage = function(page) {
     switch(page) {
@@ -10650,7 +10667,7 @@ const openPage = function(page) {
         case 'about':
         case 'resume':
         case 'contact':
-            let prefix = __WEBPACK_IMPORTED_MODULE_5__directorySystem__["a" /* Directory */].current != '~' ? '~/' : '';
+            let prefix = __WEBPACK_IMPORTED_MODULE_6__directorySystem__["a" /* Directory */].current != '~' ? '~/' : '';
             triggerCommand('open ' + prefix + page);
             break;
     }
@@ -10661,38 +10678,33 @@ const openPage = function(page) {
     }
 }
 
-const triggerCommand = function(command) {
-    __WEBPACK_IMPORTED_MODULE_7__elements__["a" /* $commandInput */].val(command);
-    handleEnter(command);
-}
-
 const handleEnter = function(value) {
-    __WEBPACK_IMPORTED_MODULE_4__terminalHistory__["a" /* default */].clearDownInputStack();
+    __WEBPACK_IMPORTED_MODULE_5__terminalHistory__["a" /* default */].clearDownInputStack();
     handleInput(value);
-    __WEBPACK_IMPORTED_MODULE_7__elements__["d" /* $terminalWindow */].scrollTop(__WEBPACK_IMPORTED_MODULE_7__elements__["d" /* $terminalWindow */].height() + __WEBPACK_IMPORTED_MODULE_7__elements__["b" /* $terminalOutput */].height());
+    __WEBPACK_IMPORTED_MODULE_8__elements__["d" /* $terminalWindow */].scrollTop(__WEBPACK_IMPORTED_MODULE_8__elements__["d" /* $terminalWindow */].height() + __WEBPACK_IMPORTED_MODULE_8__elements__["b" /* $terminalOutput */].height());
 };
 
 const handleInput = function(input) {
     let output;
-    input = Object(__WEBPACK_IMPORTED_MODULE_2__helpers__["b" /* htmlEntities */])(input);
+    input = Object(__WEBPACK_IMPORTED_MODULE_3__helpers__["b" /* htmlEntities */])(input);
 
     try {
-        output = Object(__WEBPACK_IMPORTED_MODULE_6__commandSystem__["a" /* processCommand */])(input);
+        output = Object(__WEBPACK_IMPORTED_MODULE_7__commandSystem__["b" /* processCommand */])(input);
     } catch(e) {
         output = e.message;
     }
 
-    __WEBPACK_IMPORTED_MODULE_7__elements__["a" /* $commandInput */].val('');
+    __WEBPACK_IMPORTED_MODULE_8__elements__["a" /* $commandInput */].val('');
     let fullOutput = '$ ' + input + '\n';
     if(output.length > 0 && output != false && typeof output != 'function') {
         let text = '';
-        if(__WEBPACK_IMPORTED_MODULE_7__elements__["b" /* $terminalOutput */].text() != '') {
+        if(__WEBPACK_IMPORTED_MODULE_8__elements__["b" /* $terminalOutput */].text() != '') {
             text = '\n'
         }
         fullOutput += output + '\n';
     }
     if(output != false) {
-        __WEBPACK_IMPORTED_MODULE_7__elements__["b" /* $terminalOutput */].append(fullOutput);
+        __WEBPACK_IMPORTED_MODULE_8__elements__["b" /* $terminalOutput */].append(fullOutput);
     }
 
     if(typeof output == 'function') {
@@ -10700,9 +10712,12 @@ const handleInput = function(input) {
     }
 
     if(input.length > 0) {
-        __WEBPACK_IMPORTED_MODULE_4__terminalHistory__["a" /* default */].stack.up.push(input);
+        __WEBPACK_IMPORTED_MODULE_5__terminalHistory__["a" /* default */].stack.up.push(input);
     }
 };
+
+// start up
+main();
 
 /***/ }),
 /* 6 */
@@ -11077,7 +11092,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__commands__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__helpers__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_browser_cookies__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_browser_cookies__);
 
+
+
+
+const COMMAND_COOKIE_ARR_DIVIDER = ';__;';
+/* harmony export (immutable) */ __webpack_exports__["a"] = COMMAND_COOKIE_ARR_DIVIDER;
 
 
 const processCommand = function(input) {
@@ -11117,13 +11139,19 @@ const processCommand = function(input) {
         }
     }
 
+    // set last command in cookie
+    let lastCommands = __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.get('lastCommands') || '';
+    lastCommands = lastCommands.split(COMMAND_COOKIE_ARR_DIVIDER);
+    lastCommands.push(input);
+    __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.set('lastCommands', lastCommands.join(COMMAND_COOKIE_ARR_DIVIDER));
+
     // console.log("ops=",options);
     // console.log("args=",args);
 
     let commandResult = command.execute(options, args, input);
     return commandResult ? commandResult : '';
 };
-/* harmony export (immutable) */ __webpack_exports__["a"] = processCommand;
+/* harmony export (immutable) */ __webpack_exports__["b"] = processCommand;
 
 
 /***/ }),
@@ -11256,7 +11284,7 @@ const AllCommands = {
     open: {
         execute: openCommand,
         helpText: 'opens a directory or file and displays its contents',
-        helpEntry: 'Opens a directory or file. \nIf a directory is specified, this will cd to the directory and then execute ls. If an all-text file is specified, it will output its contents to the terminal. Other files will be opened in the default GUI application.',
+        helpEntry: 'Opens a directory or file. \nIf a directory is specified, this will cd to the directory and then execute ls. If a text file is specified, it will output its contents to the terminal. Other files will be opened in the default GUI application.',
         possibleOptions: []
     },
     help: {
@@ -11279,6 +11307,105 @@ const AllCommands = {
     },
 };
 /* harmony export (immutable) */ __webpack_exports__["a"] = AllCommands;
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports) {
+
+exports.defaults = {};
+
+exports.set = function(name, value, options) {
+  // Retrieve options and defaults
+  var opts = options || {};
+  var defaults = exports.defaults;
+
+  // Apply default value for unspecified options
+  var expires  = opts.expires  || defaults.expires;
+  var domain   = opts.domain   || defaults.domain;
+  var path     = opts.path     !== undefined ? opts.path     : (defaults.path !== undefined ? defaults.path : '/');
+  var secure   = opts.secure   !== undefined ? opts.secure   : defaults.secure;
+  var httponly = opts.httponly !== undefined ? opts.httponly : defaults.httponly;
+  var samesite = opts.samesite !== undefined ? opts.samesite : defaults.samesite;
+
+  // Determine cookie expiration date
+  // If succesful the result will be a valid Date, otherwise it will be an invalid Date or false(ish)
+  var expDate = expires ? new Date(
+      // in case expires is an integer, it should specify the number of days till the cookie expires
+      typeof expires === 'number' ? new Date().getTime() + (expires * 864e5) :
+      // else expires should be either a Date object or in a format recognized by Date.parse()
+      expires
+  ) : 0;
+
+  // Set cookie
+  document.cookie = name.replace(/[^+#$&^`|]/g, encodeURIComponent)                // Encode cookie name
+  .replace('(', '%28')
+  .replace(')', '%29') +
+  '=' + value.replace(/[^+#$&/:<-\[\]-}]/g, encodeURIComponent) +                  // Encode cookie value (RFC6265)
+  (expDate && expDate.getTime() >= 0 ? ';expires=' + expDate.toUTCString() : '') + // Add expiration date
+  (domain   ? ';domain=' + domain     : '') +                                      // Add domain
+  (path     ? ';path='   + path       : '') +                                      // Add path
+  (secure   ? ';secure'               : '') +                                      // Add secure option
+  (httponly ? ';httponly'             : '') +                                      // Add httponly option
+  (samesite ? ';samesite=' + samesite : '');                                       // Add samesite option
+};
+
+exports.get = function(name) {
+  var cookies = document.cookie.split(';');
+  
+  // Iterate all cookies
+  while(cookies.length) {
+    var cookie = cookies.pop();
+
+    // Determine separator index ("name=value")
+    var separatorIndex = cookie.indexOf('=');
+
+    // IE<11 emits the equal sign when the cookie value is empty
+    separatorIndex = separatorIndex < 0 ? cookie.length : separatorIndex;
+
+    var cookie_name = decodeURIComponent(cookie.slice(0, separatorIndex).replace(/^\s+/, ''));
+
+    // Return cookie value if the name matches
+    if (cookie_name === name) {
+      return decodeURIComponent(cookie.slice(separatorIndex + 1));
+    }
+  }
+
+  // Return `null` as the cookie was not found
+  return null;
+};
+
+exports.erase = function(name, options) {
+  exports.set(name, '', {
+    expires:  -1,
+    domain:   options && options.domain,
+    path:     options && options.path,
+    secure:   0,
+    httponly: 0}
+  );
+};
+
+exports.all = function() {
+  var all = {};
+  var cookies = document.cookie.split(';');
+
+  // Iterate all cookies
+  while(cookies.length) {
+    var cookie = cookies.pop();
+
+    // Determine separator index ("name=value")
+    var separatorIndex = cookie.indexOf('=');
+
+    // IE<11 emits the equal sign when the cookie value is empty
+    separatorIndex = separatorIndex < 0 ? cookie.length : separatorIndex;
+
+    // add the cookie name and value to the `all` object
+    var cookie_name = decodeURIComponent(cookie.slice(0, separatorIndex).replace(/^\s+/, ''));
+    all[cookie_name] = decodeURIComponent(cookie.slice(separatorIndex + 1));
+  }
+
+  return all;
+};
 
 
 /***/ })
