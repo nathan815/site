@@ -94,7 +94,7 @@ footer {
     color: #999;
 }
 .terminal .titlebar {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 .terminal .content {
