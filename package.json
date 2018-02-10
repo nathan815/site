@@ -24,7 +24,6 @@
     "webpack-notifier": "^1.5.1"
   },
   "dependencies": {
-    "history": "^4.7.2",
     "jquery": "^3.3.1",
     "pdfobject": "^2.0.201604172"
   }

@@ -75,6 +75,7 @@ footer {
     position: relative;
     margin: 30px auto;
     background: #263238;
+    opacity: 0.95;
 }
 .terminal .blue,
 .terminal b {

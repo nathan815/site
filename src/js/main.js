@@ -1,38 +1,10 @@
 import $ from 'jquery';
-import { createHashHistory } from 'history';
-
 import KeyCodes from './keyCodes';
 import { htmlEntities } from './helpers';
 import TerminalHistory from './terminalHistory';
 import { Directory } from './directorySystem';
 import { processCommand } from './commandSystem';
 import { $terminalWindow, $terminalOutput, $commandInput } from './elements';
-
-$(function() {
-
-});
-
-$('nav a').on('click', function(e) {
-    e.preventDefault();
-    openPage($(this).data('page'));
-    /*$('nav a').removeClass('current');
-    $(this).addClass('current');*/
-});
-
-const openPage = function(page) {
-    switch(page) {
-        case 'home':
-            triggerCommand('cd ~');
-            break;
-        case 'projects':
-        case 'about':
-        case 'resume':
-        case 'contact':
-            let prefix = Directory.current != '~' ? '~/' : '';
-            triggerCommand('open ' + prefix + page);
-            break;
-    }
-}
 
 $terminalWindow.on('click', function(e) {
     let haveSel = getSelection().toString().length > 0;
@@ -54,6 +26,26 @@ $commandInput.on('keydown', function(e) {
             break;
     }
 });
+
+$('nav a').on('click', function(e) {
+    e.preventDefault();
+    openPage($(this).data('page'));
+});
+
+const openPage = function(page) {
+    switch(page) {
+        case 'home':
+            triggerCommand('cd ~');
+            break;
+        case 'projects':
+        case 'about':
+        case 'resume':
+        case 'contact':
+            let prefix = Directory.current != '~' ? '~/' : '';
+            triggerCommand('open ' + prefix + page);
+            break;
+    }
+}
 
 const triggerCommand = function(command) {
     $commandInput.val(command);

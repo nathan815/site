@@ -17,7 +17,6 @@ export const DirectoryList = {
             }
         },
         resume: {
-            contents: 'Opening resume in PDF viewer...',
             execute: openResume
         },
         contact: {
