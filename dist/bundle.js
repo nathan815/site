@@ -10619,7 +10619,9 @@ const main = function() {
     if(lastCommands) {
         lastCommands = lastCommands.split(__WEBPACK_IMPORTED_MODULE_7__commandSystem__["a" /* COMMAND_COOKIE_ARR_DIVIDER */]);
         for(let i = 0; i < lastCommands.length; i++) {
-            triggerCommand(lastCommands[i]);
+            // only run command if it's not open resume, or it is open resume and the last one
+            if(lastCommands[i].indexOf('resume') < 0 || i == lastCommands.length-1)
+                triggerCommand(lastCommands[i]);
         }
         __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.erase('lastCommands');
     }
@@ -10661,7 +10663,7 @@ const triggerCommand = function(command) {
 const openPage = function(page) {
     switch(page) {
         case 'home':
-            triggerCommand('cd ~');
+            triggerCommand('open ~');
             break;
         case 'projects':
         case 'about':
