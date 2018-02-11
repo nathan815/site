@@ -10503,19 +10503,19 @@ const DirectoryList = {
         },
         projects: {
             items: [ 'EnemyClouds', 'StudentSignIn', 'SwanStation', 'FishNet', 'EcoSpan' ],
-            EnemyClouds: {
+            enemyclouds: {
                 contents: '#project-enemy-clouds'
             },
-            StudentSignIn: {
+            studentsignin: {
                 contents: '#project-student-signin'
             },
-            SwanStation: {
+            swanstation: {
                 contents: '#project-swan-station'
             },
-            FishNet: {
+            fishnet: {
                 contents: '#project-fishnet'
             },
-            EcoSpan: {
+            ecospan: {
                 contents: '#project-ecospan'
             }
         },
@@ -10565,7 +10565,7 @@ Directory.parseDir = function(path) {
         let part = parts[i];
         if(part.trim() == '' || part == '.') 
             continue;
-        if(dir[part] == undefined)
+        if(dir[part.toLowerCase()] == undefined)
             throw new Error(path+': No such file or directory');
         dir = dir[part];
     }
@@ -10646,7 +10646,7 @@ const main = function() {
 
     __WEBPACK_IMPORTED_MODULE_0_jquery___default()('nav a').on('click', function(e) {
         e.preventDefault();
-        openPage(__WEBPACK_IMPORTED_MODULE_0_jquery___default()(this).data('page'));
+        openPage(__WEBPACK_IMPORTED_MODULE_0_jquery___default()(this).text());
     });
 
     __WEBPACK_IMPORTED_MODULE_0_jquery___default()('.terminal .buttons div').on('click', __WEBPACK_IMPORTED_MODULE_3__bgColorSystem__["a" /* default */]);

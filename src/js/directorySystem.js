@@ -9,19 +9,19 @@ export const DirectoryList = {
         },
         projects: {
             items: [ 'EnemyClouds', 'StudentSignIn', 'SwanStation', 'FishNet', 'EcoSpan' ],
-            EnemyClouds: {
+            enemyclouds: {
                 contents: '#project-enemy-clouds'
             },
-            StudentSignIn: {
+            studentsignin: {
                 contents: '#project-student-signin'
             },
-            SwanStation: {
+            swanstation: {
                 contents: '#project-swan-station'
             },
-            FishNet: {
+            fishnet: {
                 contents: '#project-fishnet'
             },
-            EcoSpan: {
+            ecospan: {
                 contents: '#project-ecospan'
             }
         },
@@ -69,7 +69,7 @@ Directory.parseDir = function(path) {
         let part = parts[i];
         if(part.trim() == '' || part == '.') 
             continue;
-        if(dir[part] == undefined)
+        if(dir[part.toLowerCase()] == undefined)
             throw new Error(path+': No such file or directory');
         dir = dir[part];
     }

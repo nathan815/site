@@ -40,7 +40,7 @@ const main = function() {
 
     $('nav a').on('click', function(e) {
         e.preventDefault();
-        openPage($(this).data('page'));
+        openPage($(this).text());
     });
 
     $('.terminal .buttons div').on('click', changeBgColor);
