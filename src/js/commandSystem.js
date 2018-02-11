@@ -5,7 +5,17 @@ import cookies from 'browser-cookies';
 const COMMAND_COOKIE_NAME = 'lastCommands';
 const COMMAND_COOKIE_ARR_DIVIDER = ';__;';
 
-export const fillLastCommands = function(callback) {
+export const deleteLastSavedCommand = function() {
+    let lastCommands = cookies.get(COMMAND_COOKIE_NAME);
+    if(!lastCommands) {
+        return;
+    }
+    lastCommands = lastCommands.split(COMMAND_COOKIE_ARR_DIVIDER);
+    lastCommands.pop();
+    cookies.set(COMMAND_COOKIE_NAME, lastCommands.join(COMMAND_COOKIE_ARR_DIVIDER));
+};
+
+export const runSavedCommands = function(callback) {
     let lastCommands = cookies.get(COMMAND_COOKIE_NAME);
     if(!lastCommands) {
         return;
@@ -18,6 +28,13 @@ export const fillLastCommands = function(callback) {
         }
     }
     cookies.erase(COMMAND_COOKIE_NAME);
+};
+
+const addToSavedCommands = function(val) {
+    let lastCommands = cookies.get(COMMAND_COOKIE_NAME) || '';
+    lastCommands = lastCommands.split(COMMAND_COOKIE_ARR_DIVIDER);
+    lastCommands.push(val);
+    cookies.set(COMMAND_COOKIE_NAME, lastCommands.join(COMMAND_COOKIE_ARR_DIVIDER));
 };
 
 export const processCommand = function(input) {
@@ -58,10 +75,7 @@ export const processCommand = function(input) {
     }
 
     // set last command in cookie
-    let lastCommands = cookies.get(COMMAND_COOKIE_NAME) || '';
-    lastCommands = lastCommands.split(COMMAND_COOKIE_ARR_DIVIDER);
-    lastCommands.push(input);
-    cookies.set(COMMAND_COOKIE_NAME, lastCommands.join(COMMAND_COOKIE_ARR_DIVIDER));
+    addToSavedCommands(input);
 
     // console.log("ops=",options);
     // console.log("args=",args);

@@ -8,12 +8,21 @@ export const DirectoryList = {
             contents: '#about'
         },
         projects: {
-            items: [ 'EnemyClouds', 'StudentSignIn', 'TheSwanStation', 'FishNet', 'EcoSpan' ],
+            items: [ 'EnemyClouds', 'StudentSignIn', 'SwanStation', 'FishNet', 'EcoSpan' ],
             EnemyClouds: {
-                items: [ 'hi' ],
-                hi: {
-                    items: [ 'hello' , 'world']
-                }
+                contents: '#project-enemy-clouds'
+            },
+            StudentSignIn: {
+                contents: '#project-student-signin'
+            },
+            SwanStation: {
+                contents: '#project-swan-station'
+            },
+            FishNet: {
+                contents: '#project-fishnet'
+            },
+            EcoSpan: {
+                contents: '#project-ecospan'
             }
         },
         resume: {

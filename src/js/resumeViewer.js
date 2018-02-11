@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import PDFObject from 'pdfobject';
+import { deleteLastSavedCommand } from './commandSystem';
 
 const $resumeContainer = $('#resume-viewer-container');
 const $resumeContent = $('#resume-viewer-container .content');
@@ -12,6 +13,7 @@ export const openResume = function() {
     });
     $resumeClose.off('click').on('click', function() {
         $resumeContainer.fadeOut(250);
+        deleteLastSavedCommand();
     });
     $resumeContent.css('height',$(window).width()+50);
     $resumeContainer.fadeIn(250);

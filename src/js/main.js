@@ -4,7 +4,7 @@ import { htmlEntities } from './helpers';
 import changeBgColor from './bgColorSystem';
 import TerminalHistory from './terminalHistory';
 import { Directory } from './directorySystem';
-import { processCommand, fillLastCommands } from './commandSystem';
+import { processCommand, runSavedCommands } from './commandSystem';
 import { $terminalWindow, $terminalOutput, $commandInput } from './elements';
 
 const main = function() {
@@ -15,7 +15,7 @@ const main = function() {
 
     // fill in last commands when page loads
     // maintains a sort of state
-    fillLastCommands(triggerCommand);
+    runSavedCommands(triggerCommand);
 
     $terminalWindow.on('click', function(e) {
         let haveSel = getSelection().toString().length > 0;

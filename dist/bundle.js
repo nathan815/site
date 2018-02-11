@@ -10502,12 +10502,21 @@ const DirectoryList = {
             contents: '#about'
         },
         projects: {
-            items: [ 'EnemyClouds', 'StudentSignIn', 'TheSwanStation', 'FishNet', 'EcoSpan' ],
+            items: [ 'EnemyClouds', 'StudentSignIn', 'SwanStation', 'FishNet', 'EcoSpan' ],
             EnemyClouds: {
-                items: [ 'hi' ],
-                hi: {
-                    items: [ 'hello' , 'world']
-                }
+                contents: '#project-enemy-clouds'
+            },
+            StudentSignIn: {
+                contents: '#project-student-signin'
+            },
+            SwanStation: {
+                contents: '#project-swan-station'
+            },
+            FishNet: {
+                contents: '#project-fishnet'
+            },
+            EcoSpan: {
+                contents: '#project-ecospan'
             }
         },
         resume: {
@@ -10612,7 +10621,7 @@ const main = function() {
 
     // fill in last commands when page loads
     // maintains a sort of state
-    Object(__WEBPACK_IMPORTED_MODULE_6__commandSystem__["a" /* fillLastCommands */])(triggerCommand);
+    Object(__WEBPACK_IMPORTED_MODULE_6__commandSystem__["c" /* runSavedCommands */])(triggerCommand);
 
     __WEBPACK_IMPORTED_MODULE_7__elements__["d" /* $terminalWindow */].on('click', function(e) {
         let haveSel = getSelection().toString().length > 0;
@@ -10789,6 +10798,8 @@ const TerminalHistory = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_pdfobject__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_pdfobject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_pdfobject__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__commandSystem__ = __webpack_require__(10);
+
 
 
 
@@ -10803,6 +10814,7 @@ const openResume = function() {
     });
     $resumeClose.off('click').on('click', function() {
         $resumeContainer.fadeOut(250);
+        Object(__WEBPACK_IMPORTED_MODULE_2__commandSystem__["a" /* deleteLastSavedCommand */])();
     });
     $resumeContent.css('height',__WEBPACK_IMPORTED_MODULE_0_jquery___default()(window).width()+50);
     $resumeContainer.fadeIn(250);
@@ -11091,7 +11103,19 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 const COMMAND_COOKIE_NAME = 'lastCommands';
 const COMMAND_COOKIE_ARR_DIVIDER = ';__;';
 
-const fillLastCommands = function(callback) {
+const deleteLastSavedCommand = function() {
+    let lastCommands = __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.get(COMMAND_COOKIE_NAME);
+    if(!lastCommands) {
+        return;
+    }
+    lastCommands = lastCommands.split(COMMAND_COOKIE_ARR_DIVIDER);
+    lastCommands.pop();
+    __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.set(COMMAND_COOKIE_NAME, lastCommands.join(COMMAND_COOKIE_ARR_DIVIDER));
+};
+/* harmony export (immutable) */ __webpack_exports__["a"] = deleteLastSavedCommand;
+
+
+const runSavedCommands = function(callback) {
     let lastCommands = __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.get(COMMAND_COOKIE_NAME);
     if(!lastCommands) {
         return;
@@ -11105,8 +11129,15 @@ const fillLastCommands = function(callback) {
     }
     __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.erase(COMMAND_COOKIE_NAME);
 };
-/* harmony export (immutable) */ __webpack_exports__["a"] = fillLastCommands;
+/* harmony export (immutable) */ __webpack_exports__["c"] = runSavedCommands;
 
+
+const addToSavedCommands = function(val) {
+    let lastCommands = __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.get(COMMAND_COOKIE_NAME) || '';
+    lastCommands = lastCommands.split(COMMAND_COOKIE_ARR_DIVIDER);
+    lastCommands.push(val);
+    __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.set(COMMAND_COOKIE_NAME, lastCommands.join(COMMAND_COOKIE_ARR_DIVIDER));
+};
 
 const processCommand = function(input) {
     input = input.trim();
@@ -11146,10 +11177,7 @@ const processCommand = function(input) {
     }
 
     // set last command in cookie
-    let lastCommands = __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.get(COMMAND_COOKIE_NAME) || '';
-    lastCommands = lastCommands.split(COMMAND_COOKIE_ARR_DIVIDER);
-    lastCommands.push(input);
-    __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.set(COMMAND_COOKIE_NAME, lastCommands.join(COMMAND_COOKIE_ARR_DIVIDER));
+    addToSavedCommands(input);
 
     // console.log("ops=",options);
     // console.log("args=",args);
