@@ -15,11 +15,28 @@
                     <li><a href="#" title="open ~/">home</a></li>
                     <li><a href="#" title="open ~/about">about</a></li>
                     <li><a href="#" title="open ~/projects">projects</a></li>
-                    <li><a href="#" title="open ~/resume">resume</a></li>
+                    <li><a href="resume.pdf" title="open ~/resume">resume</a></li>
                     <li><a href="#" title="open ~/contact">contact</a></li>
                 </ul>
             </nav>
         </header>
+
+        <div class="terminal mac-window">
+            <div class="titlebar">
+                <div class="buttons">
+                    <div class="close" data-color="red"><span>&times;</span></div>
+                    <div class="minimize" data-color="yellow"><span>&ndash;</span></div>
+                    <div class="zoom" data-color="green"><span>+</span></div>
+                </div>
+                Terminal &mdash; bash <span id="current-directory">~</span>
+            </div>
+            <div class="content" id="window">
+                <div id="output">Welcome to nathanieljohnson.me<br>Navigate by using commands or clicking links above<br><span id="default-output">Type <span class="blue">ls</span> for item listing, or <span class="blue">help</span> for a list of commands<br></span></div>
+                <div class="command-input">
+                    $ <input type="text" id="command" spellcheck="false" autocomplete="false" autocorrect="off" autocapitalize="off" />
+                </div>
+            </div>
+        </div>
 
         <!-- hidden, used in terminal -->
         <div class="pages">
@@ -47,23 +64,6 @@
             </div>
             <div id="project-student-signin">
                 <b>Student Sign In (Feb 2018, Ongoing)</b> <br>description coming soon<br><a href="https://github.com/nathan815/studentsignin-app" target="_blank">app repo</a> - <a href="https://github.com/nathan815/studentsignin-api" target="_blank">web api repo</a>
-            </div>
-        </div>
-
-        <div class="terminal mac-window">
-            <div class="titlebar">
-                <div class="buttons">
-                    <div class="close" data-color="red"><span>&times;</span></div>
-                    <div class="minimize" data-color="yellow"><span>&ndash;</span></div>
-                    <div class="zoom" data-color="green"><span>+</span></div>
-                </div>
-                Terminal &mdash; bash <span id="current-directory">~</span>
-            </div>
-            <div class="content" id="window">
-                <div id="output">Welcome to nathanieljohnson.me<br>Navigate by using commands or clicking links above<br><span id="default-output">Type <span class="blue">ls</span> for item listing, or <span class="blue">help</span> for a list of commands<br></span></div>
-                <div class="command-input">
-                    $ <input type="text" id="command" spellcheck="false" autocomplete="false" autocorrect="off" autocapitalize="off" />
-                </div>
             </div>
         </div>
 
