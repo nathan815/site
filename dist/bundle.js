@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -10491,7 +10491,7 @@ const htmlEntities = function(str) {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Directory; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__elements__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__resumeViewer__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__resumeViewer__ = __webpack_require__(9);
 
 
 
@@ -10562,10 +10562,10 @@ Directory.parseDir = function(path) {
 
     // loop through each part of directory
     for(let i = 0; i < parts.length; i++) {
-        let part = parts[i];
-        if(part.trim() == '' || part == '.') 
+        let part = parts[i].trim().toLowerCase();
+        if(part == '' || part == '.') 
             continue;
-        if(dir[part.toLowerCase()] == undefined)
+        if(dir[part] == undefined)
             throw new Error(path+': No such file or directory');
         dir = dir[part];
     }
@@ -10594,15 +10594,116 @@ Directory.generateContents = function(path) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__commands__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__helpers__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_browser_cookies__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_browser_cookies__);
+
+
+
+
+const COMMAND_COOKIE_NAME = 'lastCommands';
+const COMMAND_COOKIE_ARR_DIVIDER = ';__;';
+
+const deleteLastSavedCommand = function() {
+    let lastCommands = __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.get(COMMAND_COOKIE_NAME);
+    if(!lastCommands) {
+        return;
+    }
+    lastCommands = lastCommands.split(COMMAND_COOKIE_ARR_DIVIDER);
+    lastCommands.pop();
+    __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.set(COMMAND_COOKIE_NAME, lastCommands.join(COMMAND_COOKIE_ARR_DIVIDER));
+};
+/* harmony export (immutable) */ __webpack_exports__["a"] = deleteLastSavedCommand;
+
+
+const runSavedCommands = function(callback) {
+    let lastCommands = __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.get(COMMAND_COOKIE_NAME);
+    if(!lastCommands) {
+        return;
+    }
+    lastCommands = lastCommands.split(COMMAND_COOKIE_ARR_DIVIDER);
+    for(let i = 0; i < lastCommands.length; i++) {
+        // only run open resume command if it is the last one
+        if(lastCommands[i].indexOf('resume') < 0 || i == lastCommands.length-1) {
+            callback(lastCommands[i]);
+        }
+    }
+    __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.erase(COMMAND_COOKIE_NAME);
+};
+/* harmony export (immutable) */ __webpack_exports__["c"] = runSavedCommands;
+
+
+const addToSavedCommands = function(val) {
+    let lastCommands = __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.get(COMMAND_COOKIE_NAME) || '';
+    lastCommands = lastCommands.split(COMMAND_COOKIE_ARR_DIVIDER);
+    lastCommands.push(val);
+    __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.set(COMMAND_COOKIE_NAME, lastCommands.join(COMMAND_COOKIE_ARR_DIVIDER));
+};
+
+const processCommand = function(input) {
+    input = input.trim();
+    if(input == '')
+        return '';
+    let parts = input.split(' ');
+    // remove blank "parts" so double spaces don't screw things up
+    for(let i = 0; i < parts.length; i++) {
+        if(parts[i].trim() == '')
+            parts.splice(i, 1);
+    }
+    const commandName = parts[0];
+    const command = __WEBPACK_IMPORTED_MODULE_0__commands__["a" /* AllCommands */][commandName];
+    const options = [];
+    const args = [];
+
+    if(command === undefined) {
+        throw new Error('-bash: '+commandName+': command not found');
+    }
+
+    parts = parts.splice(1);
+    // parse options and arguments
+    for(let i = 0; i < parts.length; i++) {
+        let part = parts[i];
+        if(part.indexOf('--') == 0 || part.indexOf('-') == 0) {
+            // get rid of the leading dashes
+            part = part.indexOf('--') == 0 ? part.slice(2) : part.slice(1);
+            // make sure option is possible
+            if(!Object(__WEBPACK_IMPORTED_MODULE_1__helpers__["a" /* arrHas */])(command.possibleOptions, part)) {
+                throw new Error(commandName + ' - Unknown option: '+part);
+            }
+            options.push(part);
+        }
+        else {
+            args.push(part);
+        }
+    }
+
+    // set last command in cookie
+    addToSavedCommands(input);
+
+    // console.log("ops=",options);
+    // console.log("args=",args);
+
+    let commandResult = command.execute(options, args, input);
+    return commandResult ? commandResult : '';
+};
+/* harmony export (immutable) */ __webpack_exports__["b"] = processCommand;
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__keyCodes__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__helpers__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__bgColorSystem__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__terminalHistory__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__bgColorSystem__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__terminalHistory__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__directorySystem__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__commandSystem__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__commandSystem__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__elements__ = __webpack_require__(1);
 
 
@@ -10719,7 +10820,7 @@ const handleInput = function(input) {
 main();
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10746,7 +10847,7 @@ const changeBgColor = function() {
 /* harmony default export */ __webpack_exports__["a"] = (changeBgColor);
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10790,15 +10891,15 @@ const TerminalHistory = {
 /* harmony default export */ __webpack_exports__["a"] = (TerminalHistory);
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_pdfobject__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_pdfobject__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_pdfobject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_pdfobject__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__commandSystem__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__commandSystem__ = __webpack_require__(5);
 
 
 
@@ -10826,7 +10927,7 @@ const openResume = function() {
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*global ActiveXObject, window, console, define, module, jQuery */
@@ -11086,107 +11187,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     };
 
 }));
-
-/***/ }),
-/* 10 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__commands__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__helpers__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_browser_cookies__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_browser_cookies__);
-
-
-
-
-const COMMAND_COOKIE_NAME = 'lastCommands';
-const COMMAND_COOKIE_ARR_DIVIDER = ';__;';
-
-const deleteLastSavedCommand = function() {
-    let lastCommands = __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.get(COMMAND_COOKIE_NAME);
-    if(!lastCommands) {
-        return;
-    }
-    lastCommands = lastCommands.split(COMMAND_COOKIE_ARR_DIVIDER);
-    lastCommands.pop();
-    __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.set(COMMAND_COOKIE_NAME, lastCommands.join(COMMAND_COOKIE_ARR_DIVIDER));
-};
-/* harmony export (immutable) */ __webpack_exports__["a"] = deleteLastSavedCommand;
-
-
-const runSavedCommands = function(callback) {
-    let lastCommands = __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.get(COMMAND_COOKIE_NAME);
-    if(!lastCommands) {
-        return;
-    }
-    lastCommands = lastCommands.split(COMMAND_COOKIE_ARR_DIVIDER);
-    for(let i = 0; i < lastCommands.length; i++) {
-        // only run open resume command if it is the last one
-        if(lastCommands[i].indexOf('resume') < 0 || i == lastCommands.length-1) {
-            callback(lastCommands[i]);
-        }
-    }
-    __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.erase(COMMAND_COOKIE_NAME);
-};
-/* harmony export (immutable) */ __webpack_exports__["c"] = runSavedCommands;
-
-
-const addToSavedCommands = function(val) {
-    let lastCommands = __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.get(COMMAND_COOKIE_NAME) || '';
-    lastCommands = lastCommands.split(COMMAND_COOKIE_ARR_DIVIDER);
-    lastCommands.push(val);
-    __WEBPACK_IMPORTED_MODULE_2_browser_cookies___default.a.set(COMMAND_COOKIE_NAME, lastCommands.join(COMMAND_COOKIE_ARR_DIVIDER));
-};
-
-const processCommand = function(input) {
-    input = input.trim();
-    if(input == '')
-        return '';
-    let parts = input.split(' ');
-    // remove blank "parts" so double spaces don't screw things up
-    for(let i = 0; i < parts.length; i++) {
-        if(parts[i].trim() == '')
-            parts.splice(i, 1);
-    }
-    const commandName = parts[0];
-    const command = __WEBPACK_IMPORTED_MODULE_0__commands__["a" /* AllCommands */][commandName];
-    const options = [];
-    const args = [];
-
-    if(command === undefined) {
-        throw new Error('-bash: '+commandName+': command not found');
-    }
-
-    parts = parts.splice(1);
-    // parse options and arguments
-    for(let i = 0; i < parts.length; i++) {
-        let part = parts[i];
-        if(part.indexOf('--') == 0 || part.indexOf('-') == 0) {
-            // get rid of the leading dashes
-            part = part.indexOf('--') == 0 ? part.slice(2) : part.slice(1);
-            // make sure option is possible
-            if(!Object(__WEBPACK_IMPORTED_MODULE_1__helpers__["a" /* arrHas */])(command.possibleOptions, part)) {
-                throw new Error(commandName + ' - Unknown option: '+part);
-            }
-            options.push(part);
-        }
-        else {
-            args.push(part);
-        }
-    }
-
-    // set last command in cookie
-    addToSavedCommands(input);
-
-    // console.log("ops=",options);
-    // console.log("args=",args);
-
-    let commandResult = command.execute(options, args, input);
-    return commandResult ? commandResult : '';
-};
-/* harmony export (immutable) */ __webpack_exports__["b"] = processCommand;
-
 
 /***/ }),
 /* 11 */

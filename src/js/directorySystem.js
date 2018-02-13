@@ -66,10 +66,10 @@ Directory.parseDir = function(path) {
 
     // loop through each part of directory
     for(let i = 0; i < parts.length; i++) {
-        let part = parts[i];
-        if(part.trim() == '' || part == '.') 
+        let part = parts[i].trim().toLowerCase();
+        if(part == '' || part == '.') 
             continue;
-        if(dir[part.toLowerCase()] == undefined)
+        if(dir[part] == undefined)
             throw new Error(path+': No such file or directory');
         dir = dir[part];
     }
