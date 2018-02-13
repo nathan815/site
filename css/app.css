@@ -101,7 +101,7 @@ footer {
     font-size: 14px;
     cursor: text;
     padding: 5px 7px;
-    overflow-y: scroll;
+    overflow-y: auto;
     height: 90%;
 }
 .terminal .content #output {
