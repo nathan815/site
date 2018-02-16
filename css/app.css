@@ -78,7 +78,7 @@ footer {
 
 .terminal {
     width: 90%;
-    height: 450px;
+    height: auto;
     position: relative;
     margin: 30px auto;
     background: #263238;
@@ -96,13 +96,13 @@ footer {
 
 .terminal .content {
     background: none;
+    height: 400px;
     z-index: 2;
     color: #eee;
     font-size: 14px;
     cursor: text;
     padding: 5px 7px;
     overflow-y: auto;
-    height: 90%;
 }
 .terminal .content #output {
     white-space: pre-wrap;
