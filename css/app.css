@@ -1,20 +1,20 @@
 @import url('https://fonts.googleapis.com/css?family=Raleway');
 
 body {
-    background: #0e4e83 url('../img/fabric-light.png') fixed;
+    background: #193954 url('../img/fabric-light.png') fixed;
     font-family: Menlo, Monaco, 'Courier New', Courier, monospace;
     padding: 0;
     margin: 0;
     transition: background 0.4s ease-in;
 }
 body.red {
-    background-color: #7b1111;
+    background-color: #651415;
 }
 body.yellow {
-    background-color: #715e04;
+    background-color: #544f14;
 }
 body.green {
-    background-color: #005a1d;
+    background-color: #174c28;
 }
 
 a {
