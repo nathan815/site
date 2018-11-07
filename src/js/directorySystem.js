@@ -8,11 +8,14 @@ export const DirectoryList = {
             contents: '#about'
         },
         projects: {
-            items: [  'SwanStation', '2018Internship', 'ReactNative', 'EnemyClouds', 'FishNet', 'EcoSpan' ],
+            items: [  'SwanStation', 'Internship2018', 'FastAndMobile', 'EnemyClouds', 'FishNet', 'EcoSpan' ],
             swanstation: {
                 contents: '#project-swan-station'
             },
-            lazofflinebooks: {
+            fastandmobile: {
+                contents: '#fastandmobile-presentation'
+            },
+            internship2018: {
                 contents: '#project-laz-offline-books'
             },
             enemyclouds: {
