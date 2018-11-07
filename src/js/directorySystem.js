@@ -8,15 +8,15 @@ export const DirectoryList = {
             contents: '#about'
         },
         projects: {
-            items: [ 'EnemyClouds', 'StudentSignIn', 'SwanStation', 'FishNet', 'EcoSpan' ],
-            enemyclouds: {
-                contents: '#project-enemy-clouds'
-            },
-            studentsignin: {
-                contents: '#project-student-signin'
-            },
+            items: [  'SwanStation', '2018Internship', 'ReactNative', 'EnemyClouds', 'FishNet', 'EcoSpan' ],
             swanstation: {
                 contents: '#project-swan-station'
+            },
+            lazofflinebooks: {
+                contents: '#project-laz-offline-books'
+            },
+            enemyclouds: {
+                contents: '#project-enemy-clouds'
             },
             fishnet: {
                 contents: '#project-fishnet'
@@ -79,16 +79,19 @@ Directory.parseDir = function(path) {
 Directory.generateContents = function(path) {
     let output = '';
     let dir = Directory.parseDir(path);
+    const columnWidth = 20;
 
     // loop through the items in the directory
     if(!dir.items)
         throw new Error(path + ': No such directory');
     for(let i = 0; i < dir.items.length; i++) {
-        output += dir.items[i];
-        if(i % 2 && i != 0 && i != dir.items.length-1) 
+        const item = dir.items[i];
+        output += `<a href="#" data-command="open ${path}/${item}">${item}</a>`;
+        if(i % 2 && i != 0 && i != dir.items.length-1) {
             output += '\n';
-        else
-            output += '\t\t';
+        } else {
+            output += " ".repeat(columnWidth - dir.items[i].length);
+        }
     }
     return output;
 };

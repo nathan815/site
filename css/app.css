@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Raleway');
 
 body {
-    background: #193954 url('../img/fabric-light.png') fixed;
+    background: #0e5d8a url('../img/fabric-light.png') fixed;
     font-family: Menlo, Monaco, 'Courier New', Courier, monospace;
     padding: 0;
     margin: 0;
@@ -46,9 +46,13 @@ header h1 {
     color: #fff;
 }
 header img {
-    width: 100px;
+    width: 120px;
     border-radius: 50%;
     box-shadow: 0 0 3px rgba(0,0,0,0.4);
+    transition: transform 0.3s;
+}
+header img:hover {
+    transform: scale(1.2);
 }
 header nav ul {
     list-style: none;
@@ -81,7 +85,7 @@ footer {
     height: auto;
     position: relative;
     margin: 30px auto;
-    background: #263238;
+    background: rgba(16, 29, 35, 0.63);
     opacity: 0.95;
     line-height: 18px;
     color: #fafafa;
@@ -103,6 +107,9 @@ footer {
     cursor: text;
     padding: 5px 7px;
     overflow-y: auto;
+    border: 1px solid rgba(10, 31, 41, 0.24);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 .terminal .content #output {
     white-space: pre-wrap;
@@ -132,7 +139,7 @@ footer {
 
 #resume-viewer-container {
     position: absolute;
-    top: 110px;
+    top: 135px;
     left: 0;
     display: none;
     z-index: 3;

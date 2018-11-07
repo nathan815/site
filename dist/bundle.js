@@ -10449,11 +10449,15 @@ const $terminalWindow = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#wind
 const $terminalOutput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#output');
 /* harmony export (immutable) */ __webpack_exports__["b"] = $terminalOutput;
 
+const $directoryLinks = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('div#output a[data-directory]');
+/* unused harmony export $directoryLinks */
+
 const $terminalTitle = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('span#current-directory');
 /* harmony export (immutable) */ __webpack_exports__["c"] = $terminalTitle;
 
 const $commandInput = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('input#command');
 /* harmony export (immutable) */ __webpack_exports__["a"] = $commandInput;
+
 
 
 /***/ }),
@@ -10502,15 +10506,15 @@ const DirectoryList = {
             contents: '#about'
         },
         projects: {
-            items: [ 'EnemyClouds', 'StudentSignIn', 'SwanStation', 'FishNet', 'EcoSpan' ],
-            enemyclouds: {
-                contents: '#project-enemy-clouds'
-            },
-            studentsignin: {
-                contents: '#project-student-signin'
-            },
+            items: [  'SwanStation', '2018Internship', 'ReactNative', 'EnemyClouds', 'FishNet', 'EcoSpan' ],
             swanstation: {
                 contents: '#project-swan-station'
+            },
+            lazofflinebooks: {
+                contents: '#project-laz-offline-books'
+            },
+            enemyclouds: {
+                contents: '#project-enemy-clouds'
             },
             fishnet: {
                 contents: '#project-fishnet'
@@ -10575,19 +10579,23 @@ Directory.parseDir = function(path) {
 Directory.generateContents = function(path) {
     let output = '';
     let dir = Directory.parseDir(path);
+    const columnWidth = 20;
 
     // loop through the items in the directory
     if(!dir.items)
         throw new Error(path + ': No such directory');
     for(let i = 0; i < dir.items.length; i++) {
-        output += dir.items[i];
-        if(i % 2 && i != 0 && i != dir.items.length-1) 
+        const item = dir.items[i];
+        output += `<a href="#" data-command="open ${path}/${item}">${item}</a>`;
+        if(i % 2 && i != 0 && i != dir.items.length-1) {
             output += '\n';
-        else
-            output += '\t\t';
+        } else {
+            output += " ".repeat(columnWidth - dir.items[i].length);
+        }
     }
     return output;
 };
+
 
 /***/ }),
 /* 5 */
@@ -10751,6 +10759,12 @@ const main = function() {
     });
 
     __WEBPACK_IMPORTED_MODULE_0_jquery___default()('.terminal .buttons div').on('click', __WEBPACK_IMPORTED_MODULE_3__bgColorSystem__["a" /* default */]);
+
+    __WEBPACK_IMPORTED_MODULE_0_jquery___default()('body').on('click', 'a[data-command]', function(e) {
+        e.preventDefault();
+        const command = __WEBPACK_IMPORTED_MODULE_0_jquery___default()(this).attr('data-command');
+        triggerCommand(command);
+    });
 };
 
 const triggerCommand = function(command) {
@@ -10818,6 +10832,7 @@ const handleInput = function(input) {
 
 // start up
 main();
+
 
 /***/ }),
 /* 7 */

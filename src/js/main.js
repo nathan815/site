@@ -5,7 +5,7 @@ import changeBgColor from './bgColorSystem';
 import TerminalHistory from './terminalHistory';
 import { Directory } from './directorySystem';
 import { processCommand, runSavedCommands } from './commandSystem';
-import { $terminalWindow, $terminalOutput, $commandInput } from './elements';
+import { $terminalWindow, $terminalOutput, $commandInput, $directoryLinks } from './elements';
 
 const main = function() {
 
@@ -44,6 +44,12 @@ const main = function() {
     });
 
     $('.terminal .buttons div').on('click', changeBgColor);
+
+    $('body').on('click', 'a[data-command]', function(e) {
+        e.preventDefault();
+        const command = $(this).attr('data-command');
+        triggerCommand(command);
+    });
 };
 
 const triggerCommand = function(command) {
