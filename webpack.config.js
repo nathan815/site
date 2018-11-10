@@ -1,5 +1,6 @@
 const path = require('path');
-var WebpackNotifierPlugin = require('webpack-notifier');
+const WebpackNotifierPlugin = require('webpack-notifier');
+
 
 module.exports = {
   entry: './src/js/main.js',

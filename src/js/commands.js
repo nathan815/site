@@ -1,7 +1,8 @@
 import $ from 'jquery';
 import { arrHas } from './helpers';
 import { $terminalOutput } from './elements';
-import { Directory, DirectoryList } from './directorySystem';
+import { Directory } from './directorySystem';
+import directories from './directories';
 
 const defaultOutput = $('#default-output').html();
 
@@ -89,7 +90,7 @@ const cdCommand = function(options, args) {
 
     let path = args[0];
     if(path == '~') { // navigating to home
-        Directory.setCurrentDirectory('~', DirectoryList['~']);
+        Directory.setCurrentDirectory('~', directories['~']);
         return true;
     }
     if(path == '..' && Directory.current != '~') { // navigating up
@@ -112,30 +113,30 @@ export const AllCommands = {
     ls: {
         execute: lsCommand,
         possibleOptions: [],
-        helpText: 'lists the items in a directory',
-        helpEntry: 'Lists the items in a directory. If no directory is specified, it defaults to current directory.'
+        helpText: 'list the items in current or specified directory',
+        helpEntry: 'Lists the items in a specified directory, defaulting to the current directory.'
     },
     open: {
         execute: openCommand,
-        helpText: 'opens a directory or file and displays its contents',
+        helpText: 'open a directory or file and displays its contents',
         helpEntry: 'Opens a directory or file. \nIf a directory is specified, this will cd to the directory and then execute ls. If a text file is specified, it will output its contents to the terminal. Other files will be opened in the default GUI application.',
         possibleOptions: []
     },
     help: {
         execute: helpCommand,
-        helpText: 'lists all commands, or displays help for a command',
+        helpText: 'list all commands, or display help for a command',
         helpEntry: 'Lists all commands, or displays help for a command.\n  Available options: --hidden (show hidden commands)',
         possibleOptions: [ 'hidden' ]
     },
     clear: {
         execute: clearCommand,
-        helpText: 'clears the output',
+        helpText: 'clear the output',
         possibleOptions: []
     },
     git: {
         execute: gitCommand,
         possibleOptions: [ 'version', 'm' ],
-        helpText: 'the best version control system',
+        helpText: 'an awesome distributed version control system',
         helpEntry: 'Git is the best version control system.\n  Available options: --version',
         hidden: true
     },

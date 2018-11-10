@@ -1,48 +1,9 @@
 import { $terminalTitle } from './elements';
-import { openResume } from './resumeViewer';
-
-export const DirectoryList = {
-    '~': {
-        items: [ 'about', 'projects', 'resume', 'contact', 'site-info'],
-        about: {
-            contents: '#about'
-        },
-        projects: {
-            items: [  'SwanStation', 'Internship2018', 'FastAndMobile', 'EnemyClouds', 'FishNet', 'EcoSpan' ],
-            swanstation: {
-                contents: '#project-swan-station'
-            },
-            fastandmobile: {
-                contents: '#fastandmobile-presentation'
-            },
-            internship2018: {
-                contents: '#project-laz-offline-books'
-            },
-            enemyclouds: {
-                contents: '#project-enemy-clouds'
-            },
-            fishnet: {
-                contents: '#project-fishnet'
-            },
-            ecospan: {
-                contents: '#project-ecospan'
-            }
-        },
-        resume: {
-            execute: openResume
-        },
-        contact: {
-            contents: '#contact'
-        },
-        ['site-info']: {
-            contents: '#site-info'
-        },
-    }
-};
+import directories from './directories';
 
 export let Directory = {};
 Directory.current = '~';
-Directory.currentDirObject = DirectoryList[Directory.current];
+Directory.currentDirObject = directories[Directory.current];
 Directory.prev = '';
 Directory.prevDirObject = null;
 
@@ -63,7 +24,7 @@ Directory.goBack = function() {
 
 Directory.parseDir = function(path) {
     let parts = path.split('/');
-    let dir = DirectoryList;
+    let dir = directories;
     if(parts[0] != '~')
         dir = Directory.currentDirObject;
 

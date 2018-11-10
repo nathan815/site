@@ -107,9 +107,6 @@ footer {
     cursor: text;
     padding: 5px 7px;
     overflow-y: auto;
-    border: 1px solid rgba(10, 31, 41, 0.24);
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
 }
 .terminal .content #output {
     white-space: pre-wrap;

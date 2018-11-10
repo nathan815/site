@@ -8,9 +8,6 @@ const $resumeClose = $('#resume-close');
 const $resumeViewer = $('#resume-viewer');
 
 export const openResume = function() {
-    $('html,body').animate({
-        scrollTop: 140
-    });
     $resumeClose.off('click').on('click', function() {
         $resumeContainer.fadeOut(250);
         deleteLastSavedCommand();
