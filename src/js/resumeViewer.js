@@ -14,7 +14,7 @@ export const openResume = function() {
     });
     $resumeContent.css('height',$(window).width()+50);
     $resumeContainer.fadeIn(250);
-    PDFObject.embed("resume.pdf", "#resume-viewer", {
+    PDFObject.embed("ResumeNathanielJohnson.pdf", "#resume-viewer", {
         fallbackLink: "<p>This browser does not support inline PDFs. <a href='[url]'>Click To View PDF &raquo;</a></p>"
     });
 };
