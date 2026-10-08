@@ -1,0 +1,100 @@
+---
+import Base from '../layouts/Base.astro';
+import Activity from '../components/Activity.astro';
+import { profile, skills, experience, projects } from '../data/site';
+---
+<Base>
+  <main id="top" class="mx-auto max-w-5xl px-4">
+    <!-- Hero -->
+    <section class="flex min-h-[78vh] flex-col justify-center py-20">
+      <p class="font-mono text-sm text-cyan">$ whoami</p>
+      <h1 class="mt-3 text-4xl font-bold tracking-tight sm:text-6xl">
+        Hi, I'm <span class="grad-text">{profile.name.split(' ')[0]}</span>.
+      </h1>
+      <p class="mt-4 font-mono text-lg text-muted sm:text-2xl">
+        <span class="text-fg">I </span><span id="typed" class="caret" data-lines={JSON.stringify(profile.taglines)}>{profile.taglines[0]}</span>
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="#projects" class="rounded-lg px-4 py-2 text-sm font-semibold text-black" style="background:linear-gradient(100deg,var(--cyan),var(--violet))">View projects</a>
+        <a href="/ResumeNathanielJohnson.pdf" class="rounded-lg border border-border px-4 py-2 text-sm hover:border-cyan">Resume</a>
+        <a href="#contact" class="rounded-lg border border-border px-4 py-2 text-sm hover:border-cyan">Contact</a>
+      </div>
+      <p class="mt-8 font-mono text-xs text-muted">tip: press <kbd class="rounded border border-border px-1">⌘/Ctrl K</kbd> or <kbd class="rounded border border-border px-1">`</kbd></p>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="reveal py-16">
+      <h2 class="mb-6 font-mono text-sm text-cyan"># about</h2>
+      <div class="grid items-center gap-8 md:grid-cols-[1fr_auto]">
+        <div>
+          <p class="text-lg leading-relaxed text-muted">{profile.summary}</p>
+          <p class="mt-4 font-mono text-xs text-muted">📍 {profile.location}</p>
+        </div>
+        <img src="/me.jpg" alt={`Portrait of ${profile.name}`} width="160" height="160" class="h-40 w-40 rounded-2xl border border-border object-cover" loading="lazy" />
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills" class="reveal py-16">
+      <h2 class="mb-6 font-mono text-sm text-cyan"># skills</h2>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {Object.entries(skills).map(([group, items]) => (
+          <div class="card p-5">
+            <h3 class="mb-3 text-sm font-semibold">{group}</h3>
+            <div class="flex flex-wrap gap-2">{items.map((s) => <span class="tag">{s}</span>)}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Experience -->
+    <section id="experience" class="reveal py-16">
+      <h2 class="mb-6 font-mono text-sm text-cyan"># experience</h2>
+      <ol class="relative space-y-6 border-l border-border pl-6">
+        {experience.map((e) => (
+          <li class="relative">
+            <span class="absolute -left-[1.85rem] top-1.5 h-2.5 w-2.5 rounded-full" style="background:linear-gradient(135deg,var(--cyan),var(--violet))"></span>
+            <div class="flex flex-wrap items-baseline justify-between gap-2">
+              <h3 class="font-semibold">{e.role} <span class="text-muted font-normal">· {e.org}</span></h3>
+              <span class="font-mono text-xs text-muted">{e.period}</span>
+            </div>
+            <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-muted">{e.points.map((p) => <li>{p}</li>)}</ul>
+            {e.stack.length > 0 && <div class="mt-3 flex flex-wrap gap-2">{e.stack.map((s) => <span class="tag">{s}</span>)}</div>}
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" class="reveal py-16">
+      <h2 class="mb-6 font-mono text-sm text-cyan"># projects</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        {projects.map((p) => (
+          <a href={p.href} target="_blank" rel="noopener" class="card block p-5">
+            <h3 class="font-semibold">{p.name} <span class="text-cyan">↗</span></h3>
+            <p class="mt-2 text-sm text-muted">{p.blurb}</p>
+            <div class="mt-4 flex flex-wrap gap-2">{p.stack.map((s) => <span class="tag">{s}</span>)}</div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Activity -->
+    <section id="activity" class="reveal py-16">
+      <h2 class="mb-2 font-mono text-sm text-cyan"># activity</h2>
+      <p class="mb-6 text-sm text-muted">Recent engineering and AI-assisted work, as aggregate numbers.</p>
+      <Activity />
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="reveal py-16">
+      <h2 class="mb-6 font-mono text-sm text-cyan"># contact</h2>
+      <div class="card p-6">
+        <p class="text-muted">Want to chat about a project or role? Email me at <a class="text-cyan underline-offset-4 hover:underline" href={`mailto:${profile.email}`}>{profile.email}</a>.</p>
+        <div class="mt-4 flex flex-wrap gap-3">
+          {profile.links.map((l) => <a class="tag hover:border-cyan hover:text-fg" href={l.href} target="_blank" rel="noopener">{l.label} ↗</a>)}
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>

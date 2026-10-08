@@ -1,0 +1,25 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Old domain -> new primary domain
+[[redirects]]
+  from = "https://nathanieljohnson.me/*"
+  to = "https://nathancj.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.nathanieljohnson.me/*"
+  to = "https://nathancj.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://nathanieljohnson.netlify.app/*"
+  to = "https://nathancj.com/:splat"
+  status = 301
+  force = true

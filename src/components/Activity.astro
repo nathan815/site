@@ -1,0 +1,48 @@
+---
+import { loadActivity } from '../data/activity';
+const a = await loadActivity();
+const w = a.weeks;
+const max = Math.max(...w.map((x) => x.commits), 1);
+const maxAi = Math.max(...w.map((x) => x.aiSessions), 1);
+const W = 560, H = 140, pad = 8;
+const bw = (W - pad * 2) / w.length;
+const total = (k: 'commits' | 'prs' | 'aiSessions') => w.reduce((s, x) => s + x[k], 0);
+const line = w.map((x, i) => `${pad + i * bw + bw / 2},${H - pad - (x.aiSessions / maxAi) * (H - pad * 2)}`).join(' ');
+const stats = [
+  { label: 'Commits', value: total('commits') },
+  { label: 'Pull requests', value: total('prs') },
+  { label: 'AI sessions', value: total('aiSessions') },
+];
+const bmax = Math.max(...a.buckets.map((b) => b.commits), 1);
+---
+<div class="grid gap-4 md:grid-cols-3">
+  {stats.map((s) => (
+    <div class="card p-5">
+      <div class="font-mono text-3xl font-semibold grad-text">{s.value}</div>
+      <div class="mt-1 text-xs text-muted">{s.label} · last {w.length} weeks</div>
+    </div>
+  ))}
+</div>
+<div class="card mt-4 p-5">
+  <div class="mb-3 flex flex-wrap items-center gap-4 font-mono text-xs text-muted">
+    <span><span class="mr-1 inline-block h-2 w-2 rounded-sm" style="background:var(--cyan)"></span>commits / week</span>
+    <span><span class="mr-1 inline-block h-2 w-2 rounded-full" style="background:var(--violet)"></span>AI sessions / week</span>
+  </div>
+  <svg viewBox={`0 0 ${W} ${H}`} class="w-full" role="img" aria-label={`Weekly commits and AI sessions over the last ${w.length} weeks`}>
+    {w.map((x, i) => {
+      const h = (x.commits / max) * (H - pad * 2);
+      return <rect x={pad + i * bw + bw * 0.18} y={H - pad - h} width={bw * 0.64} height={h} rx="3" fill="var(--cyan)" opacity="0.75"><title>{`${x.start}: ${x.commits} commits, ${x.prs} PRs, ${x.aiSessions} AI sessions`}</title></rect>;
+    })}
+    <polyline points={line} fill="none" stroke="var(--violet)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
+  </svg>
+  <ul class="mt-4 space-y-2">
+    {a.buckets.map((b) => (
+      <li class="flex items-center gap-3 font-mono text-xs">
+        <span class="w-28 shrink-0 text-muted">{b.label}</span>
+        <span class="h-1.5 rounded-full" style={`width:${(b.commits / bmax) * 100}%;background:linear-gradient(90deg,var(--cyan),var(--violet))`}></span>
+        <span class="text-muted">{b.commits}</span>
+      </li>
+    ))}
+  </ul>
+  <p class="mt-4 text-xs text-muted">Aggregate counts only, with anonymized labels. Updated {new Date(a.generatedAt).toLocaleDateString('en-US', { dateStyle: 'medium' })}.</p>
+</div>

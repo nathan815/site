@@ -1,0 +1,50 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/jetbrains-mono';
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root {
+  --bg: #f6f7fb; --surface: #ffffff; --border: #dfe2ec; --text: #12141c; --muted: #5a6072;
+  --cyan: #0891b2; --violet: #7c3aed;
+}
+:root[data-theme='dark'] {
+  --bg: #07080d; --surface: #0e1018; --border: #1d2130; --text: #e7e9f2; --muted: #8b91a7;
+  --cyan: #22d3ee; --violet: #a78bfa;
+}
+
+@theme inline {
+  --font-sans: 'Inter Variable', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+  --color-bg: var(--bg); --color-surface: var(--surface); --color-border: var(--border);
+  --color-fg: var(--text); --color-muted: var(--muted);
+  --color-cyan: var(--cyan); --color-violet: var(--violet);
+}
+
+html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+
+.grid-bg {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background-image:
+    radial-gradient(60rem 30rem at 15% -10%, color-mix(in srgb, var(--cyan) 14%, transparent), transparent),
+    radial-gradient(50rem 30rem at 95% 10%, color-mix(in srgb, var(--violet) 14%, transparent), transparent),
+    linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: auto, auto, 48px 48px, 48px 48px;
+  mask-image: linear-gradient(to bottom, black 40%, transparent 95%);
+  opacity: .55;
+}
+.grad-text { background: linear-gradient(100deg, var(--cyan), var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: .9rem; transition: border-color .2s, transform .2s; }
+.card:hover { border-color: color-mix(in srgb, var(--cyan) 55%, var(--border)); transform: translateY(-2px); }
+.tag { font-family: var(--font-mono); font-size: .7rem; padding: .15rem .5rem; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); }
+.caret::after { content: '▍'; margin-left: 2px; color: var(--cyan); animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .caret::after { animation: none; }
+}
