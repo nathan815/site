@@ -4,13 +4,38 @@
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-:root {
-  --bg: #f6f7fb; --surface: #ffffff; --border: #dfe2ec; --text: #12141c; --muted: #5a6072;
-  --cyan: #0891b2; --violet: #7c3aed;
+/* Palettes: <html data-palette="..." data-theme="dark|light">. One flat accent plus a quiet second tone; no gradients. */
+:root, html[data-palette='slate'][data-theme='light'] {
+  --bg: #f4f6f8; --surface: #ffffff; --border: #dde2e8; --text: #121820; --muted: #5b6676;
+  --accent: #1f66c1; --accent2: #7a8798; --on-accent: #ffffff;
 }
-:root[data-theme='dark'] {
-  --bg: #07080d; --surface: #0e1018; --border: #1d2130; --text: #e7e9f2; --muted: #8b91a7;
-  --cyan: #22d3ee; --violet: #a78bfa;
+html[data-palette='slate'][data-theme='dark'] {
+  --bg: #0e1217; --surface: #151a21; --border: #252c36; --text: #e6e9ee; --muted: #8a94a3;
+  --accent: #5aa0e6; --accent2: #7d8aa0; --on-accent: #0b1016;
+}
+html[data-palette='cobalt'][data-theme='light'] {
+  --bg: #f2f4f3; --surface: #ffffff; --border: #dadedc; --text: #101312; --muted: #586060;
+  --accent: #2f4bd0; --accent2: #8a8f98; --on-accent: #ffffff;
+}
+html[data-palette='cobalt'][data-theme='dark'] {
+  --bg: #101114; --surface: #17181c; --border: #26282e; --text: #ecedef; --muted: #8d9098;
+  --accent: #8398ff; --accent2: #8a8f98; --on-accent: #0c0e14;
+}
+html[data-palette='sage'][data-theme='light'] {
+  --bg: #f1f3ef; --surface: #ffffff; --border: #d9dfd7; --text: #121a14; --muted: #56645a;
+  --accent: #2f6b45; --accent2: #8a7a45; --on-accent: #ffffff;
+}
+html[data-palette='sage'][data-theme='dark'] {
+  --bg: #0d110e; --surface: #131a15; --border: #223026; --text: #dfe6e0; --muted: #82908a;
+  --accent: #8fbf9a; --accent2: #b8a77a; --on-accent: #0b110d;
+}
+html[data-palette='amber'][data-theme='light'] {
+  --bg: #f0efec; --surface: #ffffff; --border: #dcd9d2; --text: #1a1814; --muted: #645d51;
+  --accent: #a8661b; --accent2: #5f6e68; --on-accent: #ffffff;
+}
+html[data-palette='amber'][data-theme='dark'] {
+  --bg: #14110d; --surface: #1b1712; --border: #2c261d; --text: #ece6dc; --muted: #9a9080;
+  --accent: #d9a05b; --accent2: #9aa7a0; --on-accent: #17110a;
 }
 
 @theme inline {
@@ -18,7 +43,7 @@
   --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
   --color-bg: var(--bg); --color-surface: var(--surface); --color-border: var(--border);
   --color-fg: var(--text); --color-muted: var(--muted);
-  --color-cyan: var(--cyan); --color-violet: var(--violet);
+  --color-accent: var(--accent); --color-accent2: var(--accent2);
 }
 
 html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
@@ -26,19 +51,17 @@ body { background: var(--bg); color: var(--text); font-family: var(--font-sans);
 
 .grid-bg {
   position: fixed; inset: 0; z-index: -1; pointer-events: none;
-  background-image:
-    radial-gradient(60rem 30rem at 15% -10%, color-mix(in srgb, var(--cyan) 14%, transparent), transparent),
-    radial-gradient(50rem 30rem at 95% 10%, color-mix(in srgb, var(--violet) 14%, transparent), transparent),
-    linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
-  background-size: auto, auto, 48px 48px, 48px 48px;
-  mask-image: linear-gradient(to bottom, black 40%, transparent 95%);
-  opacity: .55;
+  background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to bottom, black 20%, transparent 85%);
+  opacity: .5;
 }
-.grad-text { background: linear-gradient(100deg, var(--cyan), var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: .9rem; transition: border-color .2s, transform .2s; }
-.card:hover { border-color: color-mix(in srgb, var(--cyan) 55%, var(--border)); transform: translateY(-2px); }
-.tag { font-family: var(--font-mono); font-size: .7rem; padding: .15rem .5rem; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); }
-.caret::after { content: '▍'; margin-left: 2px; color: var(--cyan); animation: blink 1s steps(1) infinite; }
+.accent-text { color: var(--accent); }
+.btn-solid { background: var(--accent); color: var(--on-accent); }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: .6rem; transition: border-color .2s, transform .2s; }
+.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.tag { font-family: var(--font-mono); font-size: .7rem; padding: .15rem .5rem; border-radius: .3rem; border: 1px solid var(--border); color: var(--muted); }
+.caret::after { content: '▍'; margin-left: 2px; color: var(--accent); animation: blink 1s steps(1) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 
 .reveal { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }

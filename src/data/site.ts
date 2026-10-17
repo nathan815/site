@@ -2,10 +2,10 @@
 export const profile = {
   name: 'Nathaniel Johnson',
   handle: 'nathan815',
-  role: 'Software Engineer', // TODO: confirm title
+  role: 'Senior Software Engineer',
   taglines: ['build things for the web.', 'ship mobile apps.', 'automate the boring stuff.', 'tinker with AI tooling.'],
   summary:
-    'TODO: Replace with a 2–3 sentence bio. I am a software engineer who enjoys building fast, well-crafted products across web, mobile and backend, and experimenting with AI-assisted development.',
+    "I'm a Senior Software Engineer at Microsoft, where I've worked on Azure VMware Solution since 2020. I like building reliable cloud infrastructure and well-crafted software, and I experiment with AI-assisted development on the side.",
   location: 'Michigan, USA', // TODO: confirm
   email: 'hello@nathancj.com', // TODO: confirm real address
   links: [
@@ -20,16 +20,19 @@ export const skills: Record<string, string[]> = {
   Frontend: ['React', 'Vue', 'React Native', 'Astro', 'Tailwind'],
   Backend: ['Node.js', 'Laravel', 'Redis', 'Socket.io'],
   Data: ['Spark', 'Hadoop', 'HDFS'],
-  Tooling: ['Git', 'GitHub Actions', 'Azure DevOps', 'Copilot', 'Claude Code'],
+  Tooling: ['Git', 'GitHub Actions', 'Azure', 'Azure DevOps', 'Copilot', 'Claude Code'],
 };
 
 export const experience = [
   {
-    role: 'TODO: Current Role',
-    org: 'TODO: Employer',
-    period: '20XX – Present',
-    points: ['TODO: Impact-focused bullet about what you built or led.', 'TODO: Another highlight with a measurable result.'],
-    stack: ['TypeScript', 'Azure DevOps'],
+    role: 'Senior Software Engineer',
+    org: 'Microsoft · Azure VMware Solution',
+    period: '2020 – Present',
+    points: [
+      'Engineer on Azure VMware Solution, the managed VMware private cloud service on Azure.',
+      'TODO: Add one or two specific things you built or led, with measurable results.',
+    ],
+    stack: ['Azure', 'Azure DevOps'],
   },
   {
     role: 'Software Engineering Intern',

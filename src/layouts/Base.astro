@@ -14,7 +14,7 @@ const commands = JSON.stringify({
 });
 ---
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" data-palette="slate">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -31,14 +31,15 @@ const commands = JSON.stringify({
       try {
         const t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
         document.documentElement.dataset.theme = t;
-      } catch {}
+        document.documentElement.dataset.palette = localStorage.getItem('palette') || 'slate';
+      } catch { document.documentElement.dataset.palette = 'slate'; }
     </script>
   </head>
   <body class="min-h-screen">
     <div class="grid-bg" aria-hidden="true"></div>
     <header class="sticky top-0 z-30 backdrop-blur border-b border-border/60 bg-bg/70">
       <nav class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3" aria-label="Main">
-        <a href="#top" class="font-mono text-sm font-semibold"><span class="grad-text">~/nathancj</span></a>
+        <a href="#top" class="font-mono text-sm font-semibold"><span class="accent-text">~/nathancj</span></a>
         <ul class="hidden gap-5 text-sm text-muted md:flex">
           {sections.slice(0, 5).map((s) => <li><a class="hover:text-fg capitalize" href={`#${s}`}>{s}</a></li>)}
         </ul>
@@ -46,6 +47,7 @@ const commands = JSON.stringify({
           <button id="open-palette" class="hidden items-center gap-2 rounded-md border border-border px-2.5 py-1 font-mono text-xs text-muted hover:text-fg sm:flex" aria-label="Open command palette">
             <span>Search</span><kbd class="rounded bg-surface px-1.5 py-0.5">⌘K</kbd>
           </button>
+          <button id="cycle-palette" class="rounded-md border border-border px-2.5 py-1 text-xs text-muted hover:text-fg" aria-label="Change color palette">Palette</button>
           <button id="toggle-theme" class="rounded-md border border-border px-2.5 py-1 text-xs text-muted hover:text-fg" aria-label="Toggle light/dark theme">Theme</button>
         </div>
       </nav>
@@ -73,7 +75,7 @@ const commands = JSON.stringify({
       </div>
       <div id="term-out" class="h-64 overflow-auto px-3 py-2 font-mono text-xs leading-relaxed" aria-live="polite"></div>
       <form id="term-form" class="flex items-center gap-2 border-t border-border px-3 py-2 font-mono text-xs">
-        <span class="grad-text">$</span>
+        <span class="accent-text">$</span>
         <input id="term-input" class="flex-1 bg-transparent outline-none" autocomplete="off" spellcheck="false" aria-label="Terminal input" />
       </form>
     </div>
