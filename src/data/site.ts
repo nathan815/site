@@ -26,11 +26,12 @@ export const skills: Record<string, string[]> = {
 interface Title { title: string; period?: string }
 
 export const experience: {
-  role: string; org: string; period: string; titles?: Title[]; points: string[]; stack: string[];
+  role: string; org: string; period: string; logo?: string; monogram?: string; titles?: Title[]; points: string[]; stack: string[];
 }[] = [
   {
     role: 'Senior Software Engineer',
     org: 'Microsoft · Azure VMware Solution',
+    logo: 'microsoft',
     period: '2020 – Present',
     titles: [
       { title: 'Senior Software Engineer', period: 'Sep 2026 – Present' },
@@ -47,6 +48,7 @@ export const experience: {
   {
     role: 'Software Engineering Intern',
     org: 'Criteo',
+    logo: '/logos/criteo.png',
     period: 'Summer 2019 · Fall 2019 – Spring 2020',
     points: [
       'Summer 2019, Palo Alto: designed and built a Spark application in Scala that consolidates product catalog data and computes statistics, processing millions of products from advertisers.',
@@ -59,6 +61,7 @@ export const experience: {
   {
     role: 'Software Engineering Intern',
     org: 'Learning A–Z',
+    logo: '/logos/learning-az.png',
     period: 'Summer 2018 – Spring 2019',
     points: [
       'Summer 2018 internship, then part-time through the 2018–19 school year.',
@@ -69,6 +72,7 @@ export const experience: {
   {
     role: 'B.S. Computer Science',
     org: 'Eastern Michigan University',
+    monogram: 'EMU',
     period: 'Graduated 2020',
     points: ['Hackathons, side projects, and a computerized Christmas light display.'],
     stack: [],

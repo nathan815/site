@@ -53,20 +53,32 @@ import { profile, skills, experience, projects, workProjects, showcaseUrl } from
       <ol class="relative space-y-6 border-l border-border pl-6">
         {experience.map((e) => (
           <li class="relative">
-            <span class="absolute -left-[1.85rem] top-1.5 h-2.5 w-2.5 rounded-full" style="background:var(--accent)"></span>
-            <div class="flex flex-wrap items-baseline justify-between gap-2">
-              {e.titles
-                ? <h3 class="font-semibold">{e.org}</h3>
-                : <h3 class="font-semibold">{e.role} <span class="text-muted font-normal">· {e.org}</span></h3>}
-              <span class="font-mono text-xs text-muted">{e.period}</span>
+            <span class="absolute -left-[1.85rem] top-3 h-2.5 w-2.5 rounded-full" style="background:var(--accent)"></span>
+            <div class="flex gap-4">
+              {e.logo === 'microsoft' ? (
+                <div class="grid h-11 w-11 shrink-0 place-items-center rounded-md border border-border bg-surface" aria-hidden="true">
+                  <svg viewBox="0 0 23 23" class="h-6 w-6"><path fill="#f25022" d="M1 1h10v10H1z"/><path fill="#7fba00" d="M12 1h10v10H12z"/><path fill="#00a4ef" d="M1 12h10v10H1z"/><path fill="#ffb900" d="M12 12h10v10H12z"/></svg>
+                </div>
+              ) : e.logo ? (
+                <img src={e.logo} alt="" width="44" height="44" loading="lazy" class="h-11 w-11 shrink-0 rounded-md border border-border object-cover" />
+              ) : (
+                <div class="grid h-11 w-11 shrink-0 place-items-center rounded-md border border-border bg-surface font-mono text-[0.7rem] font-semibold text-muted" aria-hidden="true">{e.monogram}</div>
+              )}
+              <div class="min-w-0 flex-1">
+                <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                  <h3 class="font-semibold">{e.role} <span class="text-muted font-normal">· {e.org}</span></h3>
+                  <span class="font-mono text-xs text-muted">{e.period}</span>
+                </div>
+                {e.titles && e.titles.length > 1 && (
+                  <p class="mt-1 text-sm text-muted">
+                    <span class="font-mono text-xs text-accent">since {e.titles[0].period?.split(' – ')[0]}</span>{' '}
+                    · Previously {e.titles.slice(1).map((t) => `${t.title} (${t.period})`).join(', ')}
+                  </p>
+                )}
+                <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-muted">{e.points.map((p) => <li>{p}</li>)}</ul>
+                {e.stack.length > 0 && <div class="mt-3 flex flex-wrap gap-2">{e.stack.map((s) => <span class="tag">{s}</span>)}</div>}
+              </div>
             </div>
-            {e.titles && (
-              <ul class="mt-1 space-y-0.5 text-sm text-muted" aria-label="Titles held">
-                {e.titles.map((t) => <li>{t.title}{t.period && <span class="opacity-70"> · {t.period}</span>}</li>)}
-              </ul>
-            )}
-            <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-muted">{e.points.map((p) => <li>{p}</li>)}</ul>
-            {e.stack.length > 0 && <div class="mt-3 flex flex-wrap gap-2">{e.stack.map((s) => <span class="tag">{s}</span>)}</div>}
           </li>
         ))}
       </ol>
