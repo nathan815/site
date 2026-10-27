@@ -34,8 +34,8 @@ export const experience: {
     period: '2020 – Present',
     titles: [
       { title: 'Senior Software Engineer', period: 'Sep 2026 – Present' },
-      { title: 'Software Engineer II' }, // TODO: add the promotion dates
-      { title: 'Software Engineer', period: '2020' },
+      { title: 'Software Engineer II', period: 'Sep 2022 – Sep 2026' },
+      { title: 'Software Engineer', period: '2020 – Sep 2022' },
     ],
     points: [
       'Engineer on Azure VMware Solution, the managed VMware private cloud service on Azure.',
