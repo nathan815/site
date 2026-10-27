@@ -30,7 +30,8 @@ export const experience = [
     period: '2020 – Present',
     points: [
       'Engineer on Azure VMware Solution, the managed VMware private cloud service on Azure.',
-      'TODO: Add one or two specific things you built or led, with measurable results.',
+      'Built AVS Console, the on-call operations app used by 430+ engineers. It replaced a slow PowerShell tool and cuts 20+ minutes from each incident.',
+      'Built OneSite, an internal site hosting platform with a built-in database, identity and WebSockets.',
     ],
     stack: ['Azure', 'Azure DevOps'],
   },
@@ -129,12 +130,14 @@ export interface WorkProject {
 export const workProjects: WorkProject[] = [
   {
     name: 'AVS Console',
-    blurb: 'TODO: One or two sentences on what it is, who uses it, and your role. Keep it free of customer data and internal-only details.',
-    stack: ['TODO'],
+    blurb:
+      'Internal app for on-call operations of Azure VMware Solution SDDCs, used by 430+ engineers. It is open on the shared screen in every incident. I built it to replace a slow PowerShell tool, and it cuts 20+ minutes from each incident.',
+    stack: ['On-call tooling', '430+ users'],
   },
   {
     name: 'OneSite',
-    blurb: 'TODO: One or two sentences on what it is, who uses it, and your role. Keep it free of customer data and internal-only details.',
-    stack: ['TODO'],
+    blurb:
+      'Internal site hosting platform. Every site comes with built-in APIs: a Firebase-style database, identity, WebSockets and more.',
+    stack: ['Hosting platform', 'Database', 'Identity', 'WebSockets'],
   },
 ];
