@@ -3,7 +3,7 @@ import '../styles/global.css';
 import { profile } from '../data/site';
 const { title = `${profile.name} — ${profile.role}`, description = profile.summary.slice(0, 155) } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const sections = ['about', 'skills', 'experience', 'projects', 'activity', 'contact'];
+const sections = ['skills', 'experience', 'projects', 'activity', 'contact'];
 const commands = JSON.stringify({
   sections,
   links: profile.links,
@@ -40,7 +40,7 @@ const commands = JSON.stringify({
       <nav class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3" aria-label="Main">
         <a href="#top" class="font-mono text-sm font-semibold"><span class="accent-text">~/nathancj</span></a>
         <ul class="hidden gap-5 text-sm text-muted md:flex">
-          {sections.slice(0, 5).map((s) => <li><a class="hover:text-fg capitalize" href={`#${s}`}>{s}</a></li>)}
+          {sections.slice(0, 4).map((s) => <li><a class="hover:text-fg capitalize" href={`#${s}`}>{s}</a></li>)}
         </ul>
         <div class="flex items-center gap-2">
           <button id="open-palette" class="hidden items-center gap-2 rounded-md border border-border px-2.5 py-1 font-mono text-xs text-muted hover:text-fg sm:flex" aria-label="Open command palette">

@@ -5,32 +5,27 @@ import { profile, skills, experience, projects, showcaseUrl } from '../data/site
 ---
 <Base>
   <main id="top" class="mx-auto max-w-5xl px-4">
-    <!-- Hero -->
-    <section class="flex min-h-[78vh] flex-col justify-center py-20">
-      <p class="font-mono text-sm text-accent">$ whoami</p>
-      <h1 class="mt-3 text-4xl font-bold tracking-tight sm:text-6xl">
-        Hi, I'm <span class="accent-text">{profile.name.split(' ')[0]}</span>.
-      </h1>
-      <p class="mt-4 font-mono text-lg text-muted sm:text-2xl">
-        <span class="text-fg">I </span><span id="typed" class="caret" data-lines={JSON.stringify(profile.taglines)}>{profile.taglines[0]}</span>
-      </p>
-      <div class="mt-8 flex flex-wrap gap-3">
-        <a href="#projects" class="btn-solid rounded-md px-4 py-2 text-sm font-semibold">View projects</a>
-        <a href="/ResumeNathanielJohnson.pdf" class="rounded-md border border-border px-4 py-2 text-sm hover:border-accent">Resume</a>
-        <a href="#contact" class="rounded-md border border-border px-4 py-2 text-sm hover:border-accent">Contact</a>
-      </div>
-      <p class="mt-8 font-mono text-xs text-muted">tip: press <kbd class="rounded border border-border px-1">⌘/Ctrl K</kbd> or <kbd class="rounded border border-border px-1">`</kbd></p>
-    </section>
-
-    <!-- About -->
-    <section id="about" class="reveal py-16">
-      <h2 class="mb-6 font-mono text-sm text-accent"># about</h2>
-      <div class="grid items-center gap-8 md:grid-cols-[1fr_auto]">
-        <div>
-          <p class="text-lg leading-relaxed text-muted">{profile.summary}</p>
-          <p class="mt-4 font-mono text-xs text-muted">📍 {profile.location}</p>
+    <!-- Hero + about -->
+    <section class="py-14 sm:py-20">
+      <div class="grid items-center gap-10 md:grid-cols-[1fr_auto]">
+        <div class="min-w-0">
+          <p class="font-mono text-sm text-accent">$ whoami</p>
+          <h1 class="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">
+            Hi, I'm <span class="accent-text">{profile.name.split(' ')[0]}</span>.
+          </h1>
+          <p class="mt-3 font-mono text-lg text-muted sm:text-xl">
+            <span class="text-fg">I </span><span id="typed" class="caret" data-lines={JSON.stringify(profile.taglines)}>{profile.taglines[0]}</span>
+          </p>
+          <p class="mt-6 max-w-xl text-base leading-relaxed text-muted">{profile.summary}</p>
+          <p class="mt-3 font-mono text-xs text-muted">{profile.role} · {profile.location}</p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href="#experience" class="btn-solid rounded-md px-4 py-2 text-sm font-semibold">See my work</a>
+            <a href="/ResumeNathanielJohnson.pdf" class="rounded-md border border-border px-4 py-2 text-sm hover:border-accent">Resume</a>
+            <a href="#contact" class="rounded-md border border-border px-4 py-2 text-sm hover:border-accent">Contact</a>
+          </div>
+          <p class="mt-6 font-mono text-xs text-muted">tip: press <kbd class="rounded border border-border px-1">⌘/Ctrl K</kbd> or <kbd class="rounded border border-border px-1">`</kbd></p>
         </div>
-        <img src="/me.jpg" alt={`Portrait of ${profile.name}`} width="160" height="160" class="h-40 w-40 rounded-2xl border border-border object-cover" loading="lazy" />
+        <img src="/me.jpg" alt={`Portrait of ${profile.name}`} width="176" height="176" class="order-first h-36 w-36 rounded-2xl border border-border object-cover md:order-none md:h-44 md:w-44" />
       </div>
     </section>
 
