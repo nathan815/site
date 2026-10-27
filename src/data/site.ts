@@ -16,9 +16,9 @@ export const profile = {
 };
 
 export const skills: Record<string, string[]> = {
-  Languages: ['TypeScript', 'JavaScript', 'Go', 'Python', 'PowerShell', 'Java', 'Kotlin', 'SQL'],
+  Languages: ['TypeScript', 'JavaScript', 'C#', 'Go', 'Python', 'PowerShell', 'Java', 'Kotlin', 'SQL'],
   Frontend: ['React', 'Vue', 'React Native', 'Astro', 'Tailwind'],
-  Backend: ['Node.js', 'Spring Boot', 'Laravel', 'Redis'],
+  Backend: ['Node.js', 'Durable Functions', 'Spring Boot', 'Laravel', 'Redis'],
   Data: ['Spark', 'Scala', 'Hadoop', 'HDFS', 'SQL Server'],
   Tooling: ['Git', 'GitHub Actions', 'Azure', 'Azure DevOps', 'Copilot', 'Claude Code', 'MCP'],
 };
@@ -43,10 +43,11 @@ export const experience: {
       'Started on the Underlay Networking team, building and improving the Pod Underlay Controller (PUC), a Python and Ansible service deployed in every AVS pod that configures its physical Cisco switches.',
       'Moved to the tenant networking and lower-level control plane team, working on NSX management and the control plane that configures vCenter, NSX, ESXi hosts and more.',
       'Worked on Public IP down to the NSX Edge, which lets AVS customers use Azure public IPs directly on the NSX Edge for inbound and outbound internet access, at far larger scale than managed SNAT (thousands of public IPs versus hundreds).',
+      'Currently building Atlas, a new service that replaces AWX. Its more efficient scheduler, written in C#, cut job runtimes by 30 to 50%. It runs on the Durable Functions runtime in a container, backed by Azure Storage.',
       'Built AVS Console in under a year, the on-call operations app now used by 430+ engineers. It replaced a slow PowerShell tool and cuts 20+ minutes from each incident.',
       'Built OneSite, a Microsoft-wide hosting platform for the AI era. AI agents build and deploy sites to it, using a built-in SDK and API for the backend. 50+ sites from 10 people so far.',
     ],
-    stack: ['Python', 'Ansible', 'Azure', 'VMware NSX', 'vCenter', 'ESXi', 'Cisco networking', 'Azure DevOps'],
+    stack: ['C#', 'Python', 'Ansible', 'Azure', 'VMware NSX', 'vCenter', 'ESXi', 'Cisco networking', 'Azure DevOps'],
   },
   {
     role: 'Software Engineering Intern',
@@ -140,6 +141,12 @@ export interface WorkProject {
 }
 
 export const workProjects: WorkProject[] = [
+  {
+    name: 'Atlas',
+    blurb:
+      'A new service replacing AWX, and my current major project. A more efficient scheduler built in C# cut job runtimes by 30 to 50%. It runs on the Durable Functions runtime in a container, backed by Azure Storage.',
+    stack: ['C#', 'Durable Functions', 'Azure Storage', 'Containers'],
+  },
   {
     name: 'AVS Console',
     blurb:
