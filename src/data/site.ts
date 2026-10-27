@@ -23,14 +23,23 @@ export const skills: Record<string, string[]> = {
   Tooling: ['Git', 'GitHub Actions', 'Azure', 'Azure DevOps', 'Copilot', 'Claude Code', 'MCP'],
 };
 
-export const experience = [
+interface Title { title: string; period?: string }
+
+export const experience: {
+  role: string; org: string; period: string; titles?: Title[]; points: string[]; stack: string[];
+}[] = [
   {
     role: 'Senior Software Engineer',
     org: 'Microsoft · Azure VMware Solution',
     period: '2020 – Present',
+    titles: [
+      { title: 'Senior Software Engineer', period: 'Sep 2026 – Present' },
+      { title: 'Software Engineer II' }, // TODO: add the promotion dates
+      { title: 'Software Engineer', period: '2020' },
+    ],
     points: [
       'Engineer on Azure VMware Solution, the managed VMware private cloud service on Azure.',
-      'Built AVS Console, the on-call operations app used by 430+ engineers. It replaced a slow PowerShell tool and cuts 20+ minutes from each incident.',
+      'Since summer 2025, built AVS Console, the on-call operations app used by 430+ engineers. It replaced a slow PowerShell tool and cuts 20+ minutes from each incident.',
       'Built OneSite, an internal site hosting platform with a built-in database, identity and WebSockets.',
     ],
     stack: ['Azure', 'Azure DevOps'],
@@ -133,7 +142,7 @@ export const workProjects: WorkProject[] = [
   {
     name: 'AVS Console',
     blurb:
-      'Internal app for on-call operations of Azure VMware Solution SDDCs, used by 430+ engineers. It is open on the shared screen in every incident. I built it to replace a slow PowerShell tool, and it cuts 20+ minutes from each incident.',
+      'Internal app for on-call operations of Azure VMware Solution SDDCs, used by 430+ engineers. Built since summer 2025, it is open on the shared screen in every incident. I built it to replace a slow PowerShell tool, and it cuts 20+ minutes from each incident.',
     stack: ['On-call tooling', '430+ users'],
   },
   {

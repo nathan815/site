@@ -55,9 +55,16 @@ import { profile, skills, experience, projects, workProjects, showcaseUrl } from
           <li class="relative">
             <span class="absolute -left-[1.85rem] top-1.5 h-2.5 w-2.5 rounded-full" style="background:var(--accent)"></span>
             <div class="flex flex-wrap items-baseline justify-between gap-2">
-              <h3 class="font-semibold">{e.role} <span class="text-muted font-normal">· {e.org}</span></h3>
+              {e.titles
+                ? <h3 class="font-semibold">{e.org}</h3>
+                : <h3 class="font-semibold">{e.role} <span class="text-muted font-normal">· {e.org}</span></h3>}
               <span class="font-mono text-xs text-muted">{e.period}</span>
             </div>
+            {e.titles && (
+              <ul class="mt-1 space-y-0.5 text-sm text-muted" aria-label="Titles held">
+                {e.titles.map((t) => <li>{t.title}{t.period && <span class="opacity-70"> · {t.period}</span>}</li>)}
+              </ul>
+            )}
             <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-muted">{e.points.map((p) => <li>{p}</li>)}</ul>
             {e.stack.length > 0 && <div class="mt-3 flex flex-wrap gap-2">{e.stack.map((s) => <span class="tag">{s}</span>)}</div>}
           </li>
