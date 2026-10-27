@@ -16,11 +16,11 @@ export const profile = {
 };
 
 export const skills: Record<string, string[]> = {
-  Languages: ['TypeScript', 'JavaScript', 'Java', 'Scala', 'SQL', 'PHP'], // TODO: update
+  Languages: ['TypeScript', 'JavaScript', 'Go', 'Python', 'PowerShell', 'Java', 'Kotlin', 'SQL'],
   Frontend: ['React', 'Vue', 'React Native', 'Astro', 'Tailwind'],
-  Backend: ['Node.js', 'Laravel', 'Redis', 'Socket.io'],
+  Backend: ['Node.js', 'Spring Boot', 'Laravel', 'Redis'],
   Data: ['Spark', 'Hadoop', 'HDFS'],
-  Tooling: ['Git', 'GitHub Actions', 'Azure', 'Azure DevOps', 'Copilot', 'Claude Code'],
+  Tooling: ['Git', 'GitHub Actions', 'Azure', 'Azure DevOps', 'Copilot', 'Claude Code', 'MCP'],
 };
 
 export const experience = [
@@ -57,7 +57,7 @@ export const experience = [
   {
     role: 'B.S. Computer Science',
     org: 'Eastern Michigan University',
-    period: 'TODO: years',
+    period: 'Graduated 2020',
     points: ['Hackathons, side projects, and a computerized Christmas light display.'],
     stack: [],
   },
@@ -65,27 +65,51 @@ export const experience = [
 
 export const projects = [
   {
-    name: 'The Swan Station',
-    blurb: 'A LOST-themed browser game, in the works since 2014 and rebuilt on a modern stack.',
-    stack: ['Vue', 'Laravel', 'Redis', 'Socket.io'],
-    href: 'https://github.com/nathan815',
+    name: 'ADO-Boost',
+    blurb: 'Browser extension for Chrome and Edge that adds diff stats and Copilot file groups to Azure DevOps pull requests.',
+    stack: ['TypeScript', 'Azure DevOps'],
+    href: 'https://github.com/nathan815/ADO-Boost',
   },
   {
-    name: 'Enemy Clouds',
-    blurb: 'A React Native game built in a sprint, Dec 2017.',
-    stack: ['React Native'],
-    href: 'https://github.com/nathan815',
+    name: 'prscope',
+    blurb: 'A pull request dashboard that works across Azure DevOps repos.',
+    stack: ['TypeScript', 'Azure DevOps'],
+    href: 'https://github.com/nathan815/prscope',
   },
   {
-    name: 'FishNet',
-    blurb: 'Android app from a 2017 hackathon.',
-    stack: ['Android', 'Java'],
-    href: 'https://github.com/nathan815',
+    name: 'pr-reviewer',
+    blurb: 'A local AI code review platform for Azure DevOps pull requests.',
+    stack: ['JavaScript', 'Azure DevOps', 'AI'],
+    href: 'https://github.com/nathan815/pr-reviewer',
   },
   {
-    name: 'EcoSPAN',
-    blurb: 'iOS app from a January 2018 hackathon.',
-    stack: ['iOS', 'Swift'],
-    href: 'https://github.com/nathan815',
+    name: 'copilot-proxy',
+    blurb: 'A secured proxy for using the GitHub Copilot API with Claude Code and Codex.',
+    stack: ['PowerShell', 'GitHub Copilot', 'Claude Code'],
+    href: 'https://github.com/nathan815/copilot-proxy',
   },
-]; // TODO: refresh with current projects and correct repo links
+  {
+    name: 'adx-dashboard-mcp',
+    blurb: 'An MCP server for agentic dashboard editing in Azure Data Explorer (Kusto).',
+    stack: ['JavaScript', 'MCP', 'Kusto'],
+    href: 'https://github.com/nathan815/adx-dashboard-mcp',
+  },
+  {
+    name: 'Lost Cities',
+    blurb: 'An online multiplayer version of the Lost Cities card game.',
+    stack: ['Java', 'Spring Boot', 'TypeScript', 'Vue'],
+    href: 'https://github.com/nathan815/LostCities',
+  },
+  {
+    name: 'Threes Scorekeeper',
+    blurb: 'A scorekeeping app for the card game Threes.',
+    stack: ['TypeScript'],
+    href: 'https://github.com/nathan815/threes-scorekeeper',
+  },
+  {
+    name: 'Laughable Lyrics',
+    blurb: 'An Android app that generates comical translations of song lyrics.',
+    stack: ['Kotlin', 'Android'],
+    href: 'https://github.com/nathan815/Laughable-Lyrics',
+  },
+];
