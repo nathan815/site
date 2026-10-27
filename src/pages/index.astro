@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Activity from '../components/Activity.astro';
-import { profile, skills, experience, projects } from '../data/site';
+import { profile, skills, experience, projects, workProjects, showcaseUrl } from '../data/site';
 ---
 <Base>
   <main id="top" class="mx-auto max-w-5xl px-4">
@@ -68,6 +68,31 @@ import { profile, skills, experience, projects } from '../data/site';
     <!-- Projects -->
     <section id="projects" class="reveal py-16">
       <h2 class="mb-6 font-mono text-sm text-accent"># projects</h2>
+
+      <h3 class="mb-1 text-sm font-semibold">At Microsoft</h3>
+      <p class="mb-4 text-sm text-muted">
+        Internal tools I've built on Azure VMware Solution. The code is private; the screenshots are not.
+        {showcaseUrl && <a class="text-accent underline-offset-4 hover:underline" href={showcaseUrl} target="_blank" rel="noopener">See the screenshots on GitHub ↗</a>}
+      </p>
+      <div class="grid gap-4 sm:grid-cols-2">
+        {workProjects.map((p) => (
+          <article class="card overflow-hidden">
+            {p.image
+              ? <img src={p.image} alt={p.imageAlt ?? `${p.name} screenshot`} loading="lazy" class="aspect-video w-full border-b border-border object-cover object-top" />
+              : <div class="flex aspect-video items-center justify-center border-b border-border bg-bg font-mono text-xs text-muted">screenshot coming soon</div>}
+            <div class="p-5">
+              <div class="flex items-center justify-between gap-3">
+                <h3 class="font-semibold">{p.name}</h3>
+                <span class="tag">internal</span>
+              </div>
+              <p class="mt-2 text-sm text-muted">{p.blurb}</p>
+              <div class="mt-4 flex flex-wrap gap-2">{p.stack.map((s) => <span class="tag">{s}</span>)}</div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <h3 class="mb-4 mt-12 text-sm font-semibold">Open source and personal</h3>
       <div class="grid gap-4 sm:grid-cols-2">
         {projects.map((p) => (
           <a href={p.href} target="_blank" rel="noopener" class="card block p-5">

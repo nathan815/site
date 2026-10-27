@@ -113,3 +113,28 @@ export const projects = [
     href: 'https://github.com/nathan815/Laughable-Lyrics',
   },
 ];
+
+// Internal Microsoft projects. Code stays private; screenshots live in a separate showcase repo.
+// When the repo exists, set `showcaseUrl` and give each project an `image` (path under public/).
+export const showcaseUrl: string | undefined = undefined; // TODO: e.g. 'https://github.com/nathan815/<showcase-repo>'
+
+export interface WorkProject {
+  name: string;
+  blurb: string;
+  stack: string[];
+  image?: string;
+  imageAlt?: string;
+}
+
+export const workProjects: WorkProject[] = [
+  {
+    name: 'AVS Console',
+    blurb: 'TODO: One or two sentences on what it is, who uses it, and your role. Keep it free of customer data and internal-only details.',
+    stack: ['TODO'],
+  },
+  {
+    name: 'OneSite',
+    blurb: 'TODO: One or two sentences on what it is, who uses it, and your role. Keep it free of customer data and internal-only details.',
+    stack: ['TODO'],
+  },
+];
