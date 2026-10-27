@@ -36,9 +36,22 @@ export const experience = [
   },
   {
     role: 'Software Engineering Intern',
+    org: 'Criteo',
+    period: 'Summer 2019 · Fall 2019 – Spring 2020',
+    points: [
+      'Palo Alto, CA in summer 2019, then part-time from Ann Arbor, MI through spring 2020.',
+      'TODO: Add what you worked on and the impact.',
+    ],
+    stack: [],
+  },
+  {
+    role: 'Software Engineering Intern',
     org: 'Learning A–Z',
-    period: 'Summer 2018',
-    points: ['Built offline book downloading and reading for the Android app.'],
+    period: 'Fall 2017 – Summer 2018',
+    points: [
+      'Part-time during the school year, then a summer internship in 2018.',
+      'Built offline book downloading and reading for the Android app.',
+    ],
     stack: ['Android', 'Java'],
   },
   {

@@ -14,7 +14,7 @@ const commands = JSON.stringify({
 });
 ---
 <!doctype html>
-<html lang="en" data-theme="dark" data-palette="slate">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -31,8 +31,7 @@ const commands = JSON.stringify({
       try {
         const t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
         document.documentElement.dataset.theme = t;
-        document.documentElement.dataset.palette = localStorage.getItem('palette') || 'slate';
-      } catch { document.documentElement.dataset.palette = 'slate'; }
+      } catch {}
     </script>
   </head>
   <body class="min-h-screen">
@@ -47,7 +46,6 @@ const commands = JSON.stringify({
           <button id="open-palette" class="hidden items-center gap-2 rounded-md border border-border px-2.5 py-1 font-mono text-xs text-muted hover:text-fg sm:flex" aria-label="Open command palette">
             <span>Search</span><kbd class="rounded bg-surface px-1.5 py-0.5">⌘K</kbd>
           </button>
-          <button id="cycle-palette" class="rounded-md border border-border px-2.5 py-1 text-xs text-muted hover:text-fg" aria-label="Change color palette">Palette</button>
           <button id="toggle-theme" class="rounded-md border border-border px-2.5 py-1 text-xs text-muted hover:text-fg" aria-label="Toggle light/dark theme">Theme</button>
         </div>
       </nav>

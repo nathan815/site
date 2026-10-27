@@ -4,38 +4,13 @@
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-/* Palettes: <html data-palette="..." data-theme="dark|light">. One flat accent plus a quiet second tone; no gradients. */
-:root, html[data-palette='slate'][data-theme='light'] {
+:root {
   --bg: #f4f6f8; --surface: #ffffff; --border: #dde2e8; --text: #121820; --muted: #5b6676;
   --accent: #1f66c1; --accent2: #7a8798; --on-accent: #ffffff;
 }
-html[data-palette='slate'][data-theme='dark'] {
+:root[data-theme='dark'] {
   --bg: #0e1217; --surface: #151a21; --border: #252c36; --text: #e6e9ee; --muted: #8a94a3;
   --accent: #5aa0e6; --accent2: #7d8aa0; --on-accent: #0b1016;
-}
-html[data-palette='cobalt'][data-theme='light'] {
-  --bg: #f2f4f3; --surface: #ffffff; --border: #dadedc; --text: #101312; --muted: #586060;
-  --accent: #2f4bd0; --accent2: #8a8f98; --on-accent: #ffffff;
-}
-html[data-palette='cobalt'][data-theme='dark'] {
-  --bg: #101114; --surface: #17181c; --border: #26282e; --text: #ecedef; --muted: #8d9098;
-  --accent: #8398ff; --accent2: #8a8f98; --on-accent: #0c0e14;
-}
-html[data-palette='sage'][data-theme='light'] {
-  --bg: #f1f3ef; --surface: #ffffff; --border: #d9dfd7; --text: #121a14; --muted: #56645a;
-  --accent: #2f6b45; --accent2: #8a7a45; --on-accent: #ffffff;
-}
-html[data-palette='sage'][data-theme='dark'] {
-  --bg: #0d110e; --surface: #131a15; --border: #223026; --text: #dfe6e0; --muted: #82908a;
-  --accent: #8fbf9a; --accent2: #b8a77a; --on-accent: #0b110d;
-}
-html[data-palette='amber'][data-theme='light'] {
-  --bg: #f0efec; --surface: #ffffff; --border: #dcd9d2; --text: #1a1814; --muted: #645d51;
-  --accent: #a8661b; --accent2: #5f6e68; --on-accent: #ffffff;
-}
-html[data-palette='amber'][data-theme='dark'] {
-  --bg: #14110d; --surface: #1b1712; --border: #2c261d; --text: #ece6dc; --muted: #9a9080;
-  --accent: #d9a05b; --accent2: #9aa7a0; --on-accent: #17110a;
 }
 
 @theme inline {

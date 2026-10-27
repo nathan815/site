@@ -11,15 +11,6 @@ function toggleTheme() {
 }
 $('toggle-theme').addEventListener('click', toggleTheme);
 
-const palettes = ['slate', 'cobalt', 'sage', 'amber'];
-function setPalette(name?: string) {
-  const cur = document.documentElement.dataset.palette || 'slate';
-  const next = name && palettes.includes(name) ? name : palettes[(palettes.indexOf(cur) + 1) % palettes.length];
-  document.documentElement.dataset.palette = next;
-  try { localStorage.setItem('palette', next); } catch {}
-  return next;
-}
-$('cycle-palette').addEventListener('click', () => { $('cycle-palette').textContent = setPalette(); });
 
 /* ---------- reveal on scroll ---------- */
 const io = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && (e.target.classList.add('in'), io.unobserve(e.target))), { threshold: 0.12 });
@@ -54,7 +45,6 @@ const registry: Cmd[] = [
   { name: 'resume', hint: 'Open resume (PDF)', run: () => { window.open('/ResumeNathanielJohnson.pdf', '_blank', 'noopener'); return 'opening resume…'; } },
   { name: 'email', hint: data.email, run: () => { location.href = `mailto:${data.email}`; return data.email; } },
   { name: 'theme', hint: 'Toggle light/dark', run: () => `theme: ${toggleTheme()}` },
-  { name: 'palette', hint: 'Cycle color palette (slate, cobalt, sage, amber)', run: () => `palette: ${setPalette()}` },
 ];
 
 /* ---------- palette ---------- */
@@ -109,7 +99,6 @@ const builtins: Record<string, (a: string[]) => string | void> = {
   clear: () => { out.innerHTML = ''; },
   exit: () => closeTerm(),
   sudo: () => 'nice try.',
-  palette: (a) => `palette: ${setPalette(a[0])}`,
   cd: (a) => { const s = (a[0] || '').replace(/^~?\/?/, ''); if (data.sections.includes(s)) { go(s); return `→ ${s}`; } return `cd: no such directory: ${a[0] ?? ''}`; },
 };
 $('term-form').addEventListener('submit', (e) => {
