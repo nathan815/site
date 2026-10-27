@@ -25,39 +25,104 @@ export const skills: Record<string, string[]> = {
 
 interface Title { title: string; period?: string }
 
-export const experience: {
-  role: string; org: string; period: string; logo?: string; monogram?: string; titles?: Title[]; points: string[]; stack: string[];
-}[] = [
+export interface MsProject {
+  name: string;
+  hook: string;
+  metric?: string;
+  details: string;
+  stack: string[];
+  image?: string; // screenshot under public/, shown when the box is open
+  imageAlt?: string;
+}
+
+export interface Job {
+  role: string;
+  org: string;
+  period: string;
+  summary: string;
+  logo?: string;
+  monogram?: string;
+  titles?: Title[];
+  points?: string[];
+  stack?: string[];
+  projects?: MsProject[];
+}
+
+// Internal Microsoft projects: code stays private; mock-data screenshots live in a separate showcase repo.
+// When the repo exists, set `showcaseUrl` and give each project an `image`.
+export const showcaseUrl: string | undefined = undefined; // TODO: e.g. 'https://github.com/nathan815/<showcase-repo>'
+
+export const experience: Job[] = [
   {
     role: 'Senior Software Engineer',
     org: 'Microsoft · Azure VMware Solution',
     logo: 'microsoft',
     period: '2020 – Present',
+    summary: 'Azure VMware Solution, from the physical network to on-call tooling.',
     titles: [
       { title: 'Senior Software Engineer', period: 'Sep 2026 – Present' },
       { title: 'Software Engineer II', period: 'Sep 2022 – Sep 2026' },
       { title: 'Software Engineer', period: '2020 – Sep 2022' },
     ],
-    points: [
-      'Engineer on Azure VMware Solution, the managed VMware private cloud service on Azure.',
-      'Started on the Underlay Networking team, building and improving the Pod Underlay Controller (PUC), a Python and Ansible service deployed in every AVS pod that configures its physical Cisco switches.',
-      'Moved to the tenant networking and lower-level control plane team, working on NSX management and the control plane that configures vCenter, NSX, ESXi hosts and more.',
-      'Worked on Public IP down to the NSX Edge, which lets AVS customers use Azure public IPs directly on the NSX Edge for inbound and outbound internet access, at far larger scale than managed SNAT (thousands of public IPs versus hundreds).',
-      'Leading a team of four building Atlas, a new service that replaces AWX. Its more efficient scheduler, written in C#, cut job runtimes by 30 to 50%. It runs on the Durable Functions runtime in a container, backed by Azure Storage.',
-      'Saw the pain on-call engineers faced during incidents and built AVS Console in a couple of months, released in Sep 2025. It replaced a slow PowerShell tool, cuts 20+ minutes from each incident, and is now used by 430+ engineers.',
-      'Built OneSite, a Microsoft-wide hosting platform for the AI era. AI agents build and deploy sites to it, using a built-in SDK and API for the backend. 50+ sites from 10 people so far.',
+    projects: [
+      {
+        name: 'Atlas',
+        hook: 'New service replacing AWX. I lead a team of four.',
+        metric: '30–50% faster jobs',
+        details:
+          'Atlas replaces AWX. Its more efficient scheduler, written in C#, cut job runtimes by 30 to 50%. It runs on the Durable Functions runtime in a container, backed by Azure Storage. This is my current major project, and I lead a team of four engineers on it.',
+        stack: ['C#', 'Durable Functions', 'Azure Storage', 'Containers'],
+      },
+      {
+        name: 'AVS Console',
+        hook: 'On-call app that is open in every incident.',
+        metric: '430+ engineers · 20+ min saved per incident',
+        details:
+          'Internal app for on-call operations of Azure VMware Solution SDDCs. I saw the pain on-call engineers faced during incidents and built it in a couple of months, released in Sep 2025. It replaced a slow PowerShell tool and cuts 20+ minutes from each incident. It is open on the shared screen in every incident.',
+        stack: ['On-call tooling', 'Released Sep 2025'],
+      },
+      {
+        name: 'OneSite',
+        hook: 'Hosting platform for the AI era, open to all of Microsoft.',
+        metric: '50+ sites · 10 people',
+        details:
+          'Internal hosting platform for all of Microsoft. Tell your AI agent to deploy a site and it builds and deploys to OneSite, using the built-in SDK and API for the backend: a Firebase-style database, identity, WebSockets and more. 50+ sites from 10 people so far, and growing.',
+        stack: ['Hosting platform', 'Database', 'Identity', 'WebSockets'],
+      },
+      {
+        name: 'Public IP down to the NSX Edge',
+        hook: 'Internet access straight to the NSX Edge.',
+        metric: 'Thousands of IPs, not hundreds',
+        details:
+          'A generally available AVS feature that lets customers use Azure public IPs directly on the NSX Edge for inbound and outbound internet access. It supports far larger scale than managed SNAT, with thousands of public IPs versus hundreds. I worked on it on the tenant networking and control plane team.',
+        stack: ['VMware NSX', 'Azure networking'],
+      },
+      {
+        name: 'Tenant networking and control plane',
+        hook: 'The control plane that configures NSX, vCenter and ESXi.',
+        details:
+          'I moved from the Underlay team to tenant networking and the lower-level control plane. That covers NSX management and the control plane that configures vCenter, NSX, ESXi hosts and more.',
+        stack: ['VMware NSX', 'vCenter', 'ESXi'],
+      },
+      {
+        name: 'Pod Underlay Controller (PUC)',
+        hook: 'Configures the physical Cisco switches in every AVS pod.',
+        details:
+          'My first project at Microsoft, on the Underlay Networking team. I built and improved PUC, a Python and Ansible service deployed in every AVS pod that configures its physical Cisco network switches, including ToRs and leafs.',
+        stack: ['Python', 'Ansible', 'Cisco networking'],
+      },
     ],
-    stack: ['C#', 'Python', 'Ansible', 'Azure', 'VMware NSX', 'vCenter', 'ESXi', 'Cisco networking', 'Azure DevOps'],
   },
   {
     role: 'Software Engineering Intern',
     org: 'Criteo',
     logo: '/logos/criteo.png',
     period: 'Summer 2019 · Fall 2019 – Spring 2020',
+    summary: 'Scala and Spark pipeline that processes millions of advertiser products.',
     points: [
       'Summer 2019, Palo Alto: designed and built a Spark application in Scala that consolidates product catalog data and computes statistics, processing millions of products from advertisers.',
       'Split the application into testable components using software design principles, with unit and integration tests.',
-      'Reviewed teammates\' code and incorporated feedback on my own through Gerrit code review.',
+      "Reviewed teammates' code and incorporated feedback on my own through Gerrit code review.",
       'Fall 2019 to Spring 2020, Ann Arbor (part-time): kept working with Spark and Hadoop, including fixing Scala and Java dependency issues.',
     ],
     stack: ['Scala', 'Spark', 'Hadoop', 'HDFS', 'MapReduce', 'ScalaTest', 'SQL Server', 'Gradle', 'Jenkins'],
@@ -67,10 +132,8 @@ export const experience: {
     org: 'Learning A–Z',
     logo: '/logos/learning-az.png',
     period: 'Summer 2018 – Spring 2019',
-    points: [
-      'Summer 2018 internship, then part-time through the 2018–19 school year.',
-      'Built offline book downloading and reading for the Android app.',
-    ],
+    summary: 'Offline book downloading and reading for the Android app.',
+    points: ['Summer 2018 internship, then part-time through the 2018–19 school year.'],
     stack: ['Android', 'Java'],
   },
   {
@@ -78,8 +141,7 @@ export const experience: {
     org: 'Eastern Michigan University',
     monogram: 'EMU',
     period: 'Graduated 2020',
-    points: ['Hackathons, side projects, and a computerized Christmas light display.'],
-    stack: [],
+    summary: 'Hackathons, side projects, and a computerized Christmas light display.',
   },
 ];
 
@@ -125,38 +187,5 @@ export const projects = [
     blurb: 'An Android app that generates comical translations of song lyrics.',
     stack: ['Kotlin', 'Android'],
     href: 'https://github.com/nathan815/Laughable-Lyrics',
-  },
-];
-
-// Internal Microsoft projects. Code stays private; screenshots live in a separate showcase repo.
-// When the repo exists, set `showcaseUrl` and give each project an `image` (path under public/).
-export const showcaseUrl: string | undefined = undefined; // TODO: e.g. 'https://github.com/nathan815/<showcase-repo>'
-
-export interface WorkProject {
-  name: string;
-  blurb: string;
-  stack: string[];
-  image?: string;
-  imageAlt?: string;
-}
-
-export const workProjects: WorkProject[] = [
-  {
-    name: 'Atlas',
-    blurb:
-      'A new service replacing AWX, and my current major project. I lead a team of four. A more efficient scheduler built in C# cut job runtimes by 30 to 50%. It runs on the Durable Functions runtime in a container, backed by Azure Storage.',
-    stack: ['C#', 'Durable Functions', 'Azure Storage', 'Containers'],
-  },
-  {
-    name: 'AVS Console',
-    blurb:
-      'Internal app for on-call operations of Azure VMware Solution SDDCs. I saw the pain on-call engineers faced and built it in a couple of months, released in Sep 2025. It replaced a slow PowerShell tool and cuts 20+ minutes from each incident. 430+ engineers use it, and it is open on the shared screen in every incident.',
-    stack: ['On-call tooling', '430+ users', 'Released Sep 2025'],
-  },
-  {
-    name: 'OneSite',
-    blurb:
-      'Internal hosting platform for all of Microsoft, built for the AI era. Tell your AI agent to deploy a site and it builds and deploys to OneSite, using the built-in SDK and API for the backend: a Firebase-style database, identity, WebSockets and more. 50+ sites from 10 people so far, and growing.',
-    stack: ['Hosting platform', '50+ sites', 'Database', 'Identity', 'WebSockets'],
   },
 ];

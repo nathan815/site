@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Activity from '../components/Activity.astro';
-import { profile, skills, experience, projects, workProjects, showcaseUrl } from '../data/site';
+import { profile, skills, experience, projects, showcaseUrl } from '../data/site';
 ---
 <Base>
   <main id="top" class="mx-auto max-w-5xl px-4">
@@ -50,7 +50,7 @@ import { profile, skills, experience, projects, workProjects, showcaseUrl } from
     <!-- Experience -->
     <section id="experience" class="reveal py-16">
       <h2 class="mb-6 font-mono text-sm text-accent"># experience</h2>
-      <ol class="relative space-y-6 border-l border-border pl-6">
+      <ol class="relative space-y-10 border-l border-border pl-6">
         {experience.map((e) => (
           <li class="relative">
             <span class="absolute -left-[1.85rem] top-3 h-2.5 w-2.5 rounded-full" style="background:var(--accent)"></span>
@@ -74,8 +74,46 @@ import { profile, skills, experience, projects, workProjects, showcaseUrl } from
                     {e.titles.map((t) => <li>{t.title}{t.period && <span class="font-mono text-xs"> · {t.period}</span>}</li>)}
                   </ul>
                 )}
-                <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-muted">{e.points.map((p) => <li>{p}</li>)}</ul>
-                {e.stack.length > 0 && <div class="mt-3 flex flex-wrap gap-2">{e.stack.map((s) => <span class="tag">{s}</span>)}</div>}
+                <p class="mt-2 text-sm text-muted">{e.summary}</p>
+
+                {e.projects && (
+                  <>
+                    <div class="mt-4 grid items-start gap-3 sm:grid-cols-2">
+                      {e.projects.map((p) => (
+                        <details class="card group overflow-hidden sm:open:col-span-2">
+                          <summary class="flex cursor-pointer list-none items-start justify-between gap-3 p-4 [&::-webkit-details-marker]:hidden">
+                            <div class="min-w-0">
+                              <h4 class="font-semibold">{p.name}</h4>
+                              <p class="mt-1 text-sm text-muted">{p.hook}</p>
+                              {p.metric && <p class="mt-2 font-mono text-xs text-accent">{p.metric}</p>}
+                            </div>
+                            <span class="mt-1 shrink-0 font-mono text-xs text-muted transition-transform group-open:rotate-90" aria-hidden="true">▸</span>
+                          </summary>
+                          <div class="border-t border-border p-4">
+                            {p.image && <img src={p.image} alt={p.imageAlt ?? `${p.name} screenshot`} loading="lazy" class="mb-4 aspect-video w-full rounded-md border border-border object-cover object-top" />}
+                            <p class="text-sm leading-relaxed text-muted">{p.details}</p>
+                            <div class="mt-3 flex flex-wrap gap-2">{p.stack.map((s) => <span class="tag">{s}</span>)}</div>
+                          </div>
+                        </details>
+                      ))}
+                    </div>
+                    {showcaseUrl && (
+                      <p class="mt-3 text-sm text-muted">
+                        Screenshots (mock data) on <a class="text-accent underline-offset-4 hover:underline" href={showcaseUrl} target="_blank" rel="noopener">GitHub ↗</a>
+                      </p>
+                    )}
+                  </>
+                )}
+
+                {e.points && (
+                  <details class="group mt-2">
+                    <summary class="inline-flex cursor-pointer list-none items-center gap-1 font-mono text-xs text-accent [&::-webkit-details-marker]:hidden">
+                      <span class="transition-transform group-open:rotate-90" aria-hidden="true">▸</span> details
+                    </summary>
+                    <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-muted">{e.points.map((p) => <li>{p}</li>)}</ul>
+                    {e.stack && e.stack.length > 0 && <div class="mt-3 flex flex-wrap gap-2">{e.stack.map((s) => <span class="tag">{s}</span>)}</div>}
+                  </details>
+                )}
               </div>
             </div>
           </li>
@@ -85,32 +123,9 @@ import { profile, skills, experience, projects, workProjects, showcaseUrl } from
 
     <!-- Projects -->
     <section id="projects" class="reveal py-16">
-      <h2 class="mb-6 font-mono text-sm text-accent"># projects</h2>
+      <h2 class="mb-2 font-mono text-sm text-accent"># open source and personal projects</h2>
+      <p class="mb-6 text-sm text-muted">Side projects on GitHub. My larger work at Microsoft is in the experience section above.</p>
 
-      <h3 class="mb-1 text-sm font-semibold">At Microsoft</h3>
-      <p class="mb-4 text-sm text-muted">
-        Internal tools I've built on Azure VMware Solution. The code is private; the screenshots are not.
-        {showcaseUrl && <a class="text-accent underline-offset-4 hover:underline" href={showcaseUrl} target="_blank" rel="noopener">See the screenshots on GitHub ↗</a>}
-      </p>
-      <div class="grid gap-4 sm:grid-cols-2">
-        {workProjects.map((p) => (
-          <article class="card overflow-hidden">
-            {p.image
-              ? <img src={p.image} alt={p.imageAlt ?? `${p.name} screenshot`} loading="lazy" class="aspect-video w-full border-b border-border object-cover object-top" />
-              : <div class="flex aspect-video items-center justify-center border-b border-border bg-bg font-mono text-xs text-muted">screenshot coming soon</div>}
-            <div class="p-5">
-              <div class="flex items-center justify-between gap-3">
-                <h3 class="font-semibold">{p.name}</h3>
-                <span class="tag">internal</span>
-              </div>
-              <p class="mt-2 text-sm text-muted">{p.blurb}</p>
-              <div class="mt-4 flex flex-wrap gap-2">{p.stack.map((s) => <span class="tag">{s}</span>)}</div>
-            </div>
-          </article>
-        ))}
-      </div>
-
-      <h3 class="mb-4 mt-12 text-sm font-semibold">Open source and personal</h3>
       <div class="grid gap-4 sm:grid-cols-2">
         {projects.map((p) => (
           <a href={p.href} target="_blank" rel="noopener" class="card block p-5">
