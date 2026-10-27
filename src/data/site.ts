@@ -40,7 +40,7 @@ export const experience: {
     points: [
       'Engineer on Azure VMware Solution, the managed VMware private cloud service on Azure.',
       'Since summer 2025, built AVS Console, the on-call operations app used by 430+ engineers. It replaced a slow PowerShell tool and cuts 20+ minutes from each incident.',
-      'Built OneSite, an internal site hosting platform with a built-in database, identity and WebSockets.',
+      'Built OneSite, a Microsoft-wide hosting platform for the AI era. AI agents build and deploy sites to it, using a built-in SDK and API for the backend. 50+ sites from 10 people so far.',
     ],
     stack: ['Azure', 'Azure DevOps'],
   },
@@ -148,7 +148,7 @@ export const workProjects: WorkProject[] = [
   {
     name: 'OneSite',
     blurb:
-      'Internal site hosting platform. Every site comes with built-in APIs: a Firebase-style database, identity, WebSockets and more.',
-    stack: ['Hosting platform', 'Database', 'Identity', 'WebSockets'],
+      'Internal hosting platform for all of Microsoft, built for the AI era. Tell your AI agent to deploy a site and it builds and deploys to OneSite, using the built-in SDK and API for the backend: a Firebase-style database, identity, WebSockets and more. 50+ sites from 10 people so far, and growing.',
+    stack: ['Hosting platform', '50+ sites', 'Database', 'Identity', 'WebSockets'],
   },
 ];
