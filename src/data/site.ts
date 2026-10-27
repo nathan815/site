@@ -107,16 +107,16 @@ export const projects = [
     href: 'https://github.com/nathan815/adx-dashboard-mcp',
   },
   {
-    name: 'Lost Cities',
-    blurb: 'An online multiplayer version of the Lost Cities card game.',
-    stack: ['Java', 'Spring Boot', 'TypeScript', 'Vue'],
-    href: 'https://github.com/nathan815/LostCities',
-  },
-  {
     name: 'Threes Scorekeeper',
     blurb: 'A scorekeeping app for the card game Threes.',
     stack: ['TypeScript'],
     href: 'https://github.com/nathan815/threes-scorekeeper',
+  },
+  {
+    name: 'Lost Cities',
+    blurb: 'An online multiplayer version of the Lost Cities card game.',
+    stack: ['Java', 'Spring Boot', 'TypeScript', 'Vue'],
+    href: 'https://github.com/nathan815/LostCities',
   },
   {
     name: 'Laughable Lyrics',
