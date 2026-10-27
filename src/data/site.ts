@@ -41,6 +41,7 @@ export const experience = [
     period: 'Summer 2019 · Fall 2019 – Spring 2020',
     points: [
       'Palo Alto, CA in summer 2019, then part-time from Ann Arbor, MI through spring 2020.',
+      'Continued working with Spark and Hadoop part-time, including resolving Scala and Java dependency issues.',
       'Designed and built a Spark application in Scala that consolidates product catalog data and computes statistics, processing millions of products from advertisers.',
       'Split the application into testable components using software design principles, with unit and integration tests.',
       'Reviewed teammates\' code and incorporated feedback on my own through Gerrit code review.',
