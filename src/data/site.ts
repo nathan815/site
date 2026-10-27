@@ -40,12 +40,12 @@ export const experience: {
     ],
     points: [
       'Engineer on Azure VMware Solution, the managed VMware private cloud service on Azure.',
-      'Started on the Underlay Networking team, building and improving the service that configures the physical Cisco network switches (ToRs, leafs and more) in every AVS data center.',
+      'Started on the Underlay Networking team, building and improving the Pod Underlay Controller (PUC), a Python and Ansible service deployed in every pod that configures the physical Cisco switches (ToRs, leafs and more). That was about 26 switches per pod across 60 to 70 pods, roughly 1,500 to 1,800 switches in total.',
       'Moved to the tenant networking and lower-level control plane team, working on NSX management and the control plane that configures vCenter, NSX, ESXi hosts and more.',
-      'Since summer 2025, built AVS Console, the on-call operations app used by 430+ engineers. It replaced a slow PowerShell tool and cuts 20+ minutes from each incident.',
+      'Built AVS Console in under a year, the on-call operations app now used by 430+ engineers. It replaced a slow PowerShell tool and cuts 20+ minutes from each incident.',
       'Built OneSite, a Microsoft-wide hosting platform for the AI era. AI agents build and deploy sites to it, using a built-in SDK and API for the backend. 50+ sites from 10 people so far.',
     ],
-    stack: ['Azure', 'VMware NSX', 'vCenter', 'ESXi', 'Cisco networking', 'Azure DevOps'],
+    stack: ['Python', 'Ansible', 'Azure', 'VMware NSX', 'vCenter', 'ESXi', 'Cisco networking', 'Azure DevOps'],
   },
   {
     role: 'Software Engineering Intern',
