@@ -7,7 +7,7 @@ export const profile = {
   summary:
     "I'm a Senior Software Engineer at Microsoft, where I've worked on Azure VMware Solution since 2020. I like building reliable cloud infrastructure and well-crafted software, and I experiment with AI-assisted development on the side.",
   location: 'Michigan, USA', // TODO: confirm
-  email: 'hello@nathancj.com', // TODO: confirm real address
+  email: 'hello@nathancj.com',
   links: [
     { label: 'GitHub', href: 'https://github.com/nathan815' },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/nathanielcjohnson' },
@@ -40,10 +40,12 @@ export const experience: {
     ],
     points: [
       'Engineer on Azure VMware Solution, the managed VMware private cloud service on Azure.',
+      'Started on the Underlay Networking team, building and improving the service that configures the physical Cisco network switches (ToRs, leafs and more) in every AVS data center.',
+      'Moved to the tenant networking and lower-level control plane team, working on NSX management and the control plane that configures vCenter, NSX, ESXi hosts and more.',
       'Since summer 2025, built AVS Console, the on-call operations app used by 430+ engineers. It replaced a slow PowerShell tool and cuts 20+ minutes from each incident.',
       'Built OneSite, a Microsoft-wide hosting platform for the AI era. AI agents build and deploy sites to it, using a built-in SDK and API for the backend. 50+ sites from 10 people so far.',
     ],
-    stack: ['Azure', 'Azure DevOps'],
+    stack: ['Azure', 'VMware NSX', 'vCenter', 'ESXi', 'Cisco networking', 'Azure DevOps'],
   },
   {
     role: 'Software Engineering Intern',
