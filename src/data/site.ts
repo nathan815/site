@@ -19,7 +19,7 @@ export const skills: Record<string, string[]> = {
   Languages: ['TypeScript', 'JavaScript', 'Go', 'Python', 'PowerShell', 'Java', 'Kotlin', 'SQL'],
   Frontend: ['React', 'Vue', 'React Native', 'Astro', 'Tailwind'],
   Backend: ['Node.js', 'Spring Boot', 'Laravel', 'Redis'],
-  Data: ['Spark', 'Hadoop', 'HDFS'],
+  Data: ['Spark', 'Scala', 'Hadoop', 'HDFS', 'SQL Server'],
   Tooling: ['Git', 'GitHub Actions', 'Azure', 'Azure DevOps', 'Copilot', 'Claude Code', 'MCP'],
 };
 
@@ -41,9 +41,11 @@ export const experience = [
     period: 'Summer 2019 · Fall 2019 – Spring 2020',
     points: [
       'Palo Alto, CA in summer 2019, then part-time from Ann Arbor, MI through spring 2020.',
-      'TODO: Add what you worked on and the impact.',
+      'Designed and built a Spark application in Scala that consolidates product catalog data and computes statistics, processing millions of products from advertisers.',
+      'Split the application into testable components using software design principles, with unit and integration tests.',
+      'Reviewed teammates\' code and incorporated feedback on my own through Gerrit code review.',
     ],
-    stack: [],
+    stack: ['Scala', 'Spark', 'Hadoop', 'HDFS', 'MapReduce', 'ScalaTest', 'SQL Server', 'Gradle', 'Jenkins'],
   },
   {
     role: 'Software Engineering Intern',
