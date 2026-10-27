@@ -44,7 +44,7 @@ export const experience: {
       'Moved to the tenant networking and lower-level control plane team, working on NSX management and the control plane that configures vCenter, NSX, ESXi hosts and more.',
       'Worked on Public IP down to the NSX Edge, which lets AVS customers use Azure public IPs directly on the NSX Edge for inbound and outbound internet access, at far larger scale than managed SNAT (thousands of public IPs versus hundreds).',
       'Leading a team of four building Atlas, a new service that replaces AWX. Its more efficient scheduler, written in C#, cut job runtimes by 30 to 50%. It runs on the Durable Functions runtime in a container, backed by Azure Storage.',
-      'Built AVS Console in under a year, the on-call operations app now used by 430+ engineers. It replaced a slow PowerShell tool and cuts 20+ minutes from each incident.',
+      'Saw the pain on-call engineers faced during incidents and built AVS Console in a couple of months, released in Sep 2025. It replaced a slow PowerShell tool, cuts 20+ minutes from each incident, and is now used by 430+ engineers.',
       'Built OneSite, a Microsoft-wide hosting platform for the AI era. AI agents build and deploy sites to it, using a built-in SDK and API for the backend. 50+ sites from 10 people so far.',
     ],
     stack: ['C#', 'Python', 'Ansible', 'Azure', 'VMware NSX', 'vCenter', 'ESXi', 'Cisco networking', 'Azure DevOps'],
@@ -150,8 +150,8 @@ export const workProjects: WorkProject[] = [
   {
     name: 'AVS Console',
     blurb:
-      'Internal app for on-call operations of Azure VMware Solution SDDCs, used by 430+ engineers. Built since summer 2025, it is open on the shared screen in every incident. I built it to replace a slow PowerShell tool, and it cuts 20+ minutes from each incident.',
-    stack: ['On-call tooling', '430+ users'],
+      'Internal app for on-call operations of Azure VMware Solution SDDCs. I saw the pain on-call engineers faced and built it in a couple of months, released in Sep 2025. It replaced a slow PowerShell tool and cuts 20+ minutes from each incident. 430+ engineers use it, and it is open on the shared screen in every incident.',
+    stack: ['On-call tooling', '430+ users', 'Released Sep 2025'],
   },
   {
     name: 'OneSite',
