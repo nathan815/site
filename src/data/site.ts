@@ -40,8 +40,9 @@ export const experience: {
     ],
     points: [
       'Engineer on Azure VMware Solution, the managed VMware private cloud service on Azure.',
-      'Started on the Underlay Networking team, building and improving the Pod Underlay Controller (PUC), a Python and Ansible service deployed in every pod that configures the physical Cisco switches (ToRs, leafs and more). That was about 26 switches per pod across 60 to 70 pods, roughly 1,500 to 1,800 switches in total.',
+      'Started on the Underlay Networking team, building and improving the Pod Underlay Controller (PUC), a Python and Ansible service deployed in every AVS pod that configures its physical Cisco switches.',
       'Moved to the tenant networking and lower-level control plane team, working on NSX management and the control plane that configures vCenter, NSX, ESXi hosts and more.',
+      'Worked on Public IP down to the NSX Edge, which lets AVS customers use Azure public IPs directly on the NSX Edge for inbound and outbound internet access, at far larger scale than managed SNAT (thousands of public IPs versus hundreds).',
       'Built AVS Console in under a year, the on-call operations app now used by 430+ engineers. It replaced a slow PowerShell tool and cuts 20+ minutes from each incident.',
       'Built OneSite, a Microsoft-wide hosting platform for the AI era. AI agents build and deploy sites to it, using a built-in SDK and API for the backend. 50+ sites from 10 people so far.',
     ],
