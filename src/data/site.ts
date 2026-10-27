@@ -47,9 +47,9 @@ export const experience = [
   {
     role: 'Software Engineering Intern',
     org: 'Learning A–Z',
-    period: 'Fall 2017 – Summer 2018',
+    period: 'Summer 2018 – Spring 2019',
     points: [
-      'Part-time during the school year, then a summer internship in 2018.',
+      'Summer 2018 internship, then part-time through the 2018–19 school year.',
       'Built offline book downloading and reading for the Android app.',
     ],
     stack: ['Android', 'Java'],
