@@ -93,12 +93,6 @@ export const projects = [
     href: 'https://github.com/nathan815/prscope',
   },
   {
-    name: 'pr-reviewer',
-    blurb: 'A local AI code review platform for Azure DevOps pull requests.',
-    stack: ['JavaScript', 'Azure DevOps', 'AI'],
-    href: 'https://github.com/nathan815/pr-reviewer',
-  },
-  {
     name: 'copilot-proxy',
     blurb: 'A secured proxy for using the GitHub Copilot API with Claude Code and Codex.',
     stack: ['PowerShell', 'GitHub Copilot', 'Claude Code'],
