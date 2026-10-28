@@ -38,17 +38,26 @@ if (typed) {
 
 /* ---------- backend (optional) ---------- */
 interface ApiStatus { status: string; version: string; startedAt: string; uptimeSeconds: number; goVersion: string; requests: number }
+class ApiError extends Error {}
+
 async function apiStatus(): Promise<ApiStatus> {
-  if (!data.apiUrl) throw new Error('not configured');
+  if (!data.apiUrl) throw new ApiError('no backend configured (PUBLIC_API_URL was not set when the site was built)');
+  const url = `${data.apiUrl}/api/status`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 3000);
   try {
-    const res = await fetch(`${data.apiUrl}/api/status`, { signal: ctrl.signal });
-    if (!res.ok) throw new Error(String(res.status));
-    return (await res.json()) as ApiStatus;
+    const res = await fetch(url, { signal: ctrl.signal });
+    if (!res.ok) throw new ApiError(`GET ${url} returned HTTP ${res.status}${res.statusText ? ` ${res.statusText}` : ''}`);
+    try { return (await res.json()) as ApiStatus; }
+    catch (e) { throw new ApiError(`GET ${url} returned a response that is not valid JSON (${(e as Error).message})`); }
+  } catch (e) {
+    if (e instanceof ApiError) throw e;
+    if ((e as Error).name === 'AbortError') throw new ApiError(`GET ${url} timed out after 3s`);
+    // Browsers report network failures and CORS blocks identically, so say both.
+    throw new ApiError(`GET ${url} failed: ${(e as Error).message} (network error, or blocked by CORS: the browser does not say which)`);
   } finally { clearTimeout(timer); }
 }
-const offline = 'backend offline (the site is static; the live API runs separately and is not reachable right now)';
+const errText = (e: unknown) => `error: ${e instanceof Error ? e.message : String(e)}`;
 const fmtUptime = (s: number) => {
   const d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60);
   return [d && `${d}d`, (d || h) && `${h}h`, `${m}m`].filter(Boolean).join(' ');
@@ -64,10 +73,10 @@ const registry: Cmd[] = [
   { name: 'email', hint: data.email, run: () => { location.href = `mailto:${data.email}`; return data.email; } },
   { name: 'status', hint: 'Live backend status', run: async () => {
       try { const a = await apiStatus(); return `api: ${a.status}\nversion: ${a.version}\nuptime: ${fmtUptime(a.uptimeSeconds)}\nruntime: ${a.goVersion}\nrequests served: ${a.requests}`; }
-      catch { return offline; }
+      catch (e) { return errText(e); }
     } },
   { name: 'uptime', hint: 'How long the backend has been up', run: async () => {
-      try { return `up ${fmtUptime((await apiStatus()).uptimeSeconds)}`; } catch { return offline; }
+      try { return `up ${fmtUptime((await apiStatus()).uptimeSeconds)}`; } catch (e) { return errText(e); }
     } },
   { name: 'theme', hint: 'Toggle light/dark', run: () => `theme: ${toggleTheme()}` },
 ];

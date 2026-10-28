@@ -2,7 +2,7 @@
 
 Small Go backend for nathancj.com. It serves live data for the site's terminal (`status`, `uptime`) and is the place to add more features later. Standard library only.
 
-The site is static and works without it. When the API is unreachable the terminal prints a "backend offline" message.
+The site is static and works without it. When the API fails, the terminal prints the actual error (HTTP status, timeout, network or CORS failure, or "no backend configured").
 
 ## Endpoints
 | Route | Description |
