@@ -64,18 +64,18 @@ const fmtUptime = (s: number) => {
 };
 
 /* ---------- shared command registry ---------- */
-interface Cmd { name: string; hint: string; run: () => string | void | Promise<string | void> }
+interface Cmd { name: string; hint: string; showOutput?: boolean; run: () => string | void | Promise<string | void> }
 const go = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); };
 const registry: Cmd[] = [
   ...data.sections.map((s: string): Cmd => ({ name: `goto ${s}`, hint: `Jump to ${s}`, run: () => { go(s); return `→ ${s}`; } })),
   ...data.links.map((l: { label: string; href: string }): Cmd => ({ name: `open ${l.label.toLowerCase().replace(/\s+/g, '-')}`, hint: l.href, run: () => { window.open(l.href, '_blank', 'noopener'); return `opening ${l.href}`; } })),
   { name: 'resume', hint: 'Open resume (PDF)', run: () => { window.open('/ResumeNathanielJohnson.pdf', '_blank', 'noopener'); return 'opening resume…'; } },
   { name: 'email', hint: data.email, run: () => { location.href = `mailto:${data.email}`; return data.email; } },
-  { name: 'status', hint: 'Live backend status', run: async () => {
+  { name: 'status', hint: 'Live backend status', showOutput: true, run: async () => {
       try { const a = await apiStatus(); return `api: ${a.status}\nversion: ${a.version}\nuptime: ${fmtUptime(a.uptimeSeconds)}\nruntime: ${a.goVersion}\nrequests served: ${a.requests}`; }
       catch (e) { return errText(e); }
     } },
-  { name: 'uptime', hint: 'How long the backend has been up', run: async () => {
+  { name: 'uptime', hint: 'How long the backend has been up', showOutput: true, run: async () => {
       try { return `up ${fmtUptime((await apiStatus()).uptimeSeconds)}`; } catch (e) { return errText(e); }
     } },
   { name: 'theme', hint: 'Toggle light/dark', run: () => `theme: ${toggleTheme()}` },
@@ -97,10 +97,19 @@ function renderPalette() {
     li.innerHTML = `<span class="font-mono"></span><span class="truncate text-xs"></span>`;
     (li.children[0] as HTMLElement).textContent = c.name;
     (li.children[1] as HTMLElement).textContent = c.hint;
-    li.addEventListener('click', () => { closePalette(); c.run(); });
+    li.addEventListener('click', () => runFromPalette(c));
     palList.appendChild(li);
   });
   if (!shown.length) palList.innerHTML = '<li class="px-4 py-2 text-muted">No matches</li>';
+}
+// Commands that produce text (status, uptime) show it in the terminal; the rest just act.
+async function runFromPalette(c: Cmd) {
+  closePalette();
+  if (!c.showOutput) { c.run(); return; }
+  openTerm();
+  termPrint(`$ ${c.name}`, 'text-fg');
+  const res = await c.run();
+  if (res) termPrint(String(res), 'text-muted');
 }
 function openPalette() { pal.classList.replace('hidden', 'flex'); palIn.value = ''; sel = 0; renderPalette(); palIn.focus(); }
 function closePalette() { pal.classList.replace('flex', 'hidden'); }
@@ -110,7 +119,7 @@ palIn.addEventListener('input', () => { sel = 0; renderPalette(); });
 palIn.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowDown') { sel = Math.min(sel + 1, shown.length - 1); renderPalette(); e.preventDefault(); }
   else if (e.key === 'ArrowUp') { sel = Math.max(sel - 1, 0); renderPalette(); e.preventDefault(); }
-  else if (e.key === 'Enter' && shown[sel]) { closePalette(); shown[sel].run(); }
+  else if (e.key === 'Enter' && shown[sel]) runFromPalette(shown[sel]);
 });
 
 /* ---------- terminal ---------- */
