@@ -75,11 +75,11 @@ export const experience: Job[] = [
       },
       {
         name: 'AVS Console',
-        hook: 'On-call app that is open in every incident.',
+        hook: 'On-call app that is open in every incident. I still maintain it.',
         metric: '430+ engineers · 20+ min saved per incident',
         details:
-          'Internal app for on-call operations of Azure VMware Solution SDDCs. I saw the pain on-call engineers faced during incidents and built it in a couple of months, released in Sep 2025. It replaced a slow PowerShell tool and cuts 20+ minutes from each incident. It is open on the shared screen in every incident.',
-        stack: ['On-call tooling', 'Released Sep 2025'],
+          'Internal app for on-call operations of Azure VMware Solution SDDCs. I saw the pain on-call engineers faced during incidents and built the first version in a couple of months, released in Sep 2025. It replaced a slow PowerShell tool and cuts 20+ minutes from each incident. It is open on the shared screen in every incident. I am still its primary maintainer, improving it and adding features since launch.',
+        stack: ['On-call tooling', 'Primary maintainer', 'Since Sep 2025'],
       },
       {
         name: 'OneSite',
