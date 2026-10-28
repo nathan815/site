@@ -5,6 +5,7 @@ const { title = `${profile.name} — ${profile.role}`, description = profile.sum
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const sections = ['skills', 'experience', 'projects', 'activity', 'contact'];
 const commands = JSON.stringify({
+  apiUrl: import.meta.env.PUBLIC_API_URL ?? '',
   sections,
   links: profile.links,
   email: profile.email,

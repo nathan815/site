@@ -16,5 +16,8 @@ All copy lives in `src/data/site.ts`. Items marked `TODO` are placeholders.
 ## Activity section
 Renders `src/data/activity.json` (placeholder sample). Real data comes from a separate collector project; set `ACTIVITY_DATA_URL` (Netlify build env var) to a published JSON file with the same schema and it is fetched at build time, falling back to the bundled file.
 
+## Backend (optional)
+A small Go API in `api/` powers the terminal's live `status` and `uptime` commands. See `api/README.md`. Set `PUBLIC_API_URL` at build time to enable it.
+
 ## Keyboard
 `Cmd/Ctrl+K` command palette, `` ` `` mini terminal.

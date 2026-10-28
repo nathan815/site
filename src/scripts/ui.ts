@@ -36,14 +36,39 @@ if (typed) {
   }
 }
 
+/* ---------- backend (optional) ---------- */
+interface ApiStatus { status: string; version: string; startedAt: string; uptimeSeconds: number; goVersion: string; requests: number }
+async function apiStatus(): Promise<ApiStatus> {
+  if (!data.apiUrl) throw new Error('not configured');
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 3000);
+  try {
+    const res = await fetch(`${data.apiUrl}/api/status`, { signal: ctrl.signal });
+    if (!res.ok) throw new Error(String(res.status));
+    return (await res.json()) as ApiStatus;
+  } finally { clearTimeout(timer); }
+}
+const offline = 'backend offline (the site is static; the live API runs separately and is not reachable right now)';
+const fmtUptime = (s: number) => {
+  const d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60);
+  return [d && `${d}d`, (d || h) && `${h}h`, `${m}m`].filter(Boolean).join(' ');
+};
+
 /* ---------- shared command registry ---------- */
-interface Cmd { name: string; hint: string; run: () => string | void }
+interface Cmd { name: string; hint: string; run: () => string | void | Promise<string | void> }
 const go = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); };
 const registry: Cmd[] = [
   ...data.sections.map((s: string): Cmd => ({ name: `goto ${s}`, hint: `Jump to ${s}`, run: () => { go(s); return `→ ${s}`; } })),
   ...data.links.map((l: { label: string; href: string }): Cmd => ({ name: `open ${l.label.toLowerCase().replace(/\s+/g, '-')}`, hint: l.href, run: () => { window.open(l.href, '_blank', 'noopener'); return `opening ${l.href}`; } })),
   { name: 'resume', hint: 'Open resume (PDF)', run: () => { window.open('/ResumeNathanielJohnson.pdf', '_blank', 'noopener'); return 'opening resume…'; } },
   { name: 'email', hint: data.email, run: () => { location.href = `mailto:${data.email}`; return data.email; } },
+  { name: 'status', hint: 'Live backend status', run: async () => {
+      try { const a = await apiStatus(); return `api: ${a.status}\nversion: ${a.version}\nuptime: ${fmtUptime(a.uptimeSeconds)}\nruntime: ${a.goVersion}\nrequests served: ${a.requests}`; }
+      catch { return offline; }
+    } },
+  { name: 'uptime', hint: 'How long the backend has been up', run: async () => {
+      try { return `up ${fmtUptime((await apiStatus()).uptimeSeconds)}`; } catch { return offline; }
+    } },
   { name: 'theme', hint: 'Toggle light/dark', run: () => `theme: ${toggleTheme()}` },
 ];
 
@@ -101,7 +126,7 @@ const builtins: Record<string, (a: string[]) => string | void> = {
   sudo: () => 'nice try.',
   cd: (a) => { const s = (a[0] || '').replace(/^~?\/?/, ''); if (data.sections.includes(s)) { go(s); return `→ ${s}`; } return `cd: no such directory: ${a[0] ?? ''}`; },
 };
-$('term-form').addEventListener('submit', (e) => {
+$('term-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const line = tin.value.trim(); tin.value = '';
   if (!line) return;
@@ -109,7 +134,7 @@ $('term-form').addEventListener('submit', (e) => {
   termPrint(`$ ${line}`, 'text-fg');
   const [cmd, ...args] = line.split(/\s+/);
   const reg = registry.find((c) => c.name === line.toLowerCase());
-  const res = reg ? reg.run() : builtins[cmd.toLowerCase()]?.(args) ?? `command not found: ${cmd}`;
+  const res = reg ? await reg.run() : builtins[cmd.toLowerCase()]?.(args) ?? `command not found: ${cmd}`;
   if (res) termPrint(String(res), 'text-muted');
 });
 tin.addEventListener('keydown', (e) => {
