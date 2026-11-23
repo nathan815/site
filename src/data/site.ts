@@ -67,11 +67,11 @@ export const experience: Job[] = [
     projects: [
       {
         name: 'Atlas',
-        hook: 'New service replacing AWX. I lead a team of four.',
-        metric: '30–50% faster jobs',
+        hook: 'Control plane job orchestrator replacing AWX. I lead a team of four.',
+        metric: '2,000+ SDDCs · 30–50% faster jobs',
         details:
-          'Atlas replaces AWX. Its more efficient scheduler, written in C#, cut job runtimes by 30 to 50%. It runs on the Durable Functions runtime in a container, backed by Azure Storage. This is my current major project, and I lead a team of four engineers on it.',
-        stack: ['C#', 'Durable Functions', 'Azure Storage', 'Containers'],
+          'Atlas is a new control plane job orchestrator service that replaces AWX. It is deployed globally on over 2,000 AVS SDDCs. Its more efficient scheduler, written in C#, cut job runtimes by 30 to 50%. It runs on the Durable Functions runtime in a container, backed by Azure Storage. This is my current major project, and I lead a team of four engineers on it.',
+        stack: ['C#', 'Durable Functions', 'Azure Storage', 'Containers', 'Job orchestration'],
       },
       {
         name: 'AVS Console',
