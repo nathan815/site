@@ -1,6 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
-import Activity from '../components/Activity.astro';
+import GithubActivity from '../components/GithubActivity.astro';
+// Work activity charts are hidden until the collector project is running.
+// Re-enable: see https://github.com/nathan815/site/issues/13
+// import Activity from '../components/Activity.astro';
 import { profile, skills, experience, projects, showcaseUrl } from '../data/site';
 ---
 <Base>
@@ -134,9 +137,14 @@ import { profile, skills, experience, projects, showcaseUrl } from '../data/site
 
     <!-- Activity -->
     <section id="activity" class="reveal py-16">
-      <h2 class="mb-2 font-mono text-sm text-accent"># activity</h2>
-      <p class="mb-6 text-sm text-muted">Recent engineering and AI-assisted work, as aggregate numbers.</p>
-      <Activity />
+      <h2 class="mb-2 font-mono text-sm text-accent"># recent github activity</h2>
+      <p class="mb-6 text-sm text-muted">What I have been building in public lately.</p>
+      <GithubActivity />
+      {/* Work activity charts (hidden until the collector is set up): https://github.com/nathan815/site/issues/13
+      <div class="mt-12">
+        <Activity />
+      </div>
+      */}
     </section>
 
     <!-- Contact -->

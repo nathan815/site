@@ -1,0 +1,43 @@
+---
+import { githubActivity as a } from '../data/githubActivity';
+
+const fmtDate = (iso: string) => new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+const stats = [
+  { label: 'Active repos', value: a.totals.repos },
+  { label: 'Commits', value: a.totals.commits },
+  { label: 'Pull requests', value: a.totals.prs },
+].filter((s) => s.value !== null);
+// Until real commit and PR counts exist (the build-time script fills them in), skip the lone repo tile.
+const showStats = a.totals.commits !== null && a.totals.prs !== null;
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+---
+{showStats && (
+  <div class="grid gap-4 sm:grid-cols-3">
+    {stats.map((s) => (
+      <div class="card p-5">
+        <div class="font-mono text-3xl font-semibold accent-text">{s.value}</div>
+        <div class="mt-1 text-xs text-muted">{s.label} · last {a.windowDays} days</div>
+      </div>
+    ))}
+  </div>
+)}
+
+<ul class:list={['grid gap-4 sm:grid-cols-2', showStats && 'mt-4']}>
+  {a.repos.map((r) => (
+    <li>
+      <a href={r.url} target="_blank" rel="noopener" class="card block h-full p-5">
+        <h3 class="font-semibold">{r.name} <span class="text-accent">↗</span></h3>
+        {r.description && <p class="mt-2 text-sm text-muted">{r.description}</p>}
+        <div class="mt-4 flex flex-wrap items-center gap-2">
+          {r.language && <span class="tag">{r.language}</span>}
+          {r.commits !== null && <span class="tag">{plural(r.commits, 'commit')}</span>}
+          {r.prs !== null && <span class="tag">{plural(r.prs, 'PR')}</span>}
+          <span class="font-mono text-xs text-muted">pushed {fmtDate(r.pushedAt)}</span>
+        </div>
+      </a>
+    </li>
+  ))}
+</ul>
+<p class="mt-4 text-xs text-muted">
+  Public repositories only, last {a.windowDays} days. Updated {fmtDate(a.generatedAt)}.
+</p>

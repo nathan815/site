@@ -14,7 +14,9 @@ npm run check    # type check
 All copy lives in `src/data/site.ts`. Items marked `TODO` are placeholders.
 
 ## Activity section
-Renders `src/data/activity.json` (placeholder sample). Real data comes from a separate collector project; set `ACTIVITY_DATA_URL` (Netlify build env var) to a published JSON file with the same schema and it is fetched at build time, falling back to the bundled file.
+Shows recently active public GitHub repos with their descriptions and commit and PR counts. `scripts/github-activity.mjs` fetches them at build time (see `netlify.toml`) and writes `src/data/github-activity.json`. It needs no token, but set `GITHUB_TOKEN` in Netlify to avoid rate limits. If the fetch fails, the committed snapshot is used and the build continues. Run it locally with `npm run activity`.
+
+The work activity charts (commits, PRs and AI sessions from a separate collector) are hidden until that project exists. See [issue 13](https://github.com/nathan815/site/issues/13).
 
 ## Backend (optional)
 A small Go API in `api/` powers the terminal's live `status` and `uptime` commands. See `api/README.md`. Set `PUBLIC_API_URL` at build time to enable it.

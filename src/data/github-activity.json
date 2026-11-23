@@ -1,0 +1,13 @@
+{
+  "_note": "Snapshot used until scripts/github-activity.mjs runs at build time. Commit and PR counts are filled in by that script.",
+  "generatedAt": "2026-11-23T00:00:00Z",
+  "user": "nathan815",
+  "windowDays": 90,
+  "totals": { "repos": 4, "commits": null, "prs": null },
+  "repos": [
+    { "name": "ADO-Boost", "description": "Chrome/Edge extension that adds diff stats and Copilot file groups to Azure DevOps PRs", "language": "TypeScript", "url": "https://github.com/nathan815/ADO-Boost", "stars": 0, "pushedAt": "2026-10-26T22:49:34Z", "commits": null, "prs": null },
+    { "name": "prscope", "description": "PR dashboard for Azure DevOps across repos", "language": "TypeScript", "url": "https://github.com/nathan815/prscope", "stars": 0, "pushedAt": "2026-10-26T04:05:12Z", "commits": null, "prs": null },
+    { "name": "homelab", "description": "Home automation and homelab experiments", "language": "Shell", "url": "https://github.com/nathan815/homelab", "stars": 0, "pushedAt": "2026-10-26T03:22:45Z", "commits": null, "prs": null },
+    { "name": "site", "description": "Personal website", "language": "Astro", "url": "https://github.com/nathan815/site", "stars": 1, "pushedAt": "2026-11-23T22:50:00Z", "commits": null, "prs": null }
+  ]
+}

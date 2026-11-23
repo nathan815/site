@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build"
+  command = "node scripts/github-activity.mjs && npm run build"
   publish = "dist"
 
 [build.environment]
