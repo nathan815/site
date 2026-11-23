@@ -67,9 +67,19 @@ import { profile, skills, experience, projects, showcaseUrl, contacts } from '..
                   <span class="font-mono text-xs text-muted">{e.period}</span>
                 </div>
                 {e.titles && (
-                  <ul class="mt-1 space-y-0.5 text-sm text-muted" aria-label="Titles held">
-                    {e.titles.map((t) => <li>{t.title}{t.period && <span class="font-mono text-xs"> · {t.period}</span>}</li>)}
-                  </ul>
+                  <div class="mt-1 text-sm text-muted" aria-label="Titles held">
+                    <p>{e.titles[0].title}{e.titles[0].period && <span class="font-mono text-xs"> · {e.titles[0].period}</span>}</p>
+                    {e.titles.length > 1 && (
+                      <details class="group">
+                        <summary class="inline-flex cursor-pointer list-none items-center gap-1 font-mono text-xs text-accent [&::-webkit-details-marker]:hidden">
+                          <span class="transition-transform group-open:rotate-90" aria-hidden="true">▸</span> full progression
+                        </summary>
+                        <ul class="mt-1 space-y-0.5">
+                          {e.titles.slice(1).map((t) => <li>{t.title}{t.period && <span class="font-mono text-xs"> · {t.period}</span>}</li>)}
+                        </ul>
+                      </details>
+                    )}
+                  </div>
                 )}
                 <p class="mt-2 text-sm text-muted">{e.summary}</p>
 
