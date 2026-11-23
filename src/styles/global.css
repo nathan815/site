@@ -13,6 +13,22 @@
   --accent: #5aa0e6; --accent2: #7d8aa0; --on-accent: #0b1016;
 }
 
+/* Contribution graph scale: one hue, steps from surface to accent. Same element as --accent, so themes follow. */
+:root {
+  --lv0: color-mix(in srgb, var(--border) 60%, var(--surface));
+  --lv1: color-mix(in srgb, var(--accent) 30%, var(--surface));
+  --lv2: color-mix(in srgb, var(--accent) 52%, var(--surface));
+  --lv3: color-mix(in srgb, var(--accent) 76%, var(--surface));
+  --lv4: var(--accent);
+}
+
+.chart-tip {
+  position: fixed; z-index: 60; pointer-events: none; max-width: 16rem;
+  background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: .4rem;
+  padding: .3rem .55rem; font: 500 .72rem var(--font-mono); box-shadow: 0 6px 20px rgb(0 0 0 / .25);
+}
+svg [data-tip]:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
 @theme inline {
   --font-sans: 'Inter Variable', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;

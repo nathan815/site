@@ -14,7 +14,12 @@ npm run check    # type check
 All copy lives in `src/data/site.ts`. Items marked `TODO` are placeholders.
 
 ## Activity section
-Shows recently active public GitHub repos with their descriptions and commit and PR counts. `scripts/github-activity.mjs` fetches them at build time (see `netlify.toml`) and writes `src/data/github-activity.json`. It needs no token, but set `GITHUB_TOKEN` in Netlify to avoid rate limits. If the fetch fails, the committed snapshot is used and the build continues. Run it locally with `npm run activity`.
+Shows a contribution heatmap, a weekly contributions bar chart, and recently active public repos with descriptions and commit and PR counts. `scripts/github-activity.mjs` fetches the data at build time (see `netlify.toml`) and writes `src/data/github-activity.json`. Run it locally with `npm run activity`.
+
+- **Repos and counts:** public REST API, no token needed. A token only raises rate limits.
+- **Contribution calendar:** with `GITHUB_TOKEN` set it uses the official GraphQL API (a read-only token with access to public data is enough). Without one it falls back to the public profile page's calendar, which is unofficial and may break if GitHub changes the page.
+- **Failure:** each part fails on its own, the previous data is kept, and the build continues. Until the first successful run the graphs are hidden.
+- **Freshness:** the data only updates when the site builds, so trigger a rebuild on a schedule (for example a Netlify build hook called from a daily GitHub Actions cron).
 
 The work activity charts (commits, PRs and AI sessions from a separate collector) are hidden until that project exists. See [issue 13](https://github.com/nathan815/site/issues/13).
 

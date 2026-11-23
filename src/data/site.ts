@@ -3,7 +3,14 @@ export const profile = {
   name: 'Nathaniel Johnson',
   handle: 'nathan815',
   role: 'Senior Software Engineer',
-  taglines: ['build things for the web.', 'ship mobile apps.', 'automate the boring stuff.', 'build with AI every day.'],
+  taglines: [
+    'ship cloud control plane services globally.',
+    'run VMware on Azure.',
+    'turn on-call pain into tools.',
+    'orchestrate jobs across thousands of SDDCs.',
+    'automate the boring stuff.',
+    'build with AI every day.',
+  ],
   summary:
     "I'm a Senior Software Engineer at Microsoft, where I've worked on Azure VMware Solution since 2020. I like building reliable cloud infrastructure and well-crafted software, and AI-assisted development is now central to my day-to-day work.",
   location: 'Michigan, USA', // TODO: confirm

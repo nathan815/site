@@ -160,6 +160,31 @@ tin.addEventListener('keydown', (e) => {
   else if (e.key === 'ArrowDown') { tin.value = cmdHistory[++hi] ?? ''; hi = Math.min(hi, cmdHistory.length); e.preventDefault(); }
 });
 
+/* ---------- chart tooltips + scroll ---------- */
+const tip = document.createElement('div');
+tip.className = 'chart-tip';
+tip.hidden = true;
+tip.setAttribute('role', 'tooltip');
+document.body.appendChild(tip);
+function showTip(el: Element, x: number, y: number) {
+  tip.textContent = el.getAttribute('data-tip') ?? '';
+  tip.hidden = false;
+  const r = tip.getBoundingClientRect();
+  tip.style.left = `${Math.max(8, Math.min(x + 12, innerWidth - r.width - 8))}px`;
+  tip.style.top = `${y - r.height - 12 < 8 ? y + 18 : y - r.height - 12}px`;
+}
+document.addEventListener('pointermove', (e) => {
+  const el = (e.target as Element).closest?.('[data-tip]');
+  if (el) showTip(el, e.clientX, e.clientY); else tip.hidden = true;
+});
+document.addEventListener('focusin', (e) => {
+  const el = (e.target as Element).closest?.('[data-tip]');
+  if (el) { const b = el.getBoundingClientRect(); showTip(el, b.left + b.width / 2, b.top); }
+});
+document.addEventListener('focusout', () => { tip.hidden = true; });
+addEventListener('scroll', () => { tip.hidden = true; }, { passive: true });
+document.querySelectorAll<HTMLElement>('[data-scroll-end]').forEach((el) => { el.scrollLeft = el.scrollWidth; });
+
 /* ---------- global keys ---------- */
 const typing = (t: EventTarget | null) => t instanceof HTMLElement && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA');
 document.addEventListener('keydown', (e) => {

@@ -1,5 +1,6 @@
 ---
 import { githubActivity as a } from '../data/githubActivity';
+import ContributionGraphs from './ContributionGraphs.astro';
 
 const fmtDate = (iso: string) => new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 const stats = [
@@ -22,7 +23,13 @@ const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
   </div>
 )}
 
-<ul class:list={['grid gap-4 sm:grid-cols-2', showStats && 'mt-4']}>
+{a.calendar && (
+  <div class:list={[showStats && 'mt-4']}>
+    <ContributionGraphs calendar={a.calendar} />
+  </div>
+)}
+
+<ul class:list={['grid gap-4 sm:grid-cols-2', (showStats || a.calendar) && 'mt-4']}>
   {a.repos.map((r) => (
     <li>
       <a href={r.url} target="_blank" rel="noopener" class="card block h-full p-5">
