@@ -7,7 +7,6 @@ export const profile = {
     'ship cloud control plane services globally.',
     'run VMware on Azure.',
     'turn on-call pain into tools.',
-    'orchestrate jobs across thousands of SDDCs.',
     'automate the boring stuff.',
     'build with AI every day.',
   ],
