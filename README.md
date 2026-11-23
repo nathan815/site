@@ -26,5 +26,8 @@ The work activity charts (commits, PRs and AI sessions from a separate collector
 ## Backend (optional)
 A small Go API in `api/` powers the terminal's live `status` and `uptime` commands. See `api/README.md`. Set `PUBLIC_API_URL` at build time to enable it.
 
+## Analytics
+Cloudflare Web Analytics (free, cookie-free). It loads only when `PUBLIC_ANALYTICS_TOKEN` is set as a build variable, so nothing tracks until you add the token in Netlify.
+
 ## Keyboard
 `Cmd/Ctrl+K` command palette, `` ` `` mini terminal.

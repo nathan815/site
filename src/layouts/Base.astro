@@ -3,6 +3,8 @@ import '../styles/global.css';
 import { profile } from '../data/site';
 const { title = `${profile.name} — ${profile.role}`, description = profile.summary.slice(0, 155) } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+// Cloudflare Web Analytics loads only when a site token is set at build time.
+const analyticsToken = import.meta.env.PUBLIC_ANALYTICS_TOKEN;
 const sections = ['skills', 'experience', 'projects', 'activity', 'contact'];
 const commands = JSON.stringify({
   apiUrl: import.meta.env.PUBLIC_API_URL ?? '',
@@ -28,6 +30,9 @@ const commands = JSON.stringify({
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     <meta name="twitter:card" content="summary" />
+    {analyticsToken && (
+      <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: analyticsToken })}></script>
+    )}
     <script is:inline>
       try {
         const t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
@@ -56,6 +61,7 @@ const commands = JSON.stringify({
 
     <footer class="mx-auto max-w-5xl px-4 py-10 text-center font-mono text-xs text-muted">
       © {new Date().getFullYear()} {profile.name} · built with Astro · press <kbd class="rounded border border-border px-1">`</kbd> for a terminal
+      {analyticsToken && <span class="mt-1 block">Anonymous, cookie-free page-view analytics by Cloudflare.</span>}
     </footer>
 
     <!-- Command palette -->
