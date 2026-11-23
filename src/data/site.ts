@@ -65,7 +65,7 @@ export const experience: Job[] = [
     org: 'Microsoft · Azure VMware Solution',
     logo: 'microsoft',
     period: '2020 – Present',
-    summary: 'Azure VMware Solution, from the physical network to on-call tooling.',
+    summary: 'I build the Azure VMware Solution control plane, and the tools engineers use to operate it.',
     titles: [
       { title: 'Senior Software Engineer', period: 'Sep 2026 – Present' },
       { title: 'Software Engineer II', period: 'Sep 2022 – Sep 2026' },
@@ -82,11 +82,11 @@ export const experience: Job[] = [
       },
       {
         name: 'AVS Console',
-        hook: 'On-call app that is open in every incident. I envisioned it, built it, and now lead it.',
+        hook: 'Desktop app for prod on-call and lab access. I envisioned it, built it, and now lead it.',
         metric: '430+ engineers · 20+ min saved per incident',
         details:
-          'Internal app for on-call operations of Azure VMware Solution SDDCs. I envisioned it after seeing the pain on-call engineers faced during incidents, then built the first version myself in a couple of months, released in Sep 2025. It replaced a slow PowerShell tool and cuts 20+ minutes from each incident. It is open on the shared screen in every incident. I am now its lead maintainer, still improving it and adding features since launch.',
-        stack: ['Creator', 'Lead maintainer', 'Since Sep 2025'],
+          'AVS Console is a full GUI desktop app for operating Azure VMware Solution SDDCs. On-call engineers use it for production, and engineers across the team use it for lab access. I envisioned it after seeing the pain on-call engineers faced during incidents, then built the first version myself in a couple of months, released in Sep 2025. It replaced a slow PowerShell tool and cuts 20+ minutes from each incident. It is open on the shared screen in every incident. I am now its lead maintainer, still improving it and adding features since launch.',
+        stack: ['Desktop app', 'Creator', 'Lead maintainer', 'Since Sep 2025'],
       },
       {
         name: 'OneSite',
