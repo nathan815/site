@@ -3,9 +3,9 @@ export const profile = {
   name: 'Nathaniel Johnson',
   handle: 'nathan815',
   role: 'Senior Software Engineer',
-  taglines: ['build things for the web.', 'ship mobile apps.', 'automate the boring stuff.', 'tinker with AI tooling.'],
+  taglines: ['build things for the web.', 'ship mobile apps.', 'automate the boring stuff.', 'build with AI every day.'],
   summary:
-    "I'm a Senior Software Engineer at Microsoft, where I've worked on Azure VMware Solution since 2020. I like building reliable cloud infrastructure and well-crafted software, and I experiment with AI-assisted development on the side.",
+    "I'm a Senior Software Engineer at Microsoft, where I've worked on Azure VMware Solution since 2020. I like building reliable cloud infrastructure and well-crafted software, and AI-assisted development is now central to my day-to-day work.",
   location: 'Michigan, USA', // TODO: confirm
   email: 'hello@nathancj.com',
   links: [
@@ -75,11 +75,11 @@ export const experience: Job[] = [
       },
       {
         name: 'AVS Console',
-        hook: 'On-call app that is open in every incident. I still maintain it.',
+        hook: 'On-call app that is open in every incident. I envisioned it, built it, and now lead it.',
         metric: '430+ engineers · 20+ min saved per incident',
         details:
-          'Internal app for on-call operations of Azure VMware Solution SDDCs. I saw the pain on-call engineers faced during incidents and built the first version in a couple of months, released in Sep 2025. It replaced a slow PowerShell tool and cuts 20+ minutes from each incident. It is open on the shared screen in every incident. I am still its primary maintainer, improving it and adding features since launch.',
-        stack: ['On-call tooling', 'Primary maintainer', 'Since Sep 2025'],
+          'Internal app for on-call operations of Azure VMware Solution SDDCs. I envisioned it after seeing the pain on-call engineers faced during incidents, then built the first version myself in a couple of months, released in Sep 2025. It replaced a slow PowerShell tool and cuts 20+ minutes from each incident. It is open on the shared screen in every incident. I am now its lead maintainer, still improving it and adding features since launch.',
+        stack: ['Creator', 'Lead maintainer', 'Since Sep 2025'],
       },
       {
         name: 'OneSite',
