@@ -90,6 +90,13 @@ export const experience: Job[] = [
         stack: ['Hosting platform', 'Database', 'Identity', 'WebSockets'],
       },
       {
+        name: 'AVS Gen 2 (AV64)',
+        hook: 'Next-generation AVS on Azure Fleet servers.',
+        details:
+          'Azure VMware Solution Generation 2 runs on the AV64 SKU, on Azure Fleet servers. I worked on the control plane implementation that helped make it possible, on two fronts: the networking side, and deploying a host agent.',
+        stack: ['AV64', 'Control plane', 'Networking', 'Host agent'],
+      },
+      {
         name: 'Public IP down to the NSX Edge',
         hook: 'Internet access straight to the NSX Edge.',
         metric: 'Thousands of IPs, not hundreds',
