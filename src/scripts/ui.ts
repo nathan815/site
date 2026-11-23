@@ -37,18 +37,19 @@ if (typed) {
 }
 
 /* ---------- backend (optional) ---------- */
-interface ApiStatus { status: string; version: string; startedAt: string; uptimeSeconds: number; goVersion: string; requests: number }
+interface ApiStatus { status: string; version: string; runtime: string; region: string | null; time: string; requests: number | null }
+interface ApiHealth { ok: boolean; region: string | null }
 class ApiError extends Error {}
 
-async function apiStatus(): Promise<ApiStatus> {
+async function apiGet<T>(path: string): Promise<T> {
   if (!data.apiUrl) throw new ApiError('no backend configured (PUBLIC_API_URL was not set when the site was built)');
-  const url = `${data.apiUrl}/api/status`;
+  const url = `${data.apiUrl}${path}`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 3000);
   try {
     const res = await fetch(url, { signal: ctrl.signal });
     if (!res.ok) throw new ApiError(`GET ${url} returned HTTP ${res.status}${res.statusText ? ` ${res.statusText}` : ''}`);
-    try { return (await res.json()) as ApiStatus; }
+    try { return (await res.json()) as T; }
     catch (e) { throw new ApiError(`GET ${url} returned a response that is not valid JSON (${(e as Error).message})`); }
   } catch (e) {
     if (e instanceof ApiError) throw e;
@@ -58,10 +59,6 @@ async function apiStatus(): Promise<ApiStatus> {
   } finally { clearTimeout(timer); }
 }
 const errText = (e: unknown) => `error: ${e instanceof Error ? e.message : String(e)}`;
-const fmtUptime = (s: number) => {
-  const d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60);
-  return [d && `${d}d`, (d || h) && `${h}h`, `${m}m`].filter(Boolean).join(' ');
-};
 
 /* ---------- shared command registry ---------- */
 interface Cmd { name: string; hint: string; showOutput?: boolean; run: () => string | void | Promise<string | void> }
@@ -71,11 +68,22 @@ const registry: Cmd[] = [
   ...data.links.map((l: { label: string; href: string }): Cmd => ({ name: `open ${l.label.toLowerCase().replace(/\s+/g, '-')}`, hint: l.href, run: () => { window.open(l.href, '_blank', 'noopener'); return `opening ${l.href}`; } })),
   { name: 'email', hint: data.email, run: () => { location.href = `mailto:${data.email}`; return data.email; } },
   { name: 'status', hint: 'Live backend status', showOutput: true, run: async () => {
-      try { const a = await apiStatus(); return `api: ${a.status}\nversion: ${a.version}\nuptime: ${fmtUptime(a.uptimeSeconds)}\nruntime: ${a.goVersion}\nrequests served: ${a.requests}`; }
-      catch (e) { return errText(e); }
+      try {
+        const a = await apiGet<ApiStatus>('/api/status');
+        return [`api: ${a.status}`, `version: ${a.version}`, `runtime: ${a.runtime}`, `edge: ${a.region ?? 'unknown'}`, `requests served: ${a.requests ?? 'n/a'}`].join('\n');
+      } catch (e) { return errText(e); }
     } },
-  { name: 'uptime', hint: 'How long the backend has been up', showOutput: true, run: async () => {
-      try { return `up ${fmtUptime((await apiStatus()).uptimeSeconds)}`; } catch (e) { return errText(e); }
+  { name: 'ping', hint: 'Round-trip time to the backend', showOutput: true, run: async () => {
+      try {
+        const times: number[] = [];
+        let region: string | null = null;
+        for (let i = 0; i < 3; i++) {
+          const t0 = performance.now();
+          region = (await apiGet<ApiHealth>('/health')).region;
+          times.push(Math.round(performance.now() - t0));
+        }
+        return `pong from edge ${region ?? 'unknown'}: ${times.map((t) => `${t} ms`).join(', ')} (first includes connection setup)`;
+      } catch (e) { return errText(e); }
     } },
   { name: 'theme', hint: 'Toggle light/dark', run: () => `theme: ${toggleTheme()}` },
 ];
@@ -101,7 +109,7 @@ function renderPalette() {
   });
   if (!shown.length) palList.innerHTML = '<li class="px-4 py-2 text-muted">No matches</li>';
 }
-// Commands that produce text (status, uptime) show it in the terminal; the rest just act.
+// Commands that produce text (status, ping) show it in the terminal; the rest just act.
 async function runFromPalette(c: Cmd) {
   closePalette();
   if (!c.showOutput) { c.run(); return; }

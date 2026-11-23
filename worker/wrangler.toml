@@ -1,0 +1,20 @@
+name = "nathancj-api"
+main = "src/index.ts"
+compatibility_date = "2025-10-01"
+
+# Browser origins allowed to call the API (CORS). Comma separated.
+[vars]
+ALLOWED_ORIGINS = "https://nathancj.com,http://localhost:4321"
+
+# A single Durable Object counts requests to /api/status. SQLite-backed objects are
+# the only kind available on the free plan.
+[[durable_objects.bindings]]
+name = "COUNTER"
+class_name = "Counter"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Counter"]
+
+[observability]
+enabled = true

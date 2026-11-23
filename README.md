@@ -24,7 +24,7 @@ Shows a contribution heatmap, a weekly contributions bar chart, and recently act
 The work activity charts (commits, PRs and AI sessions from a separate collector) are hidden until that project exists. See [issue 13](https://github.com/nathan815/site/issues/13).
 
 ## Backend (optional)
-A small Go API in `api/` powers the terminal's live `status` and `uptime` commands. See `api/README.md`. Set `PUBLIC_API_URL` at build time to enable it.
+A small Cloudflare Worker in `worker/` powers the terminal's live `status` and `ping` commands. See `worker/README.md`. Set `PUBLIC_API_URL` at build time to enable it. An earlier Go and Azure Container Apps version is documented for reference in `docs/azure-container-apps.md`.
 
 ## Analytics
 Cloudflare Web Analytics (free, cookie-free). It loads only when `PUBLIC_ANALYTICS_TOKEN` is set as a build variable, so nothing tracks until you add the token in Netlify.

@@ -1,4 +1,7 @@
-# Deploy to Azure Container Apps
+# Azure Container Apps (reference only)
+
+The site's backend is now a Cloudflare Worker (see `worker/`). The earlier Go API and its Dockerfile were removed. They remain in git history at commit `cccd335` (for example `git show cccd335:api/main.go`). To use these steps, restore the `api/` folder from that commit first.
+
 
 Not yet run end to end: these steps were written without Azure access, so treat the first run as the test.
 
