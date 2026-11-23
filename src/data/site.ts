@@ -41,6 +41,7 @@ export interface Job {
   period: string;
   summary: string;
   logo?: string;
+  logoOnWhite?: boolean; // transparent marks sit on a white tile with padding
   monogram?: string;
   titles?: Title[];
   points?: string[];
@@ -146,7 +147,8 @@ export const experience: Job[] = [
   {
     role: 'B.S. Computer Science',
     org: 'Eastern Michigan University',
-    monogram: 'EMU',
+    logo: '/logos/emu.png',
+    logoOnWhite: true,
     period: 'Graduated 2020',
     summary: 'Hackathons, side projects, and a computerized Christmas light display.',
   },
