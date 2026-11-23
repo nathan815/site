@@ -1,6 +1,6 @@
 // All copy lives here. Items marked TODO are placeholders to replace with real info.
 export const profile = {
-  name: 'Nathaniel Johnson',
+  name: 'Nathan Johnson',
   handle: 'nathan815',
   role: 'Senior Software Engineer',
   taglines: [
