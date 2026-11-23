@@ -117,9 +117,13 @@ func (s *server) middleware(next http.Handler) http.Handler {
 	})
 }
 
+// clientIP returns the address used for rate limiting. When a trusted proxy sets
+// CLIENT_IP_HEADER, the last entry is used: proxies append the address they saw, so
+// earlier entries can be forged by the client (X-Forwarded-For: <anything>).
 func (s *server) clientIP(r *http.Request) string {
 	if s.cfg.clientIPHeader != "" {
-		if v := strings.TrimSpace(strings.Split(r.Header.Get(s.cfg.clientIPHeader), ",")[0]); v != "" {
+		parts := strings.Split(r.Header.Get(s.cfg.clientIPHeader), ",")
+		if v := strings.TrimSpace(parts[len(parts)-1]); v != "" {
 			return v
 		}
 	}

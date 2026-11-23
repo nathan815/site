@@ -91,3 +91,23 @@ func TestUnknownRouteAndMethod(t *testing.T) {
 		t.Fatalf("got %d", rec.Code)
 	}
 }
+
+func TestForwardedHeaderCannotBeSpoofedToEvadeLimit(t *testing.T) {
+	srv := newTestServer(2)
+	srv.cfg.clientIPHeader = "X-Forwarded-For"
+	h := srv.routes()
+	send := func(forged string) int {
+		req := httptest.NewRequest("GET", "/health", nil)
+		// The proxy appends the real client address (198.51.100.9) after whatever the client sent.
+		req.Header.Set("X-Forwarded-For", forged+", 198.51.100.9")
+		rec := httptest.NewRecorder()
+		h.ServeHTTP(rec, req)
+		return rec.Code
+	}
+	if send("1.1.1.1") != http.StatusOK || send("2.2.2.2") != http.StatusOK {
+		t.Fatal("first two requests should pass")
+	}
+	if got := send("3.3.3.3"); got != http.StatusTooManyRequests {
+		t.Fatalf("forged leading address evaded the limit: got %d", got)
+	}
+}
