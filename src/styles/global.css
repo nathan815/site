@@ -38,6 +38,8 @@ svg [data-tip]:focus-visible { outline: 2px solid var(--accent); outline-offset:
 }
 
 html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+/* Sections carry 4rem of top padding; pull them up so the heading, not the padding, lands under the nav. */
+section[id] { scroll-margin-top: -3.5rem; }
 body { background: var(--bg); color: var(--text); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
 
 .grid-bg {
@@ -62,3 +64,21 @@ body { background: var(--bg); color: var(--text); font-family: var(--font-sans);
   .reveal { opacity: 1; transform: none; transition: none; }
   .caret::after { animation: none; }
 }
+
+/* Form fields: a soft accent ring on focus instead of the browser default outline. */
+.field {
+  width: 100%; border: 1px solid var(--border); border-radius: .5rem; background: var(--bg); color: var(--text);
+  padding: .55rem .75rem; transition: border-color .15s, box-shadow .15s, background-color .15s;
+}
+.field:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
+.field:focus { outline: none; border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 40%, transparent); }
+
+/* Pulsing dot on the hero map. */
+.troy-ring { transform-box: fill-box; transform-origin: center; stroke: none; opacity: .5; animation: troy-pulse 2.4s ease-out infinite; }
+@keyframes troy-pulse { 0% { transform: scale(.5); opacity: .55; } 80%, 100% { transform: scale(3.2); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .troy-ring { animation: none; opacity: .25; } }
+
+/* The Troy dot stays hidden until the portrait is hovered, focused or tapped. */
+.troy { opacity: 0; transition: opacity .4s ease; }
+section:has(.me-photo:hover) .troy, section.show-troy .troy { opacity: 1; }
+.me-photo { cursor: pointer; -webkit-tap-highlight-color: transparent; }
