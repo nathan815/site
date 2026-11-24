@@ -36,7 +36,7 @@ const chatEnabled = Boolean(import.meta.env.PUBLIC_API_URL);
             <a href="#contact" class="rounded-md border border-border px-4 py-2 text-sm hover:border-accent">Contact</a>
             {chatEnabled && <button type="button" data-chat-open class="rounded-md border border-border px-4 py-2 text-sm hover:border-accent"><span class="accent-text" aria-hidden="true">✦</span> Ask my AI</button>}
           </div>
-          <p class="mt-6 font-mono text-xs text-muted">tip: press <kbd class="rounded border border-border px-1">⌘/Ctrl K</kbd> or <kbd class="rounded border border-border px-1">`</kbd></p>
+          <p class="mt-6 font-mono text-xs text-muted">tip: press <kbd class="rounded border border-border px-1">`</kbd> to open terminal</p>
         </div>
         <img src="/me.jpg" alt={`Portrait of ${profile.name}`} width="176" height="176" class="me-photo order-first h-36 w-36 rounded-2xl border border-border object-cover md:order-none md:h-44 md:w-44" />
       </div>
