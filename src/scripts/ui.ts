@@ -95,14 +95,10 @@ const errText = (e: unknown) => `error: ${e instanceof Error ? e.message : Strin
 })();
 
 /* ---------- shared command registry ---------- */
-interface Cmd { name: string; hint: string; showOutput?: boolean; run: () => string | void | Promise<string | void> }
+interface Cmd { name: string; rest?: boolean; hint: string; showOutput?: boolean; run: () => string | void | Promise<string | void> }
 const go = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); };
 const registry: Cmd[] = [
   ...data.sections.map((s: string): Cmd => ({ name: `goto ${s}`, hint: `Jump to ${s}`, run: () => { go(s); return `→ ${s}`; } })),
-  ...data.links.map((l: { label: string; href: string }): Cmd => ({ name: `open ${l.label.toLowerCase().replace(/\s+/g, '-')}`, hint: l.href, run: () => { window.open(l.href, '_blank', 'noopener'); return `opening ${l.href}`; } })),
-  ...(data.items as { kind: string; name: string; hint: string; target: string }[]).map((i): Cmd => i.kind === 'open'
-    ? { name: `repo ${i.name.toLowerCase()}`, hint: i.hint, run: () => { window.open(i.target, '_blank', 'noopener'); return `opening ${i.target}`; } }
-    : { name: `goto ${i.name.toLowerCase()}`, hint: i.hint, run: () => { const el = document.getElementById(i.target); if (el instanceof HTMLDetailsElement) el.open = true; go(i.target); return `→ ${i.name}`; } }),
   { name: 'email', hint: data.email, run: () => { location.href = `mailto:${data.email}`; return data.email; } },
   { name: 'status', hint: 'Live backend status', showOutput: true, run: async () => {
       try {
@@ -124,6 +120,10 @@ const registry: Cmd[] = [
     } },
   ...(data.apiUrl ? [{ name: 'ask', hint: 'Ask the AI about Nathan', run: () => { dispatchEvent(new CustomEvent('chat:open')); } } as Cmd] : []),
   { name: 'theme', hint: 'Toggle light/dark', run: () => `theme: ${toggleTheme()}` },
+  { name: 'terminal', hint: 'Open the terminal', run: () => { openTerm(); } },
+  ...(data.items as { kind: string; name: string; hint: string; target: string }[]).filter((i) => i.kind !== 'open').map((i): Cmd => ({ rest: true, name: `goto ${i.name.toLowerCase()}`, hint: i.hint, run: () => { const el = document.getElementById(i.target); if (el instanceof HTMLDetailsElement) el.open = true; go(i.target); return `→ ${i.name}`; } })),
+  ...data.links.map((l: { label: string; href: string }): Cmd => ({ rest: true, name: `open ${l.label.toLowerCase().replace(/\s+/g, '-')}`, hint: l.href, run: () => { window.open(l.href, '_blank', 'noopener'); return `opening ${l.href}`; } })),
+  ...(data.items as { kind: string; name: string; hint: string; target: string }[]).filter((i) => i.kind === 'open').map((i): Cmd => ({ rest: true, name: `repo ${i.name.toLowerCase()}`, hint: i.hint, run: () => { window.open(i.target, '_blank', 'noopener'); return `opening ${i.target}`; } })),
 ];
 
 /* ---------- palette ---------- */
@@ -138,8 +138,8 @@ function renderPalette() {
     const li = document.createElement('li');
     li.setAttribute('role', 'option');
     li.setAttribute('aria-selected', String(i === sel));
-    li.className = `flex cursor-pointer justify-between gap-3 px-4 py-2 ${i === sel ? 'bg-bg text-fg' : 'text-muted'}`;
-    li.innerHTML = `<span class="font-mono"></span><span class="truncate text-xs"></span>`;
+    li.className = `flex cursor-pointer items-center justify-between gap-4 px-4 py-2 ${i === sel ? 'bg-bg text-fg' : 'text-muted'}${c.rest && i > 0 && !shown[i - 1].rest ? ' mt-1 border-t border-border pt-3' : ''}`;
+    li.innerHTML = `<span class="max-w-[60%] shrink-0 truncate whitespace-nowrap font-mono"></span><span class="min-w-0 flex-1 truncate text-right text-xs leading-6"></span>`;
     (li.children[0] as HTMLElement).textContent = c.name;
     (li.children[1] as HTMLElement).textContent = c.hint;
     li.addEventListener('click', () => runFromPalette(c));
@@ -180,8 +180,12 @@ function openTerm() {
 function closeTerm() { term.classList.add('hidden'); }
 addEventListener('terminal:close', closeTerm);
 $('terminal-close').addEventListener('click', closeTerm);
+const usage = (verb: string) => `usage: ${verb} <name>\n${registry.filter((c) => c.name.startsWith(`${verb} `)).map((c) => `  ${c.name}`).join('\n')}`;
 const builtins: Record<string, (a: string[]) => string | void> = {
-  help: () => ['about, whoami, skills, ls, clear, exit', ...registry.map((c) => c.name)].join('\n'),
+  help: () => ['about, whoami, skills, ls, clear, exit, goto, open, repo, email, status, ping, ask, theme', 'Type goto, open or repo on its own for usage.'].join('\n'),
+  goto: () => usage('goto'),
+  open: () => usage('open'),
+  repo: () => usage('repo'),
   about: () => data.summary,
   whoami: () => `${data.name} — ${data.role}`,
   ls: () => data.sections.join('  '),
