@@ -3,10 +3,10 @@ const data = JSON.parse(document.getElementById('cmd-data')!.textContent!);
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 
 /* ---------- theme ---------- */
-// The label keeps the visible word "Theme" first (WCAG 2.5.3) and says the current state and what a press does.
+// Icon-only button: the label says what a press does, matching the icon shown (sun in dark, moon in light).
 const labelTheme = () => {
-  const t = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
-  $('toggle-theme').setAttribute('aria-label', `Theme: ${t}. Switch to ${t === 'dark' ? 'light' : 'dark'}`);
+  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  $('toggle-theme').setAttribute('aria-label', `Switch to ${next} theme`);
 };
 function toggleTheme() {
   const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
