@@ -7,6 +7,8 @@ The site's backend: a small Cloudflare Worker (TypeScript). The site works witho
 |---|---|
 | `GET /health` | `{"ok":true,"region":"IAD"}`. `region` is the Cloudflare data center that served the request. |
 | `GET /api/status` | Version, runtime, edge region, time, and a running request count kept in a Durable Object. |
+| `POST /api/views` | Records one page view and returns `{"total":N,"week":N}` (`week` = last 7 days incl. today). |
+| `GET /api/views` | Same counts, without recording. |
 
 The terminal's `status` and `ping` commands call these.
 

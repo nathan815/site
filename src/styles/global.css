@@ -53,6 +53,9 @@ body { background: var(--bg); color: var(--text); font-family: var(--font-sans);
 .btn-solid { background: var(--accent); color: var(--on-accent); }
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: .6rem; transition: border-color .2s, transform .2s; }
 .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.stat { display: inline-flex; align-items: baseline; gap: .3rem; padding: .2rem .65rem; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); }
+.stat b { color: var(--accent); font-weight: 600; }
+#view-counter:not([hidden]) { display: flex; }
 .tag { font-family: var(--font-mono); font-size: .7rem; padding: .15rem .5rem; border-radius: .3rem; border: 1px solid var(--border); color: var(--muted); }
 .caret::after { content: '▍'; margin-left: 2px; color: var(--accent); animation: blink 1s steps(1) infinite; }
 @keyframes blink { 50% { opacity: 0; } }

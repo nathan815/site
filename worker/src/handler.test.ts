@@ -12,7 +12,11 @@ function counter(start = 0, fail = false) {
     calls,
     ns: {
       idFromName: (name: string) => { calls.push(name); return name; },
-      get: () => ({ increment: async () => { if (fail) throw new Error('boom'); return ++n; } }),
+      get: () => ({
+        increment: async () => { if (fail) throw new Error('boom'); return ++n; },
+        hit: async () => { if (fail) throw new Error('boom'); n++; return { total: n, week: 1 }; },
+        views: async () => { if (fail) throw new Error('boom'); return { total: n, week: 1 }; },
+      }),
     },
   };
 }
@@ -79,4 +83,19 @@ test('responses are never cached', async () => {
   const res = await handle(new Request(url('/health')), env());
   assert.equal(res.headers.get('Cache-Control'), 'no-store');
   assert.equal(res.headers.get('X-Content-Type-Options'), 'nosniff');
+});
+
+test('POST /api/views records a view, GET reads without recording', async () => {
+  const c = counter(10);
+  const e = env({ COUNTER: c.ns });
+  const posted = await (await handle(new Request(url('/api/views'), { method: 'POST' }), e)).json();
+  assert.deepEqual(posted, { total: 11, week: 1 });
+  const got = await (await handle(new Request(url('/api/views')), e)).json();
+  assert.deepEqual(got, { total: 11, week: 1 });
+});
+
+test('/api/views is 503 when the counter fails or is missing, 405 for other methods', async () => {
+  assert.equal((await handle(new Request(url('/api/views')), env())).status, 503);
+  assert.equal((await handle(new Request(url('/api/views'), { method: 'POST' }), env({ COUNTER: counter(0, true).ns }))).status, 503);
+  assert.equal((await handle(new Request(url('/api/views'), { method: 'DELETE' }), env())).status, 405);
 });

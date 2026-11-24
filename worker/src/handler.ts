@@ -1,8 +1,12 @@
 // Request handling for the site's backend. Kept free of Cloudflare-specific imports so it
 // can be unit tested under plain Node.
 
+import type { Views } from './views.ts';
+
 export interface CounterStub {
   increment(): Promise<number>;
+  hit(): Promise<Views>;
+  views(): Promise<Views>;
 }
 export interface CounterNamespace {
   idFromName(name: string): unknown;
@@ -39,13 +43,27 @@ export async function handle(request: Request, env: Env): Promise<Response> {
     if (!allowedOrigins(env).has(origin)) return new Response('origin not allowed', { status: 403, headers: base });
     base['Access-Control-Allow-Origin'] = origin;
     base['Vary'] = 'Origin';
-    base['Access-Control-Allow-Methods'] = 'GET, OPTIONS';
+    base['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS';
     base['Access-Control-Max-Age'] = '600';
   }
   if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: base });
 
   const { pathname } = new URL(request.url);
   const region = (request as unknown as WithColo).cf?.colo ?? null;
+
+  if (pathname === '/api/views') {
+    // GET reads the counts; POST records one view and returns the updated counts.
+    if (request.method !== 'GET' && request.method !== 'POST') {
+      return json({ error: 'method not allowed' }, { status: 405 }, { ...base, Allow: 'GET, POST, OPTIONS' });
+    }
+    if (!env.COUNTER) return json({ error: 'counter unavailable' }, { status: 503 }, base);
+    try {
+      const stub = env.COUNTER.get(env.COUNTER.idFromName('global'));
+      return json(request.method === 'POST' ? await stub.hit() : await stub.views(), { status: 200 }, base);
+    } catch {
+      return json({ error: 'counter unavailable' }, { status: 503 }, base);
+    }
+  }
 
   if (pathname !== '/health' && pathname !== '/api/status') {
     return json({ error: 'not found' }, { status: 404 }, base);

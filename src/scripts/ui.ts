@@ -67,6 +67,33 @@ async function apiGet<T>(path: string): Promise<T> {
 }
 const errText = (e: unknown) => `error: ${e instanceof Error ? e.message : String(e)}`;
 
+/* ---------- view counter ---------- */
+// Records one view per browser session (reloads don't count) and shows totals in the footer.
+// Silent on any failure: the counter is decoration.
+(async () => {
+  const el = document.getElementById('view-counter');
+  if (!el || !data.apiUrl) return;
+  let seen = false;
+  try { seen = sessionStorage.getItem('viewed') === '1'; } catch {}
+  try {
+    const res = await fetch(`${data.apiUrl}/api/views`, { method: seen ? 'GET' : 'POST', signal: AbortSignal.timeout(4000) });
+    if (!res.ok) return;
+    const v = (await res.json()) as { total: number; week: number };
+    if (typeof v.total !== 'number' || typeof v.week !== 'number') return;
+    try { sessionStorage.setItem('viewed', '1'); } catch {}
+    const n = new Intl.NumberFormat();
+    el.replaceChildren(...[[v.total, v.total === 1 ? 'view' : 'views'], [v.week, 'this week']].map(([num, label]) => {
+      const chip = document.createElement('span');
+      chip.className = 'stat';
+      const b = document.createElement('b');
+      b.textContent = n.format(num as number);
+      chip.append(b, ` ${label}`);
+      return chip;
+    }));
+    el.hidden = false;
+  } catch {}
+})();
+
 /* ---------- shared command registry ---------- */
 interface Cmd { name: string; hint: string; showOutput?: boolean; run: () => string | void | Promise<string | void> }
 const go = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); };
@@ -79,8 +106,8 @@ const registry: Cmd[] = [
   { name: 'email', hint: data.email, run: () => { location.href = `mailto:${data.email}`; return data.email; } },
   { name: 'status', hint: 'Live backend status', showOutput: true, run: async () => {
       try {
-        const a = await apiGet<ApiStatus>('/api/status');
-        return [`api: ${a.status}`, `version: ${a.version}`, `runtime: ${a.runtime}`, `edge: ${a.region ?? 'unknown'}`, `requests served: ${a.requests ?? 'n/a'}`].join('\n');
+        const [a, v] = await Promise.all([apiGet<ApiStatus>('/api/status'), apiGet<{ total: number; week: number }>('/api/views').catch(() => null)]);
+        return [`api: ${a.status}`, `version: ${a.version}`, `runtime: ${a.runtime}`, `edge: ${a.region ?? 'unknown'}`, `requests served: ${a.requests ?? 'n/a'}`, `site views: ${v ? `${v.total} total, ${v.week} in the last 7 days` : 'n/a'}`].join('\n');
       } catch (e) { return errText(e); }
     } },
   { name: 'ping', hint: 'Round-trip time to the backend', showOutput: true, run: async () => {
