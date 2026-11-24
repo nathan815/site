@@ -25,12 +25,20 @@ npm run dev         # runs the real Workers runtime locally on :8787
 Build the site against it with `PUBLIC_API_URL=http://127.0.0.1:8787 npm run build` from the repo root. `localhost:4321` is already in the CORS allowlist.
 
 ## Deploy
-Not yet run against a real Cloudflare account. The code was tested only in the local runtime (`wrangler dev`).
+Deploys run from CI: `.github/workflows/deploy-worker.yml` runs on every push to `master` that touches `worker/**` (and via **Actions > Deploy worker > Run workflow**). It runs `npm ci`, `npm run typecheck`, `npm test`, `npm run deploy`, then `wrangler d1 migrations apply nathancj-chat --remote --force`, which applies only new files in `migrations/`. It never runs on pull requests.
 
+Required repository secrets (Settings > Secrets and variables > Actions):
+- `CLOUDFLARE_API_TOKEN`: an API token with **Workers Scripts: Edit**, **D1: Edit** and **Account Settings: Read** (account level). Workers AI, Durable Objects and cron triggers are configured through the Worker script itself. Not verified against current Cloudflare docs (checked only from memory); if a deploy fails with an authentication error, the missing permission is named in the wrangler output.
+- `CLOUDFLARE_ACCOUNT_ID`: your Cloudflare account id.
+
+The D1 `database_id` is pinned in `wrangler.toml` so CI never tries to create a database.
+
+Manual fallback:
 ```sh
 cd worker
 npx wrangler login
 npm run deploy      # also stamps the git short SHA as the version
+npm run db:migrate  # apply new D1 migrations
 ```
 Wrangler prints a `https://nathancj-api.<your-subdomain>.workers.dev` address. Set it as `PUBLIC_API_URL` in Netlify and redeploy the site.
 
@@ -51,7 +59,7 @@ Every chat question is recorded in a D1 table `chat_log` (`migrations/0001_chat_
 
 - **Privacy:** the IP is stored only as `sha256(LOG_SALT + date + ip)`, truncated. The same visitor hashes differently each day, so you can count visitors per day but not follow them. Rows older than `LOG_RETENTION_DAYS` (90) are deleted by a daily cron. The site footer tells visitors conversations are logged. Optionally set a secret salt: `npx wrangler secret put LOG_SALT`.
 - **Local:** `npm run db:migrate:local`, then `npm run logs:local`.
-- **Production:** `npm run db:migrate` once, then `npm run logs`. `wrangler.toml` has no `database_id`, so the first `wrangler deploy` should offer to create the database (unverified: not run against a real account). Otherwise run `npx wrangler d1 create nathancj-chat` and paste the id in.
+- **Production:** `npm run db:migrate` (CI does this on deploy), then `npm run logs`. CI applies migrations on deploy; `npm run db:migrate` is the manual equivalent. The `database_id` is pinned in `wrangler.toml`.
 - **Useful queries** (`npx wrangler d1 execute nathancj-chat --remote --command "..."`):
   - Questions the bot could not answer: `SELECT ts, question FROM chat_log WHERE asked_nathan = 1 ORDER BY id DESC`
   - Daily usage: `SELECT substr(ts,1,10) day, count(*) questions, count(DISTINCT ip_hash) visitors FROM chat_log GROUP BY day ORDER BY day DESC`
