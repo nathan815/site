@@ -1,0 +1,180 @@
+---
+import Base from '../layouts/Base.astro';
+import GithubActivity from '../components/GithubActivity.astro';
+// Work activity charts are hidden until the collector project is running.
+// Re-enable: see https://github.com/nathan815/site/issues/13
+// import Activity from '../components/Activity.astro';
+import { profile, skills, experience, projects, showcaseUrl, contacts } from '../data/site';
+---
+<Base>
+  <main id="top" class="mx-auto max-w-5xl px-4">
+    <!-- Hero + about -->
+    <section class="py-14 sm:py-20">
+      <div class="grid items-center gap-10 md:grid-cols-[1fr_auto]">
+        <div class="min-w-0">
+          <p class="font-mono text-sm text-accent">$ whoami</p>
+          <h1 class="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">
+            Hi, I'm <span class="accent-text">{profile.name.split(' ')[0]}</span>.
+          </h1>
+          <p class="mt-3 font-mono text-lg text-muted sm:text-xl">
+            <span class="text-fg">I </span><span id="typed" class="caret" data-lines={JSON.stringify(profile.taglines)}>{profile.taglines[0]}</span>
+          </p>
+          <p class="mt-6 max-w-xl text-base leading-relaxed text-muted">{profile.summary}</p>
+          <p class="mt-3 font-mono text-xs text-muted">{profile.role} · {profile.location}</p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href="#experience" class="btn-solid rounded-md px-4 py-2 text-sm font-semibold">See my work</a>
+            <a href="#contact" class="rounded-md border border-border px-4 py-2 text-sm hover:border-accent">Contact</a>
+          </div>
+          <p class="mt-6 font-mono text-xs text-muted">tip: press <kbd class="rounded border border-border px-1">⌘/Ctrl K</kbd> or <kbd class="rounded border border-border px-1">`</kbd></p>
+        </div>
+        <img src="/me.jpg" alt={`Portrait of ${profile.name}`} width="176" height="176" class="order-first h-36 w-36 rounded-2xl border border-border object-cover md:order-none md:h-44 md:w-44" />
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills" class="reveal py-16">
+      <h2 class="mb-6 font-mono text-sm text-accent"># skills</h2>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {Object.entries(skills).map(([group, items]) => (
+          <div class="card p-5">
+            <h3 class="mb-3 text-sm font-semibold">{group}</h3>
+            <div class="flex flex-wrap gap-2">{items.map((s) => <span class="tag">{s}</span>)}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Experience -->
+    <section id="experience" class="reveal py-16">
+      <h2 class="mb-6 font-mono text-sm text-accent"># experience</h2>
+      <ol class="relative space-y-10 border-l border-border pl-6">
+        {experience.map((e) => (
+          <li class="relative">
+            <span class="absolute -left-[1.85rem] top-3 h-2.5 w-2.5 rounded-full" style="background:var(--accent)"></span>
+            <div class="flex gap-4">
+              {e.logo === 'microsoft' ? (
+                <div class="grid h-11 w-11 shrink-0 place-items-center rounded-md border border-border bg-surface" aria-hidden="true">
+                  <svg viewBox="0 0 23 23" class="h-6 w-6"><path fill="#f25022" d="M1 1h10v10H1z"/><path fill="#7fba00" d="M12 1h10v10H12z"/><path fill="#00a4ef" d="M1 12h10v10H1z"/><path fill="#ffb900" d="M12 12h10v10H12z"/></svg>
+                </div>
+              ) : e.logo ? (
+                <img src={e.logo} alt="" width="44" height="44" loading="lazy" class={e.logoOnWhite ? 'h-11 w-11 shrink-0 rounded-md border border-border bg-white object-contain p-2' : 'h-11 w-11 shrink-0 rounded-md border border-border object-cover'} />
+              ) : (
+                <div class="grid h-11 w-11 shrink-0 place-items-center rounded-md border border-border bg-surface font-mono text-[0.7rem] font-semibold text-muted" aria-hidden="true">{e.monogram}</div>
+              )}
+              <div class="min-w-0 flex-1">
+                <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                  <h3 class="font-semibold">{e.role} <span class="text-muted font-normal">· {e.org}</span></h3>
+                  <span class="font-mono text-xs text-muted">{e.period}</span>
+                </div>
+                {e.titles && (
+                  <div class="mt-1 text-sm text-muted" aria-label="Titles held">
+                    <p>{e.titles[0].title}{e.titles[0].period && <span class="font-mono text-xs"> · {e.titles[0].period}</span>}</p>
+                    {e.titles.length > 1 && (
+                      <details class="group">
+                        <summary class="inline-flex cursor-pointer list-none items-center gap-1 font-mono text-xs text-accent [&::-webkit-details-marker]:hidden">
+                          <span class="transition-transform group-open:rotate-90" aria-hidden="true">▸</span> full progression
+                        </summary>
+                        <ul class="mt-1 space-y-0.5">
+                          {e.titles.slice(1).map((t) => <li>{t.title}{t.period && <span class="font-mono text-xs"> · {t.period}</span>}</li>)}
+                        </ul>
+                      </details>
+                    )}
+                  </div>
+                )}
+                <p class="mt-2 text-sm text-muted">{e.summary}</p>
+
+                {e.projects && (
+                  <>
+                    <div class="mt-4 grid items-start gap-3 sm:grid-cols-2">
+                      {e.projects.map((p) => (
+                        <details class="card group overflow-hidden sm:open:col-span-2">
+                          <summary class="flex cursor-pointer list-none items-start justify-between gap-3 p-4 [&::-webkit-details-marker]:hidden">
+                            <div class="min-w-0">
+                              <h4 class="font-semibold">{p.name}</h4>
+                              <p class="mt-1 text-sm text-muted">{p.hook}</p>
+                              {p.metric && <p class="mt-2 font-mono text-xs text-accent">{p.metric}</p>}
+                            </div>
+                            <span class="mt-1 shrink-0 font-mono text-xs text-muted transition-transform group-open:rotate-90" aria-hidden="true">▸</span>
+                          </summary>
+                          <div class="border-t border-border p-4">
+                            {p.image && <img src={p.image} alt={p.imageAlt ?? `${p.name} screenshot`} loading="lazy" class="mb-4 aspect-video w-full rounded-md border border-border object-cover object-top" />}
+                            <p class="text-sm leading-relaxed text-muted">{p.details}</p>
+                            <div class="mt-3 flex flex-wrap gap-2">{p.stack.map((s) => <span class="tag">{s}</span>)}</div>
+                          </div>
+                        </details>
+                      ))}
+                    </div>
+                    {showcaseUrl && (
+                      <p class="mt-3 text-sm text-muted">
+                        Screenshots (mock data) on <a class="text-accent underline-offset-4 hover:underline" href={showcaseUrl} target="_blank" rel="noopener">GitHub ↗</a>
+                      </p>
+                    )}
+                  </>
+                )}
+
+                {e.points && (
+                  <details class="group mt-2">
+                    <summary class="inline-flex cursor-pointer list-none items-center gap-1 font-mono text-xs text-accent [&::-webkit-details-marker]:hidden">
+                      <span class="transition-transform group-open:rotate-90" aria-hidden="true">▸</span> details
+                    </summary>
+                    <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-muted">{e.points.map((p) => <li>{p}</li>)}</ul>
+                    {e.stack && e.stack.length > 0 && <div class="mt-3 flex flex-wrap gap-2">{e.stack.map((s) => <span class="tag">{s}</span>)}</div>}
+                  </details>
+                )}
+              </div>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" class="reveal py-16">
+      <h2 class="mb-2 font-mono text-sm text-accent"># open source and personal projects</h2>
+      <p class="mb-6 text-sm text-muted">Side projects on GitHub. My larger work at Microsoft is in the experience section above.</p>
+
+      <div class="grid gap-4 sm:grid-cols-2">
+        {projects.map((p) => (
+          <a href={p.href} target="_blank" rel="noopener" class="card block p-5">
+            <h3 class="font-semibold">{p.name} <span class="text-accent">↗</span></h3>
+            <p class="mt-2 text-sm text-muted">{p.blurb}</p>
+            <div class="mt-4 flex flex-wrap gap-2">{p.stack.map((s) => <span class="tag">{s}</span>)}</div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Activity -->
+    <section id="activity" class="reveal py-16">
+      <h2 class="mb-2 font-mono text-sm text-accent"># recent github activity</h2>
+      <p class="mb-6 text-sm text-muted">What I have been building in public lately.</p>
+      <GithubActivity />
+      {/* Work activity charts (hidden until the collector is set up): https://github.com/nathan815/site/issues/13
+      <div class="mt-12">
+        <Activity />
+      </div>
+      */}
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="reveal py-16">
+      <h2 class="mb-2 font-mono text-sm text-accent"># contact</h2>
+      <p class="mb-6 text-sm text-muted">Want to chat about a project or role? Reach out on LinkedIn or by email.</p>
+      <ul class="grid gap-4 sm:grid-cols-2">
+        {contacts.map((c) => (
+          <li>
+            <a href={c.href} {...(c.external ? { target: '_blank', rel: 'noopener' } : {})} class="card flex h-full items-center gap-4 p-5" aria-label={`${c.label}: ${c.handle}`}>
+              <span class="grid h-14 w-14 shrink-0 place-items-center rounded-xl border border-border bg-bg" aria-hidden="true">
+                <svg viewBox={c.viewBox} class="h-8 w-8" style={`color:${c.color}`} fill={c.stroke ? 'none' : 'currentColor'} stroke={c.stroke ? 'currentColor' : 'none'} stroke-width={c.stroke ? 1.6 : undefined} stroke-linecap="round" stroke-linejoin="round" set:html={c.svg} />
+              </span>
+              <span class="min-w-0 flex-1">
+                <span class="block text-lg font-semibold">{c.label} <span class="text-accent">{c.external ? '↗' : '→'}</span></span>
+                <span class="block truncate font-mono text-sm text-muted">{c.handle}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </main>
+</Base>

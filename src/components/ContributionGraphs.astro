@@ -1,0 +1,129 @@
+---
+import type { Calendar } from '../data/githubActivity';
+
+interface Props { calendar: Calendar }
+const { calendar } = Astro.props;
+
+const utc = (iso: string) => new Date(`${iso}T00:00:00Z`);
+const fmt = (iso: string, o: Intl.DateTimeFormatOptions) => utc(iso).toLocaleDateString('en-US', { timeZone: 'UTC', ...o });
+const plural = (n: number, w: string) => `${n.toLocaleString('en-US')} ${w}${n === 1 ? '' : 's'}`;
+const dayIso = (weekStart: string, i: number) => new Date(utc(weekStart).getTime() + i * 864e5).toISOString().slice(0, 10);
+
+/* ---------- heatmap ---------- */
+const weeks = calendar.weeks;
+const CELL = 11, GAP = 3, PITCH = CELL + GAP, LEFT = 30, TOP = 18;
+const heatW = LEFT + weeks.length * PITCH - GAP;
+const heatH = TOP + 7 * PITCH - GAP;
+
+const nonZero = weeks.flatMap((w) => w.days).filter((n): n is number => n !== null && n > 0).sort((a, b) => a - b);
+const q = (p: number) => nonZero[Math.min(nonZero.length - 1, Math.floor(p * nonZero.length))] ?? 0;
+const [q1, q2, q3] = [q(0.25), q(0.5), q(0.75)];
+const level = (n: number) => (n === 0 ? 0 : 1 + Number(n > q1) + Number(n > q2) + Number(n > q3));
+
+const cells = weeks.flatMap((w, x) =>
+  w.days.flatMap((n, y) => {
+    if (n === null) return [];
+    const date = dayIso(w.start, y);
+    return [{
+      x: LEFT + x * PITCH, y: TOP + y * PITCH, level: level(n),
+      tip: `${n === 0 ? 'No contributions' : plural(n, 'contribution')} · ${fmt(date, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}`,
+    }];
+  }),
+);
+const monthLabels: { x: number; text: string }[] = [];
+weeks.forEach((w, x) => {
+  const m = fmt(w.start, { month: 'short' });
+  const prev = monthLabels[monthLabels.length - 1];
+  if ((!prev || prev.text !== m) && (!prev || LEFT + x * PITCH - prev.x >= 3 * PITCH)) monthLabels.push({ x: LEFT + x * PITCH, text: m });
+});
+const activeDays = weeks.flatMap((w) => w.days).filter((n) => n !== null && n > 0).length;
+
+/* ---------- weekly bars (last 26 weeks) ---------- */
+const recent = weeks.slice(-26).map((w) => ({
+  start: w.start,
+  total: w.days.reduce<number>((s, n) => s + (n ?? 0), 0),
+}));
+const niceMax = (v: number) => {
+  if (v <= 0) return 1;
+  const p = 10 ** Math.floor(Math.log10(v));
+  return ([1, 2, 5, 10].find((m) => m * p >= v) ?? 10) * p;
+};
+const maxVal = niceMax(Math.max(...recent.map((r) => r.total)));
+const ticks = [0, maxVal / 2, maxVal];
+const BW = 640, BH = 170, BL = 36, BT = 10, BB = 22;
+const plotH = BH - BT - BB;
+const pitch = (BW - BL) / recent.length;
+const barW = Math.max(6, pitch - 4);
+const yOf = (v: number) => BT + plotH - (v / maxVal) * plotH;
+const bars = recent.map((r, i) => {
+  const h = Math.max(r.total > 0 ? 2 : 0, (r.total / maxVal) * plotH);
+  const x = BL + i * pitch + (pitch - barW) / 2;
+  const y = BT + plotH - h;
+  const rad = Math.min(4, barW / 2, h);
+  const d = h === 0 ? '' : `M${x},${y + h}V${y + rad}Q${x},${y} ${x + rad},${y}H${x + barW - rad}Q${x + barW},${y} ${x + barW},${y + rad}V${y + h}Z`;
+  return { ...r, x, d, hitX: BL + i * pitch, tip: `Week of ${fmt(r.start, { month: 'short', day: 'numeric' })} · ${plural(r.total, 'contribution')}` };
+});
+const peak = bars.reduce((a, b) => (b.total > a.total ? b : a), bars[0]);
+const barMonths: { x: number; text: string }[] = [];
+bars.forEach((b) => {
+  const m = fmt(b.start, { month: 'short' });
+  const prev = barMonths[barMonths.length - 1];
+  if (!prev || prev.text !== m) barMonths.push({ x: b.x, text: m });
+});
+if (barMonths.length > 1 && barMonths[1].x - barMonths[0].x < 3 * pitch) barMonths.shift();
+const total26 = recent.reduce((s, r) => s + r.total, 0);
+---
+<div class="card p-5 !transform-none">
+  <div class="mb-3 flex flex-wrap items-baseline justify-between gap-2">
+    <h3 class="font-semibold">{calendar.total.toLocaleString('en-US')} contributions in the last year</h3>
+    <span class="font-mono text-xs text-muted">{activeDays} active days</span>
+  </div>
+  <div class="overflow-x-auto" data-scroll-end>
+    <svg viewBox={`0 0 ${heatW} ${heatH}`} class="block min-w-[720px] w-full" role="img"
+      aria-label={`Contribution calendar: ${calendar.total} contributions over the last year on ${activeDays} active days. Weekly totals are in the table below.`}>
+      {[1, 3, 5].map((d) => <text x="0" y={TOP + d * PITCH + CELL - 1} class="fill-muted" font-size="10" font-family="var(--font-mono)">{['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d]}</text>)}
+      {monthLabels.map((m) => <text x={m.x} y="10" class="fill-muted" font-size="10" font-family="var(--font-mono)">{m.text}</text>)}
+      {cells.map((c) => <rect x={c.x} y={c.y} width={CELL} height={CELL} rx="2" style={`fill:var(--lv${c.level})`} data-tip={c.tip} />)}
+    </svg>
+  </div>
+  <div class="mt-3 flex items-center justify-end gap-1.5 font-mono text-xs text-muted" aria-hidden="true">
+    <span>Less</span>
+    {[0, 1, 2, 3, 4].map((l) => <span class="inline-block h-[11px] w-[11px] rounded-sm" style={`background:var(--lv${l})`}></span>)}
+    <span>More</span>
+  </div>
+</div>
+
+<div class="card mt-4 p-5 !transform-none">
+  <div class="mb-3 flex flex-wrap items-baseline justify-between gap-2">
+    <h3 class="font-semibold">Weekly contributions, last 26 weeks</h3>
+    <span class="font-mono text-xs text-muted">{plural(total26, 'contribution')} · busiest week {peak.total}</span>
+  </div>
+  <div class="overflow-x-auto" data-scroll-end>
+  <svg viewBox={`0 0 ${BW} ${BH}`} class="block min-w-[560px] w-full" role="group" aria-label="Bar chart of weekly contributions over the last 26 weeks. The same numbers are in the table below.">
+    {ticks.map((t) => (
+      <>
+        <line x1={BL} x2={BW} y1={yOf(t)} y2={yOf(t)} stroke="var(--border)" stroke-width="1" />
+        <text x={BL - 6} y={yOf(t) + 3} text-anchor="end" class="fill-muted" font-size="10" font-family="var(--font-mono)">{t}</text>
+      </>
+    ))}
+    {barMonths.map((m) => <text x={m.x} y={BH - 6} class="fill-muted" font-size="10" font-family="var(--font-mono)">{m.text}</text>)}
+    {bars.map((b) => (
+      <g>
+        {b.d && <path d={b.d} style="fill:var(--accent)" />}
+        <rect x={b.hitX} y={BT} width={pitch} height={plotH} fill="transparent" tabindex="0" data-tip={b.tip} aria-label={b.tip} />
+      </g>
+    ))}
+  </svg>
+  </div>
+  <details class="mt-3">
+    <summary class="cursor-pointer font-mono text-xs text-accent">View as table</summary>
+    <div class="mt-2 max-h-64 overflow-auto">
+      <table class="w-full text-left text-sm">
+        <thead class="text-xs text-muted"><tr><th class="py-1 pr-4 font-normal">Week of</th><th class="py-1 font-normal">Contributions</th></tr></thead>
+        <tbody>
+          {recent.map((r) => <tr class="border-t border-border"><td class="py-1 pr-4 text-muted">{fmt(r.start, { month: 'short', day: 'numeric', year: 'numeric' })}</td><td class="py-1 font-mono tabular-nums">{r.total}</td></tr>)}
+        </tbody>
+      </table>
+    </div>
+  </details>
+</div>

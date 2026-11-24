@@ -1,0 +1,18 @@
+{
+  "_note": "PLACEHOLDER sample data. The collector (separate repo) will publish real numbers in this schema.",
+  "generatedAt": "2026-10-01T00:00:00Z",
+  "weeks": [
+    { "start": "2026-08-17", "commits": 21, "prs": 4, "aiSessions": 12 },
+    { "start": "2026-08-24", "commits": 34, "prs": 6, "aiSessions": 19 },
+    { "start": "2026-08-31", "commits": 18, "prs": 3, "aiSessions": 15 },
+    { "start": "2026-09-07", "commits": 42, "prs": 8, "aiSessions": 28 },
+    { "start": "2026-09-14", "commits": 29, "prs": 5, "aiSessions": 24 },
+    { "start": "2026-09-21", "commits": 37, "prs": 7, "aiSessions": 31 },
+    { "start": "2026-09-28", "commits": 25, "prs": 4, "aiSessions": 22 }
+  ],
+  "buckets": [
+    { "label": "work-repo-1", "commits": 96 },
+    { "label": "work-repo-2", "commits": 54 },
+    { "label": "personal", "commits": 56 }
+  ]
+}

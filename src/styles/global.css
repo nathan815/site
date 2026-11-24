@@ -1,0 +1,64 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/jetbrains-mono';
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root {
+  --bg: #f4f6f8; --surface: #ffffff; --border: #dde2e8; --text: #121820; --muted: #5b6676;
+  --accent: #1f66c1; --accent2: #7a8798; --on-accent: #ffffff;
+}
+:root[data-theme='dark'] {
+  --bg: #0e1217; --surface: #151a21; --border: #252c36; --text: #e6e9ee; --muted: #8a94a3;
+  --accent: #5aa0e6; --accent2: #7d8aa0; --on-accent: #0b1016;
+}
+
+/* Contribution graph scale: one hue, steps from surface to accent. Same element as --accent, so themes follow. */
+:root {
+  --lv0: color-mix(in srgb, var(--border) 60%, var(--surface));
+  --lv1: color-mix(in srgb, var(--accent) 30%, var(--surface));
+  --lv2: color-mix(in srgb, var(--accent) 52%, var(--surface));
+  --lv3: color-mix(in srgb, var(--accent) 76%, var(--surface));
+  --lv4: var(--accent);
+}
+
+.chart-tip {
+  position: fixed; z-index: 60; pointer-events: none; max-width: 16rem;
+  background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: .4rem;
+  padding: .3rem .55rem; font: 500 .72rem var(--font-mono); box-shadow: 0 6px 20px rgb(0 0 0 / .25);
+}
+svg [data-tip]:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+@theme inline {
+  --font-sans: 'Inter Variable', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+  --color-bg: var(--bg); --color-surface: var(--surface); --color-border: var(--border);
+  --color-fg: var(--text); --color-muted: var(--muted);
+  --color-accent: var(--accent); --color-accent2: var(--accent2);
+}
+
+html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+
+.grid-bg {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to bottom, black 20%, transparent 85%);
+  opacity: .5;
+}
+.accent-text { color: var(--accent); }
+.btn-solid { background: var(--accent); color: var(--on-accent); }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: .6rem; transition: border-color .2s, transform .2s; }
+.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.tag { font-family: var(--font-mono); font-size: .7rem; padding: .15rem .5rem; border-radius: .3rem; border: 1px solid var(--border); color: var(--muted); }
+.caret::after { content: '▍'; margin-left: 2px; color: var(--accent); animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .caret::after { animation: none; }
+}
