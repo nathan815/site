@@ -3,12 +3,19 @@ const data = JSON.parse(document.getElementById('cmd-data')!.textContent!);
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 
 /* ---------- theme ---------- */
+// The label keeps the visible word "Theme" first (WCAG 2.5.3) and says the current state and what a press does.
+const labelTheme = () => {
+  const t = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+  $('toggle-theme').setAttribute('aria-label', `Theme: ${t}. Switch to ${t === 'dark' ? 'light' : 'dark'}`);
+};
 function toggleTheme() {
   const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
   document.documentElement.dataset.theme = next;
   try { localStorage.setItem('theme', next); } catch {}
+  labelTheme();
   return next;
 }
+labelTheme();
 $('toggle-theme').addEventListener('click', toggleTheme);
 
 
@@ -127,8 +134,10 @@ const registry: Cmd[] = [
 ];
 
 /* ---------- palette ---------- */
-const pal = $('palette'), palIn = $<HTMLInputElement>('palette-input'), palList = $('palette-list');
+const pal = $('palette'), palIn = $<HTMLInputElement>('palette-input'), palList = $('palette-list'), palStatus = $('palette-status');
 let sel = 0, shown: Cmd[] = [];
+let palReturn: HTMLElement | null = null; // element to refocus when the palette closes
+let statusTimer: number | undefined;
 function renderPalette() {
   const q = palIn.value.trim().toLowerCase();
   shown = registry.filter((c) => !q || c.name.includes(q) || c.hint.toLowerCase().includes(q));
@@ -136,6 +145,7 @@ function renderPalette() {
   palList.innerHTML = '';
   shown.forEach((c, i) => {
     const li = document.createElement('li');
+    li.id = `pal-opt-${i}`;
     li.setAttribute('role', 'option');
     li.setAttribute('aria-selected', String(i === sel));
     li.className = `flex cursor-pointer items-center justify-between gap-4 px-4 py-2 ${i === sel ? 'bg-bg text-fg' : 'text-muted'}${c.rest && i > 0 && !shown[i - 1].rest ? ' mt-1 border-t border-border pt-3' : ''}`;
@@ -145,21 +155,39 @@ function renderPalette() {
     li.addEventListener('click', () => runFromPalette(c));
     palList.appendChild(li);
   });
-  if (!shown.length) palList.innerHTML = '<li class="px-4 py-2 text-muted">No matches</li>';
+  if (!shown.length) palList.innerHTML = '<li class="px-4 py-2 text-muted" role="presentation">No matches</li>';
+  if (shown.length) {
+    palIn.setAttribute('aria-activedescendant', `pal-opt-${sel}`);
+    document.getElementById(`pal-opt-${sel}`)?.scrollIntoView({ block: 'nearest' });
+  } else palIn.removeAttribute('aria-activedescendant');
+  // Debounced so screen readers hear the final count, not one per keystroke.
+  clearTimeout(statusTimer);
+  statusTimer = window.setTimeout(() => { palStatus.textContent = shown.length ? `${shown.length} result${shown.length === 1 ? '' : 's'}` : 'No matches'; }, 400);
 }
 // Commands that produce text (status, ping) show it in the terminal; the rest just act.
 async function runFromPalette(c: Cmd) {
-  closePalette();
+  closePalette(false);
   if (!c.showOutput) { c.run(); return; }
   openTerm();
   termPrint(`$ ${c.name}`, 'text-fg');
   const res = await c.run();
   if (res) termPrint(String(res), 'text-muted');
 }
-function openPalette() { pal.classList.replace('hidden', 'flex'); palIn.value = ''; sel = 0; renderPalette(); palIn.focus(); }
-function closePalette() { pal.classList.replace('flex', 'hidden'); }
+function openPalette() {
+  if (pal.classList.contains('hidden')) palReturn = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  pal.classList.replace('hidden', 'flex'); palIn.value = ''; sel = 0; renderPalette(); palIn.focus();
+}
+// refocus=false when a command ran: it may have moved focus (terminal, chat) or scrolled somewhere new.
+function closePalette(refocus = true) {
+  if (pal.classList.contains('hidden')) return;
+  pal.classList.replace('flex', 'hidden');
+  palStatus.textContent = '';
+  if (refocus) palReturn?.focus();
+}
 $('open-palette').addEventListener('click', openPalette);
 pal.addEventListener('click', (e) => e.target === pal && closePalette());
+// Modal: the input is the only focusable element, so keep Tab inside.
+pal.addEventListener('keydown', (e) => { if (e.key === 'Tab') { e.preventDefault(); palIn.focus(); } });
 palIn.addEventListener('input', () => { sel = 0; renderPalette(); });
 palIn.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowDown') { sel = Math.min(sel + 1, shown.length - 1); renderPalette(); e.preventDefault(); }
@@ -171,15 +199,27 @@ palIn.addEventListener('keydown', (e) => {
 const term = $('terminal'), out = $('term-out'), tin = $<HTMLInputElement>('term-input');
 const cmdHistory: string[] = []; let hi = 0; let greeted = false;
 const termPrint = (t: string, cls = '') => { const d = document.createElement('div'); d.className = `whitespace-pre-wrap ${cls}`; d.textContent = t; out.appendChild(d); out.scrollTop = out.scrollHeight; };
+let termReturn: HTMLElement | null = null;
 function openTerm() {
   dispatchEvent(new CustomEvent('chat:close')); // the chat panel and terminal share the bottom-right corner
+  if (term.classList.contains('hidden')) {
+    const a = document.activeElement;
+    termReturn = a instanceof HTMLElement && a !== document.body && !pal.contains(a) ? a : palReturn;
+  }
   term.classList.remove('hidden');
   if (!greeted) { greeted = true; termPrint(`Welcome. Type "help" to list commands.`, 'text-muted'); }
   tin.focus();
 }
-function closeTerm() { term.classList.add('hidden'); }
-addEventListener('terminal:close', closeTerm);
-$('terminal-close').addEventListener('click', closeTerm);
+// Return focus to where it was, but only if it was inside the terminal (otherwise the user already moved on).
+function closeTerm(refocus = true) {
+  if (term.classList.contains('hidden')) return;
+  const hadFocus = term.contains(document.activeElement);
+  term.classList.add('hidden');
+  if (refocus && hadFocus) (termReturn ?? document.getElementById('open-palette'))?.focus();
+  termReturn = null;
+}
+addEventListener('terminal:close', () => closeTerm(false));
+$('terminal-close').addEventListener('click', () => closeTerm());
 const usage = (verb: string) => `usage: ${verb} <name>\n${registry.filter((c) => c.name.startsWith(`${verb} `)).map((c) => `  ${c.name}`).join('\n')}`;
 const builtins: Record<string, (a: string[]) => string | void> = {
   help: () => ['about, whoami, skills, ls, clear, exit, goto, open, repo, email, status, ping, ask, theme', 'Type goto, open or repo on its own for usage.'].join('\n'),

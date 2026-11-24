@@ -52,6 +52,7 @@ const commands = JSON.stringify({
       <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: analyticsToken })}></script>
     )}
     <script is:inline>
+      document.documentElement.classList.add('js');
       try {
         const t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
         document.documentElement.dataset.theme = t;
@@ -59,6 +60,7 @@ const commands = JSON.stringify({
     </script>
   </head>
   <body class="min-h-screen">
+    <a href="#top" class="skip-link">Skip to content</a>
     <div class="grid-bg" aria-hidden="true"></div>
     <header class="sticky top-0 z-30 backdrop-blur border-b border-border/60 bg-bg/70">
       <nav class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3" aria-label="Main">
@@ -67,10 +69,10 @@ const commands = JSON.stringify({
           {sections.slice(0, 4).map((s) => <li><a class="hover:text-fg capitalize" href={`#${s}`}>{s}</a></li>)}
         </ul>
         <div class="flex items-center gap-2">
-          <button id="open-palette" class="flex items-center gap-2 rounded-md border border-border px-2.5 py-1 font-mono text-xs text-muted hover:text-fg" aria-label="Open command palette">
-            <span>Search</span><kbd class="hidden rounded bg-surface px-1.5 py-0.5 sm:inline">⌘K</kbd>
+          <button id="open-palette" class="flex items-center gap-2 rounded-md border border-border px-2.5 py-1 font-mono text-xs text-muted hover:text-fg" aria-haspopup="dialog" aria-controls="palette" aria-keyshortcuts="Meta+K Control+K">
+            <span>Search</span><kbd class="hidden rounded bg-surface px-1.5 py-0.5 sm:inline" aria-hidden="true">⌘K</kbd>
           </button>
-          <button id="toggle-theme" class="rounded-md border border-border px-2.5 py-1 text-xs text-muted hover:text-fg" aria-label="Toggle light/dark theme">Theme</button>
+          <button id="toggle-theme" class="rounded-md border border-border px-2.5 py-1 text-xs text-muted hover:text-fg" aria-label="Theme: dark. Switch to light">Theme</button>
           <button id="menu-toggle" class="rounded-md border border-border px-2.5 py-1 text-xs text-muted hover:text-fg md:hidden" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
             <svg viewBox="0 0 20 20" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path id="menu-icon" d="M3 5h14M3 10h14M3 15h14"/></svg>
           </button>
@@ -92,8 +94,10 @@ const commands = JSON.stringify({
     <!-- Command palette -->
     <div id="palette" class="fixed inset-0 z-50 hidden items-start justify-center bg-black/60 p-4 pt-[15vh]" role="dialog" aria-modal="true" aria-label="Command palette">
       <div class="card w-full max-w-lg overflow-hidden !transform-none">
-        <input id="palette-input" class="w-full border-b border-border bg-transparent px-4 py-3 font-mono text-sm outline-none" placeholder="Type a command or section…" autocomplete="off" spellcheck="false" />
-        <ul id="palette-list" class="max-h-72 overflow-auto py-1 text-sm" role="listbox"></ul>
+        <input id="palette-input" class="w-full border-b border-border bg-transparent px-4 py-3 font-mono text-sm outline-none" placeholder="Type a command or section…" autocomplete="off" spellcheck="false"
+          role="combobox" aria-label="Search commands and sections" aria-expanded="true" aria-controls="palette-list" aria-autocomplete="list" />
+        <ul id="palette-list" class="max-h-72 overflow-auto py-1 text-sm" role="listbox" aria-label="Commands"></ul>
+        <p id="palette-status" class="sr-only" role="status" aria-live="polite"></p>
       </div>
     </div>
 
@@ -116,7 +120,7 @@ const commands = JSON.stringify({
         <button id="chat-launcher" type="button" class="ai-border fixed bottom-4 right-4 z-30 flex items-center gap-2.5 rounded-full px-5 py-3 font-mono text-sm font-semibold shadow-lg" aria-haspopup="dialog" aria-controls="chat">
           <span class="accent-text text-2xl leading-none" aria-hidden="true">✦</span> Ask AI
         </button>
-        <div id="chat" class="fixed inset-x-2 bottom-2 z-40 hidden h-[min(34rem,80dvh)] flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-2xl sm:inset-x-auto sm:bottom-4 sm:right-4 sm:w-[min(92vw,26rem)] sm:max-h-[70vh]" role="dialog" aria-label={`Ask about ${firstName}`}>
+        <div id="chat" class="fixed inset-x-2 bottom-2 z-40 hidden h-[min(34rem,80dvh)] flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-2xl sm:inset-x-auto sm:bottom-4 sm:right-4 sm:w-[min(92vw,26rem)] sm:max-h-[70vh]" role="dialog" tabindex="-1" aria-label={`Ask about ${firstName}`}>
           <div class="flex items-center justify-between gap-2 border-b border-border px-3 py-2 font-mono text-xs">
             <div class="flex min-w-0 items-center gap-2">
               <span class="truncate font-semibold">Ask about {firstName}</span>            </div>
@@ -136,7 +140,7 @@ const commands = JSON.stringify({
           <div id="chat-notice" class="chat-notice hidden" role="alert"></div>
           <form id="chat-form" class="flex items-end gap-2 border-t border-border px-3 py-2">
             <div class="relative min-w-0 flex-1">
-              <textarea id="chat-input" rows="1" maxlength="500" class="block max-h-28 w-full resize-none rounded-md border border-border bg-bg px-2.5 py-1.5 text-base outline-none focus:border-accent sm:text-sm disabled:opacity-60" placeholder="Ask a question…" aria-label="Your question" autocomplete="off"></textarea>
+              <textarea id="chat-input" rows="1" maxlength="500" class="block max-h-28 w-full resize-none rounded-md border border-(--field-border) bg-bg px-2.5 py-1.5 text-base outline-none focus:border-accent sm:text-sm disabled:opacity-60" placeholder="Ask a question…" aria-label="Your question" autocomplete="off"></textarea>
               <span id="chat-count" class="pointer-events-none absolute -top-4 right-1 hidden font-mono text-[0.65rem] text-muted" aria-hidden="true"></span>
             </div>
             <button id="chat-send" type="submit" class="btn-solid shrink-0 rounded-md px-3 py-1.5 text-sm font-semibold disabled:opacity-50">Send</button>
