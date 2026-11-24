@@ -36,3 +36,18 @@ test('results are cached for a while', async () => {
   assert.equal(n, 1);
   assert.deepEqual(JSON.parse(a), [{ date: 'd', message: 'm' }]);
 });
+
+test('tree hides build output and lockfiles; file paths are validated and encoded', async () => {
+  const tree = { tree: [{ path: 'src/a.ts', type: 'blob' }, { path: 'node_modules/x/y.js', type: 'blob' }, { path: 'package-lock.json', type: 'blob' }, { path: 'src', type: 'tree' }, { path: 'README.md', type: 'blob' }] };
+  const out = JSON.parse(await runTool('get_repo_tree', { repo: 'treey' }, {}, async () => resp(tree), 300_000_000));
+  assert.deepEqual(out, ['src/a.ts', 'README.md']);
+
+  const seen: string[] = [];
+  const f = async (u: string) => { seen.push(u); return resp('hello'); };
+  assert.equal(await runTool('get_repo_file', { repo: 'filey', path: 'docs/my file.md' }, {}, f, 400_000_000), 'hello');
+  assert.equal(seen[0], 'https://api.github.com/repos/nathan815/filey/contents/docs/my%20file.md');
+  for (const path of ['../secret', '/etc/passwd', 'a/../b', '', 5]) {
+    assert.match(await runTool('get_repo_file', { repo: 'filey', path }, {}, f, 500_000_000), /^error:/);
+  }
+  assert.equal(seen.length, 1);
+});

@@ -155,38 +155,77 @@ function init(panel: HTMLElement) {
     return t.trimEnd();
   }
   // Model output becomes DOM nodes, never HTML. Only http(s) and mailto links are ever created:
-  // [label](url), bare URLs and email addresses.
-  const LINK_RE = /\[([^\]\n]{1,100})\]\((https?:\/\/[^\s)]+|mailto:[^\s)]+)\)|(https?:\/\/[^\s<>()]*[^\s<>().,;:!?'"])|([A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+)/g;
+  // [label](url), bare URLs and email addresses. **bold** becomes <strong>.
+  const LINK_RE = /\*\*([^*\n]{1,120})\*\*|\[([^\]\n]{1,100})\]\((https?:\/\/[^\s)]+|mailto:[^\s)]+)\)|(https?:\/\/[^\s<>()]*[^\s<>().,;:!?'"])|([A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+)/g;
   function renderText(el: HTMLElement, text: string) {
     const frag = document.createDocumentFragment();
     let last = 0;
     for (const m of text.matchAll(LINK_RE)) {
-      const [full, label, mdUrl, bare, email] = m;
+      const [full, boldText, label, mdUrl, bare, email] = m;
       if (m.index! > last) frag.append(text.slice(last, m.index));
+      last = m.index! + full.length;
+      if (boldText !== undefined) {
+        const b = document.createElement('strong');
+        b.textContent = boldText;
+        frag.append(b);
+        continue;
+      }
       const a = document.createElement('a');
       a.href = mdUrl ?? bare ?? `mailto:${email}`;
       a.textContent = label ?? bare ?? email;
       a.className = 'text-accent underline underline-offset-2 [overflow-wrap:anywhere]';
       if (!a.href.startsWith('mailto:')) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
       frag.append(a);
-      last = m.index! + full.length;
     }
     frag.append(text.slice(last));
     el.replaceChildren(frag);
   }
+  const BTN = 'btn-solid rounded-md px-3 py-1.5 font-sans text-xs font-semibold';
+  // The contact dialog claims this event with preventDefault(); otherwise jump to the Contact section.
+  function openContact(message?: string) {
+    if (dispatchEvent(new CustomEvent('contact:open', { cancelable: true, detail: { message } }))) {
+      document.getElementById('contact')?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      close(false);
+    }
+  }
   function addContactButton(out: HTMLElement) {
     const b = document.createElement('button');
     b.type = 'button';
-    b.className = 'btn-solid mt-3 block rounded-md px-3 py-1.5 font-sans text-xs font-semibold';
+    b.className = `${BTN} mt-3 block`;
     b.textContent = `Contact ${data.name.split(' ')[0]}`;
-    b.addEventListener('click', () => {
-      // A contact dialog can claim this event with preventDefault(); otherwise jump to the Contact section.
-      if (dispatchEvent(new CustomEvent('contact:open', { cancelable: true }))) {
-        document.getElementById('contact')?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-        close(false);
-      }
-    });
+    b.addEventListener('click', () => openContact());
     out.append(b);
+  }
+  // Shown when the model had no answer (ask_nathan tool). Yes opens the contact form with the
+  // visitor's last three questions pre-filled.
+  function addAskOffer(out: HTMLElement) {
+    const first = data.name.split(' ')[0];
+    const box = document.createElement('div');
+    box.className = 'mt-3 rounded-md border border-border bg-surface p-2.5';
+    box.setAttribute('role', 'group');
+    box.setAttribute('aria-label', `Ask ${first}`);
+    const q = document.createElement('p');
+    q.className = 'mb-2 font-sans text-xs font-semibold';
+    q.textContent = `Do you want to ask ${first} this question?`;
+    const row = document.createElement('div');
+    row.className = 'flex gap-2';
+    const yes = document.createElement('button');
+    yes.type = 'button';
+    yes.className = BTN;
+    yes.textContent = `Yes, message ${first}`;
+    yes.addEventListener('click', () => {
+      const asked = [...new Set(history.filter((m) => m.role === 'user').map((m) => m.content))].slice(-3).map((m) => `- ${m}`);
+      openContact(`Hi ${first}, I was using the AI chat on your site and it couldn't answer ${asked.length > 1 ? 'these questions' : 'this question'}:\n\n${asked.join('\n')}\n\n`);
+      box.remove();
+    });
+    const no = document.createElement('button');
+    no.type = 'button';
+    no.className = 'rounded-md border border-border px-3 py-1.5 font-sans text-xs text-muted hover:text-fg';
+    no.textContent = 'No thanks';
+    no.addEventListener('click', () => box.remove());
+    row.append(yes, no);
+    box.append(q, row);
+    out.append(box);
   }
 
   /* ---------- request ---------- */
@@ -210,12 +249,13 @@ function init(panel: HTMLElement) {
     sync();
 
     let got = '';
+    let askOffer = false; // the model called ask_nathan: offer to forward the question
     let finished = false;
     let failed: (() => void) | null = null; // deferred notice, shown after cleanup
     let unsend = false; // request produced nothing: put the question back in the box
 
     try {
-      let msgs = history.slice(-MAX_MSGS);
+      let msgs = history.slice(-MAX_MSGS).map((m) => (m.role === 'assistant' && m.content.length > 1500 ? { ...m, content: m.content.slice(0, 1500) } : m));
       while (msgs.length && msgs[0].role !== 'user') msgs = msgs.slice(1);
       const res = await fetch(`${data.apiUrl}/api/chat`, {
         method: 'POST',
@@ -248,6 +288,7 @@ function init(panel: HTMLElement) {
           if (payload === '[DONE]') { finished = true; return; }
           let j: unknown;
           try { j = JSON.parse(payload); } catch { return; }
+          if ((j as { action?: unknown })?.action === 'ask_nathan') { askOffer = true; return; }
           const resp = (j as { response?: unknown })?.response;
           // Workers AI sends purely numeric tokens ("202", "0") as JSON numbers, not strings.
           const tok = typeof resp === 'number' ? String(resp) : resp;
@@ -269,6 +310,7 @@ function init(panel: HTMLElement) {
           lines.forEach(onLine);
         }
         onLine(buf);
+        if (!got && askOffer) { got = "I don't have that information."; renderText(out, got); }
         if (!got) { unsend = true; failed = () => note('The AI returned an empty answer. Try rephrasing your question.'); }
         else if (!finished) failed = () => note('The response ended early and may be incomplete.');
       }
@@ -296,7 +338,8 @@ function init(panel: HTMLElement) {
       }
     } else {
       history.push({ role: 'assistant', content: visibleText(got, true) });
-      if (got.includes(CONTACT_MARK)) addContactButton(out);
+      if (askOffer) addAskOffer(out);
+      else if (got.includes(CONTACT_MARK)) addContactButton(out);
     }
     failed?.();
     if (rem0() === 0 && !locked && !cooling) lockForToday('That was your last question for today.');

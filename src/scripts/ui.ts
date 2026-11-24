@@ -245,6 +245,16 @@ const emailDialog = document.getElementById('email-dialog') as HTMLDialogElement
 if (emailDialog) {
   document.querySelectorAll('[data-email-dialog]').forEach((a) =>
     a.addEventListener('click', (e) => { e.preventDefault(); emailDialog.showModal(); }));
+  // The chat's "Contact" button asks for this dialog; preventDefault tells it the request was handled.
+  // detail.message pre-fills the message box (used by the chat's "ask Nathan" offer).
+  addEventListener('contact:open', (e) => {
+    e.preventDefault();
+    const message = (e as CustomEvent<{ message?: string }>).detail?.message;
+    const box = emailDialog.querySelector<HTMLTextAreaElement>('textarea[name="message"]');
+    if (message && box) box.value = message;
+    if (!emailDialog.open) emailDialog.showModal();
+    if (message) emailDialog.querySelector<HTMLInputElement>('input[name="name"]')?.focus();
+  });
   document.getElementById('email-close')!.addEventListener('click', () => emailDialog.close());
   emailDialog.addEventListener('click', (e) => { if (e.target === emailDialog) emailDialog.close(); });
   const copyBtn = document.getElementById('email-copy')!;

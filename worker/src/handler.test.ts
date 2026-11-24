@@ -155,7 +155,7 @@ test('chat streams the model response with rate-limit headers', async () => {
   assert.match(body, /\[DONE\]/);
   assert.equal(a.calls[0].model, '@cf/meta/llama-3.1-8b-instruct-fp8-fast');
   assert.equal(a.calls[0].input.max_tokens, 700);
-  assert.equal(a.calls[0].input.tools?.length, 3);
+  assert.equal(a.calls[0].input.tools?.length, 6);
 });
 
 test('tool calls are executed, results fed back, and the final answer is streamed without tools', async () => {
@@ -163,17 +163,18 @@ test('tool calls are executed, results fed back, and the final answer is streame
   const urls: string[] = [];
   globalThis.fetch = (async (u: string) => { urls.push(String(u)); return new Response('# prscope\nPR dashboard'); }) as typeof fetch;
   try {
-    const a = fakeAi({ script: [{ tool_calls: [{ name: 'get_repo_readme', arguments: { repo: 'prscope-tooltest' } }] }, { tool_calls: [{ name: 'get_repo_readme', arguments: { repo: '../evil' } }] }] });
+    const a = fakeAi({ script: [{ tool_calls: [{ name: 'get_repo_readme', arguments: { repo: 'prscope-tooltest' } }] }, { tool_calls: [{ name: 'get_repo_readme', arguments: { repo: '../evil' } }] }, { tool_calls: [{ name: 'get_repo_file', arguments: { repo: 'x', path: '../../etc/passwd' } }] }] });
     const e = env({ AI: a.ai, LIMITER: fakeLimiter().ns });
     const res = await handle(chatReq(ok), e);
     assert.equal(res.status, 200);
     assert.match(await res.text(), /\[DONE\]/);
-    assert.equal(a.calls.length, 3);
-    assert.ok(a.calls[0].input.tools && !a.calls[2].input.tools, 'final round has no tools');
-    assert.equal(a.calls[2].input.stream, true);
-    const tool = a.calls[2].input.messages.filter((m) => m.role === 'tool');
+    assert.equal(a.calls.length, 4);
+    assert.ok(a.calls[0].input.tools && !a.calls[3].input.tools, 'final round has no tools');
+    assert.equal(a.calls[3].input.stream, true);
+    const tool = a.calls[3].input.messages.filter((m) => m.role === 'tool');
     assert.match(tool[0].content, /PR dashboard/);
     assert.match(tool[1].content, /^error:/); // invalid repo name never reaches GitHub
+    assert.match(tool[2].content, /^error:/); // path traversal never reaches GitHub
     assert.deepEqual(urls, ['https://api.github.com/repos/nathan815/prscope-tooltest/readme']);
   } finally { globalThis.fetch = realFetch; }
 });
@@ -262,4 +263,181 @@ test('CORS preflight for POST /api/chat', async () => {
   assert.equal(res.status, 204);
   assert.match(res.headers.get('Access-Control-Allow-Methods') ?? '', /POST/);
   assert.match(res.headers.get('Access-Control-Allow-Headers') ?? '', /Content-Type/);
+});
+
+test('the contact instruction is added only for contact questions', async () => {
+  const run = async (q: string) => {
+    const { a, e } = chatEnv();
+    await handle(chatReq({ messages: [{ role: 'user', content: q }] }), e);
+    return a.calls[0].input.messages[0].content;
+  };
+  assert.doesNotMatch(await run('What does Nathan work on?'), /\[\[contact\]\]/);
+  assert.match(await run('How do I get in touch with him?'), /\[\[contact\]\]/);
+  assert.match(await run('Is he open to hiring conversations? I want to get in touch'), /\[\[contact\]\]/);
+});
+
+test('ask_nathan tool ends the reply with an ask_nathan action event, after a tool round', async () => {
+  const a = fakeAi({ script: [{ tool_calls: [{ name: 'ask_nathan' }] }, { response: "I don't have that information." }] });
+  const res = await handle(chatReq({ messages: [{ role: 'user', content: 'What salary does he want?' }] }), env({ AI: a.ai, LIMITER: fakeLimiter().ns }));
+  const body = await res.text();
+  assert.match(body, /I don't have that information/);
+  assert.ok(body.indexOf('"action":"ask_nathan"') > body.indexOf('"response"') && body.indexOf('"action":"ask_nathan"') < body.indexOf('[DONE]'));
+  assert.match(a.calls[1].input.messages.at(-1)!.content, /Do not mention the tool/);
+});
+
+test('ask_nathan on the streaming path appends the action after the stream', async () => {
+  const script = [1, 2, 3].map(() => ({ tool_calls: [{ name: 'ask_nathan' }] }));
+  const a = fakeAi({ script });
+  const res = await handle(chatReq(ok), env({ AI: a.ai, LIMITER: fakeLimiter().ns }));
+  const body = await res.text();
+  assert.match(body, /\[DONE\]/);
+  assert.match(body, /"action":"ask_nathan"/);
+});
+
+test('no action event for ordinary answers', async () => {
+  const { e } = chatEnv();
+  assert.doesNotMatch(await (await handle(chatReq(ok), e)).text(), /"action"/);
+});
+
+test('contact questions never get the ask_nathan tool; others do', async () => {
+  const names = async (q: string) => {
+    const { a, e } = chatEnv();
+    await handle(chatReq({ messages: [{ role: 'user', content: q }] }), e);
+    return (a.calls[0].input.tools as { name: string }[]).map((t) => t.name);
+  };
+  assert.ok(!(await names('How do I get in touch with him?')).includes('ask_nathan'));
+  assert.ok((await names('What is his favourite food?')).includes('ask_nathan'));
+});
+
+function fakeDbForHandler() {
+  const rows: unknown[][] = [];
+  return { rows, db: { prepare: () => ({ bind: (...b: unknown[]) => ({ run: async () => { rows.push(b); return {}; } }) }) } };
+}
+const waitCtx = () => { const ps: Promise<unknown>[] = []; return { ps, c: { waitUntil: (p: Promise<unknown>) => { ps.push(p); } } }; };
+
+test('an answered question is logged once with question, answer, tools and ask flag', async () => {
+  const d = fakeDbForHandler(); const w = waitCtx();
+  const a = fakeAi({ script: [{ tool_calls: [{ name: 'ask_nathan' }] }, { response: "I don't have that." }] });
+  const res = await handle(chatReq({ messages: [{ role: 'user', content: 'Salary?' }] }), env({ AI: a.ai, LIMITER: fakeLimiter().ns, DB: d.db }), w.c);
+  await res.text();
+  await Promise.all(w.ps);
+  assert.equal(d.rows.length, 1);
+  const r = d.rows[0];
+  assert.equal(r[2], 'ok'); assert.equal(r[3], 'Salary?'); assert.equal(r[4], "I don't have that.");
+  assert.equal(r[5], '["ask_nathan"]'); assert.equal(r[6], 1);
+  assert.ok(!JSON.stringify(r).includes('1.1.1.1'));
+});
+
+test('rate-limited and unavailable requests are logged with their outcome; invalid ones are not', async () => {
+  const d = fakeDbForHandler(); const w = waitCtx();
+  const l = fakeLimiter();
+  const e = env({ AI: fakeAi().ai, LIMITER: l.ns, DB: d.db, CHAT_PER_MINUTE: '1' });
+  await (await handle(chatReq(ok), e, w.c)).text();
+  assert.equal((await handle(chatReq(ok), e, w.c)).status, 429);
+  assert.equal((await handle(chatReq(ok), env({ AI: fakeAi({ fail: true }).ai, LIMITER: fakeLimiter().ns, DB: d.db }), w.c)).status, 503);
+  assert.equal((await handle(chatReq('not json'), e, w.c)).status, 400);
+  await Promise.all(w.ps);
+  assert.deepEqual(d.rows.map((r) => r[2]), ['ok', 'rate_limited_minute', 'unavailable']);
+});
+
+test('a failing log database never affects the chat response', async () => {
+  const w = waitCtx();
+  const db = { prepare: () => ({ bind: () => ({ run: async () => { throw new Error('d1 down'); } }) }) };
+  const res = await handle(chatReq(ok), env({ AI: fakeAi().ai, LIMITER: fakeLimiter().ns, DB: db }), w.c);
+  assert.equal(res.status, 200);
+  assert.match(await res.text(), /\[DONE\]/);
+  await Promise.all(w.ps);
+});
+
+test('a tool the model was not offered is not run, even if it names it (contact question + ask_nathan)', async () => {
+  const a = fakeAi({ script: [{ tool_calls: [{ name: 'ask_nathan' }] }, { response: 'Email hello@nathancj.com [[contact]]' }] });
+  const res = await handle(chatReq({ messages: [{ role: 'user', content: 'How do I get in touch with him?' }] }), env({ AI: a.ai, LIMITER: fakeLimiter().ns }));
+  const body = await res.text();
+  assert.doesNotMatch(body, /"action"/);
+  assert.match(a.calls[1].input.messages.at(-1)!.content, /not available/);
+});
+
+test('a tool call written as plain text is never shown: the answer is regenerated without tools', async () => {
+  const a = fakeAi({ script: [{ response: '[{"name:get_repo_file,arguments:{path:docs/Atlas.md,repo:x"}}]' }] });
+  const res = await handle(chatReq(ok), env({ AI: a.ai, LIMITER: fakeLimiter().ns }));
+  const body = await res.text();
+  assert.doesNotMatch(body, /get_repo_file/);
+  assert.match(body, /"response":"hi"/);
+  assert.equal(a.calls.length, 2);
+  assert.ok(!a.calls[1].input.tools && a.calls[1].input.stream === true);
+});
+
+test('GitHub tools are withheld for internal Microsoft-work questions unless GitHub or code is mentioned', async () => {
+  const names = async (q: string) => {
+    const { a, e } = chatEnv();
+    await handle(chatReq({ messages: [{ role: 'user', content: q }] }), e);
+    return (a.calls[0].input.tools as { name: string }[]).map((t) => t.name);
+  };
+  // internal-work questions get no tools and stream straight away
+  for (const q of ['Tell me about his experience at Microsoft', 'Tell me about Atlas']) {
+    const { a, e } = chatEnv();
+    const res = await handle(chatReq({ messages: [{ role: 'user', content: q }] }), e);
+    assert.match(await res.text(), /\[DONE\]/);
+    assert.equal(a.calls.length, 1);
+    assert.equal(a.calls[0].input.tools, undefined);
+    assert.equal(a.calls[0].input.stream, true);
+  }
+  assert.ok((await names('What repos does he have on GitHub?')).includes('list_github_repos'));
+  assert.ok((await names('Show me code from his side projects at home')).includes('get_repo_file'));
+  assert.ok((await names('What is he building lately?')).includes('get_repo_recent_commits'));
+});
+
+test('a long earlier assistant answer is clipped, not rejected, so the conversation can continue', async () => {
+  const { a, e } = chatEnv();
+  const long = 'a'.repeat(5000);
+  const messages = [
+    { role: 'user', content: 'tell me about atlas' }, { role: 'assistant', content: long },
+    { role: 'user', content: 'more' }, { role: 'assistant', content: long },
+    { role: 'user', content: 'hi' },
+  ];
+  const res = await handle(chatReq({ messages }), e);
+  assert.equal(res.status, 200);
+  const sent = a.calls[0].input.messages.filter((m) => m.role === 'assistant');
+  assert.ok(sent.every((m) => m.content.length === 2000));
+});
+
+test('the contact preset is answered from a fixed reply: no model call, no limiter hit, logged as canned', async () => {
+  const d = fakeDbForHandler(); const w = waitCtx();
+  const a = fakeAi(); const l = fakeLimiter();
+  for (const q of ['How can I contact him?', '  how can i contact him ', 'How can I contact Nathan']) {
+    const res = await handle(chatReq({ messages: [{ role: 'user', content: q }] }), env({ AI: a.ai, LIMITER: l.ns, DB: d.db, CANNED_STREAM_MS: '0' }), w.c);
+    assert.equal(res.status, 200);
+    assert.equal(res.headers.get('Content-Type'), 'text/event-stream');
+    assert.equal(res.headers.get('X-RateLimit-Remaining-Day'), null);
+    const body = await res.text();
+    assert.match(body, /hello@nathancj\.com/);
+    assert.match(body, /linkedin\.com\/in\/nathanielcjohnson/);
+    assert.match(body, /\[\[contact\]\]/);
+    assert.match(body, /\[DONE\]/);
+  }
+  await Promise.all(w.ps);
+  assert.equal(a.calls.length, 0);
+  assert.equal(l.names.length, 0);
+  assert.deepEqual(d.rows.map((r) => r[2]), ['canned', 'canned', 'canned']);
+});
+
+test('the contact preset works even when the AI binding is missing', async () => {
+  const res = await handle(chatReq({ messages: [{ role: 'user', content: 'How can I contact him?' }] }), env({ CANNED_STREAM_MS: '0' }));
+  assert.equal(res.status, 200);
+  assert.match(await res.text(), /hello@nathancj\.com/);
+});
+
+test('other contact-flavoured questions still go to the model', async () => {
+  const { a, e } = chatEnv();
+  await (await handle(chatReq({ messages: [{ role: 'user', content: 'Is he open to a hiring conversation? How do I reach him?' }] }), e)).text();
+  assert.equal(a.calls.length, 1);
+});
+
+test('the canned reply streams in several small events that rebuild the exact text', async () => {
+  const res = await handle(chatReq({ messages: [{ role: 'user', content: 'How can I contact him?' }] }), env({ CANNED_STREAM_MS: '1' }));
+  const events = (await res.text()).split('\n').filter((l) => l.startsWith('data: {')).map((l) => JSON.parse(l.slice(6)).response as string);
+  assert.ok(events.length > 5, `expected many events, got ${events.length}`);
+  assert.ok(events.every((e) => e.split(/\s+/).filter(Boolean).length <= 2));
+  assert.match(events.join(''), /^You can contact Nathan by emailing him at hello@nathancj\.com/);
+  assert.match(events.join(''), /\[\[contact\]\]$/);
 });

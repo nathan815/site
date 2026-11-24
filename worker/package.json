@@ -8,7 +8,11 @@
     "context": "node scripts/gen-context.ts",
     "deploy": "npm run context && wrangler deploy --var VERSION:$(git rev-parse --short HEAD)",
     "test": "node --test \"src/**/*.test.ts\"",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:migrate:local": "wrangler d1 migrations apply nathancj-chat --local",
+    "db:migrate": "wrangler d1 migrations apply nathancj-chat --remote",
+    "logs": "wrangler d1 execute nathancj-chat --remote --command \"SELECT ts, outcome, asked_nathan AS ask, substr(question,1,80) AS question, substr(answer,1,80) AS answer FROM chat_log ORDER BY id DESC LIMIT 25\"",
+    "logs:local": "wrangler d1 execute nathancj-chat --local --command \"SELECT ts, outcome, asked_nathan AS ask, substr(question,1,80) AS question, substr(answer,1,80) AS answer FROM chat_log ORDER BY id DESC LIMIT 25\""
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20261123.1",

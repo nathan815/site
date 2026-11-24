@@ -9,7 +9,8 @@ ALLOWED_ORIGINS = "https://nathancj.com,http://localhost:4321"
 CHAT_MODEL = "@cf/meta/llama-3.1-8b-instruct-fp8-fast"
 CHAT_PER_MINUTE = "5"        # per IP
 CHAT_PER_DAY = "30"          # per IP, resets 00:00 UTC
-CHAT_GLOBAL_PER_DAY = "150"  # all visitors. Measured ~15-60 neurons per question (full resume in the prompt + tool rounds), so 150 stays under the free 10k/day
+LOG_RETENTION_DAYS = "90"
+CHAT_GLOBAL_PER_DAY = "120"  # all visitors. Measured ~25-70 neurons per question (full resume in the prompt + tool rounds), so 120 stays under the free 10k/day
 
 # Workers AI. Always calls the real service, even under `wrangler dev`.
 [ai]
@@ -33,6 +34,17 @@ new_sqlite_classes = ["Counter"]
 [[migrations]]
 tag = "v2"
 new_sqlite_classes = ["RateLimiter"]
+
+# Chat conversation log (see migrations/ and the README). With no database_id, `wrangler deploy`
+# can create the database and fill the id in; `wrangler dev` uses a local SQLite file.
+[[d1_databases]]
+binding = "DB"
+database_name = "nathancj-chat"
+migrations_dir = "migrations"
+
+# Daily cleanup of old chat log rows (LOG_RETENTION_DAYS, default 90).
+[triggers]
+crons = ["17 4 * * *"]
 
 [observability]
 enabled = true
