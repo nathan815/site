@@ -82,3 +82,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font-sans);
 .troy { opacity: 0; transition: opacity .4s ease; }
 section:has(.me-photo:hover) .troy, section.show-troy .troy { opacity: 1; }
 .me-photo { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+
+/* Outline is extra faint until the portrait is hovered or tapped, then comes up with the dot. */
+.mi-outline { opacity: .05; transition: opacity .4s ease; }
+section:has(.me-photo:hover) .mi-outline, section.show-troy .mi-outline { opacity: .16; }
