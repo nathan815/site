@@ -11,7 +11,7 @@ const analyticsToken = import.meta.env.PUBLIC_ANALYTICS_TOKEN;
 const chatEnabled = Boolean(import.meta.env.PUBLIC_API_URL);
 const firstName = profile.name.split(' ')[0];
 const chatChips = ['What does Nathan work on at Microsoft?', "What's his tech stack?", 'Tell me about Atlas', 'How can I contact him?'];
-const sections = ['skills', 'experience', 'projects', 'activity', 'contact'];
+const sections = ['experience', 'projects', 'activity', 'skills', 'contact'];
 // Extra palette entries: companies/schools, work projects, and GitHub repos.
 const repos = new Map<string, { name: string; hint: string; href: string }>();
 for (const p of projects) repos.set(p.href.toLowerCase(), { name: p.name, hint: p.blurb, href: p.href });

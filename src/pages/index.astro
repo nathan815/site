@@ -42,19 +42,6 @@ const chatEnabled = Boolean(import.meta.env.PUBLIC_API_URL);
       </div>
     </section>
 
-    <!-- Skills -->
-    <section id="skills" class="reveal py-16">
-      <h2 class="mb-6 font-mono text-base text-accent"># skills</h2>
-      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {Object.entries(skills).map(([group, items]) => (
-          <div class="card p-5">
-            <h3 class="mb-3 text-sm font-semibold">{group}</h3>
-            <div class="flex flex-wrap gap-2">{items.map((s) => <span class="tag">{s}</span>)}</div>
-          </div>
-        ))}
-      </div>
-    </section>
-
     <!-- Experience -->
     <section id="experience" class="reveal py-16">
       <h2 class="mb-6 font-mono text-base text-accent"># experience</h2>
@@ -165,6 +152,19 @@ const chatEnabled = Boolean(import.meta.env.PUBLIC_API_URL);
         <Activity />
       </div>
       */}
+    </section>
+
+    <!-- Skills -->
+    <section id="skills" class="reveal py-16">
+      <h2 class="mb-6 font-mono text-base text-accent"># skills</h2>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {Object.entries(skills).map(([group, items]) => (
+          <div class="card p-5">
+            <h3 class="mb-3 text-sm font-semibold">{group}</h3>
+            <div class="flex flex-wrap gap-2">{items.map((s) => <span class="tag">{s}</span>)}</div>
+          </div>
+        ))}
+      </div>
     </section>
 
     <!-- Contact -->
