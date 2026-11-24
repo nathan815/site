@@ -122,6 +122,7 @@ const registry: Cmd[] = [
         return `pong from edge ${region ?? 'unknown'}: ${times.map((t) => `${t} ms`).join(', ')} (first includes connection setup)`;
       } catch (e) { return errText(e); }
     } },
+  ...(data.apiUrl ? [{ name: 'ask', hint: 'Ask the AI about Nathan', run: () => { dispatchEvent(new CustomEvent('chat:open')); } } as Cmd] : []),
   { name: 'theme', hint: 'Toggle light/dark', run: () => `theme: ${toggleTheme()}` },
 ];
 
@@ -171,11 +172,13 @@ const term = $('terminal'), out = $('term-out'), tin = $<HTMLInputElement>('term
 const cmdHistory: string[] = []; let hi = 0; let greeted = false;
 const termPrint = (t: string, cls = '') => { const d = document.createElement('div'); d.className = `whitespace-pre-wrap ${cls}`; d.textContent = t; out.appendChild(d); out.scrollTop = out.scrollHeight; };
 function openTerm() {
+  dispatchEvent(new CustomEvent('chat:close')); // the chat panel and terminal share the bottom-right corner
   term.classList.remove('hidden');
   if (!greeted) { greeted = true; termPrint(`Welcome. Type "help" to list commands.`, 'text-muted'); }
   tin.focus();
 }
 function closeTerm() { term.classList.add('hidden'); }
+addEventListener('terminal:close', closeTerm);
 $('terminal-close').addEventListener('click', closeTerm);
 const builtins: Record<string, (a: string[]) => string | void> = {
   help: () => ['about, whoami, skills, ls, clear, exit', ...registry.map((c) => c.name)].join('\n'),
@@ -242,6 +245,16 @@ const emailDialog = document.getElementById('email-dialog') as HTMLDialogElement
 if (emailDialog) {
   document.querySelectorAll('[data-email-dialog]').forEach((a) =>
     a.addEventListener('click', (e) => { e.preventDefault(); emailDialog.showModal(); }));
+  // The chat's "Contact" button asks for this dialog; preventDefault tells it the request was handled.
+  // detail.message pre-fills the message box (used by the chat's "ask Nathan" offer).
+  addEventListener('contact:open', (e) => {
+    e.preventDefault();
+    const message = (e as CustomEvent<{ message?: string }>).detail?.message;
+    const box = emailDialog.querySelector<HTMLTextAreaElement>('textarea[name="message"]');
+    if (message && box) box.value = message;
+    if (!emailDialog.open) emailDialog.showModal();
+    if (message) emailDialog.querySelector<HTMLInputElement>('input[name="name"]')?.focus();
+  });
   document.getElementById('email-close')!.addEventListener('click', () => emailDialog.close());
   emailDialog.addEventListener('click', (e) => { if (e.target === emailDialog) emailDialog.close(); });
   const copyBtn = document.getElementById('email-copy')!;

@@ -89,3 +89,32 @@ section:has(.me-photo:hover) .troy, section.show-troy .troy { opacity: 1; }
 /* Outline is extra faint until the portrait is hovered or tapped, then comes up with the dot. */
 .mi-outline { opacity: .05; transition: opacity .4s ease; }
 section:has(.me-photo:hover) .mi-outline, section.show-troy .mi-outline { opacity: .16; }
+
+/* Chat widget */
+.chat-user, .chat-ai { max-width: 88%; white-space: pre-wrap; overflow-wrap: anywhere; border-radius: .6rem; padding: .45rem .7rem; line-height: 1.5; }
+.chat-user { margin-left: auto; background: var(--accent); color: var(--on-accent); }
+.chat-ai { margin-right: auto; background: var(--bg); border: 1px solid var(--border); }
+.chat-chip { text-align: left; font-size: .8rem; padding: .35rem .7rem; border-radius: .5rem; border: 1px solid var(--border); color: var(--muted); background: transparent; }
+.chat-chip:hover:not(:disabled) { border-color: var(--accent); color: var(--text); }
+.chat-chip:disabled { opacity: .5; }
+.chat-notice { margin: 0 .75rem .5rem; padding: .45rem .7rem; font-size: .75rem; line-height: 1.45; border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: .4rem; background: var(--bg); }
+.chat-notice a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.typing { display: inline-flex; gap: 4px; align-items: center; height: 1.2em; }
+.typing i { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); animation: typing 1.2s infinite ease-in-out; }
+.typing i:nth-child(2) { animation-delay: .15s; } .typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes typing { 0%, 80%, 100% { opacity: .25; } 40% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .typing i { animation: none; opacity: .6; } }
+
+/* Launcher border: a slow, soft accent highlight travels around the edge. The fill stays solid. */
+@property --ga { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+.ai-border {
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    conic-gradient(from var(--ga), color-mix(in srgb, var(--accent) 85%, transparent), transparent 22%, color-mix(in srgb, var(--accent2) 55%, transparent) 50%, transparent 72%, color-mix(in srgb, var(--accent) 85%, transparent)) border-box,
+    linear-gradient(var(--border), var(--border)) border-box;
+  animation: ai-border-spin 6s linear infinite;
+}
+.ai-border:hover { animation-duration: 2.5s; }
+@keyframes ai-border-spin { to { --ga: 360deg; } }
+@media (prefers-reduced-motion: reduce) { .ai-border { animation: none; } }
