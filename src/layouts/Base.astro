@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import { profile } from '../data/site';
-const { title = `${profile.name} — ${profile.role}`, description = profile.summary.slice(0, 155) } = Astro.props;
+const { title = profile.name, description = profile.summary.slice(0, 155) } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 // Cloudflare Web Analytics loads only when a site token is set at build time.
 const analyticsToken = import.meta.env.PUBLIC_ANALYTICS_TOKEN;
