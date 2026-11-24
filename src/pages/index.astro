@@ -4,13 +4,23 @@ import GithubActivity from '../components/GithubActivity.astro';
 // Work activity charts are hidden until the collector project is running.
 // Re-enable: see https://github.com/nathan815/site/issues/13
 // import Activity from '../components/Activity.astro';
+import { slug } from '../data/slug';
 import { profile, skills, experience, projects, showcaseUrl, contacts } from '../data/site';
 ---
 <Base>
   <main id="top" class="mx-auto max-w-5xl px-4">
     <!-- Hero + about -->
-    <section class="py-14 sm:py-20">
-      <div class="grid items-center gap-10 md:grid-cols-[1fr_auto]">
+    <section class="relative py-14 sm:py-20">
+      <!-- Faint Lower Peninsula outline behind the hero. Decorative only. -->
+      <svg aria-hidden="true" viewBox="0 0 170 225" fill="none" stroke="var(--accent)" stroke-width="0.6" stroke-linejoin="round" stroke-linecap="round" class="michigan pointer-events-none absolute right-0 top-1/2 h-[26rem] -translate-y-1/2 md:right-48 md:h-[30rem]">
+        <path class="mi-outline" d="M82 11 L91 17 L114 29 L128 47 L128 88 L119 98 L112 119 L128 114 L134 103 L144 97 L157 107 L164 150 L142 183 L128 213 L79 214 L29 212 L7 212 L18 195 L26 180 L29 161 L24 138 L20 102 L27 68 L34 50 L52 40 L48 55 L52 62 L54 45 L62 34 L73 31 L72 28 L68 21 Z"/>
+        <!-- Troy, MI -->
+        <g class="troy">
+        <circle class="troy-ring" cx="138.6" cy="169.7" r="3" fill="var(--accent)" />
+        <circle cx="138.6" cy="169.7" r="1.6" fill="var(--accent)" stroke="none" opacity="0.8" />
+        </g>
+      </svg>
+      <div class="relative grid items-center gap-10 md:grid-cols-[1fr_auto]">
         <div class="min-w-0">
           <p class="font-mono text-sm text-accent">$ whoami</p>
           <h1 class="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">
@@ -27,13 +37,13 @@ import { profile, skills, experience, projects, showcaseUrl, contacts } from '..
           </div>
           <p class="mt-6 font-mono text-xs text-muted">tip: press <kbd class="rounded border border-border px-1">⌘/Ctrl K</kbd> or <kbd class="rounded border border-border px-1">`</kbd></p>
         </div>
-        <img src="/me.jpg" alt={`Portrait of ${profile.name}`} width="176" height="176" class="order-first h-36 w-36 rounded-2xl border border-border object-cover md:order-none md:h-44 md:w-44" />
+        <img src="/me.jpg" alt={`Portrait of ${profile.name}`} width="176" height="176" class="me-photo order-first h-36 w-36 rounded-2xl border border-border object-cover md:order-none md:h-44 md:w-44" />
       </div>
     </section>
 
     <!-- Skills -->
     <section id="skills" class="reveal py-16">
-      <h2 class="mb-6 font-mono text-sm text-accent"># skills</h2>
+      <h2 class="mb-6 font-mono text-base text-accent"># skills</h2>
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {Object.entries(skills).map(([group, items]) => (
           <div class="card p-5">
@@ -46,10 +56,10 @@ import { profile, skills, experience, projects, showcaseUrl, contacts } from '..
 
     <!-- Experience -->
     <section id="experience" class="reveal py-16">
-      <h2 class="mb-6 font-mono text-sm text-accent"># experience</h2>
+      <h2 class="mb-6 font-mono text-base text-accent"># experience</h2>
       <ol class="relative space-y-10 border-l border-border pl-6">
         {experience.map((e) => (
-          <li class="relative">
+          <li class="relative scroll-mt-20" id={`job-${slug(e.org)}`}>
             <span class="absolute -left-[1.85rem] top-3 h-2.5 w-2.5 rounded-full" style="background:var(--accent)"></span>
             <div class="flex gap-4">
               {e.logo === 'microsoft' ? (
@@ -87,7 +97,7 @@ import { profile, skills, experience, projects, showcaseUrl, contacts } from '..
                   <>
                     <div class="mt-4 grid items-start gap-3 sm:grid-cols-2">
                       {e.projects.map((p) => (
-                        <details class="card group overflow-hidden sm:open:col-span-2">
+                        <details id={`proj-${slug(p.name)}`} class="card group overflow-hidden scroll-mt-20 sm:open:col-span-2">
                           <summary class="flex cursor-pointer list-none items-start justify-between gap-3 p-4 [&::-webkit-details-marker]:hidden">
                             <div class="min-w-0">
                               <h4 class="font-semibold">{p.name}</h4>
@@ -130,7 +140,7 @@ import { profile, skills, experience, projects, showcaseUrl, contacts } from '..
 
     <!-- Projects -->
     <section id="projects" class="reveal py-16">
-      <h2 class="mb-2 font-mono text-sm text-accent"># open source and personal projects</h2>
+      <h2 class="mb-2 font-mono text-base text-accent"># open source and personal projects</h2>
       <p class="mb-6 text-sm text-muted">Side projects on GitHub. My larger work at Microsoft is in the experience section above.</p>
 
       <div class="grid gap-4 sm:grid-cols-2">
@@ -146,7 +156,7 @@ import { profile, skills, experience, projects, showcaseUrl, contacts } from '..
 
     <!-- Activity -->
     <section id="activity" class="reveal py-16">
-      <h2 class="mb-2 font-mono text-sm text-accent"># recent github activity</h2>
+      <h2 class="mb-2 font-mono text-base text-accent"># recent github activity</h2>
       <p class="mb-6 text-sm text-muted">What I have been building in public lately.</p>
       <GithubActivity />
       {/* Work activity charts (hidden until the collector is set up): https://github.com/nathan815/site/issues/13
@@ -158,12 +168,12 @@ import { profile, skills, experience, projects, showcaseUrl, contacts } from '..
 
     <!-- Contact -->
     <section id="contact" class="reveal py-16">
-      <h2 class="mb-2 font-mono text-sm text-accent"># contact</h2>
+      <h2 class="mb-2 font-mono text-base text-accent"># contact</h2>
       <p class="mb-6 text-sm text-muted">Want to chat about a project or role? Reach out on LinkedIn or by email.</p>
       <ul class="grid gap-4 sm:grid-cols-2">
         {contacts.map((c) => (
           <li>
-            <a href={c.href} {...(c.external ? { target: '_blank', rel: 'noopener' } : {})} class="card flex h-full items-center gap-4 p-5" aria-label={`${c.label}: ${c.handle}`}>
+            <a href={c.href} {...(c.label === 'Message' ? { 'data-email-dialog': '' } : {})} {...(c.external ? { target: '_blank', rel: 'noopener' } : {})} class="card flex h-full items-center gap-4 p-5" aria-label={`${c.label}: ${c.handle}`}>
               <span class="grid h-14 w-14 shrink-0 place-items-center rounded-xl border border-border bg-bg" aria-hidden="true">
                 <svg viewBox={c.viewBox} class="h-8 w-8" style={`color:${c.color}`} fill={c.stroke ? 'none' : 'currentColor'} stroke={c.stroke ? 'currentColor' : 'none'} stroke-width={c.stroke ? 1.6 : undefined} stroke-linecap="round" stroke-linejoin="round" set:html={c.svg} />
               </span>
@@ -177,4 +187,26 @@ import { profile, skills, experience, projects, showcaseUrl, contacts } from '..
       </ul>
     </section>
   </main>
+  <dialog id="email-dialog" class="m-auto w-[min(92vw,28rem)] rounded-xl border border-border bg-surface p-6 text-fg backdrop:bg-black/50">
+    <div class="mb-4 flex items-start justify-between gap-4">
+      <div>
+        <p class="font-mono text-xs text-muted">email</p>
+        <div class="flex items-center gap-2">
+          <a href={`mailto:${profile.email}`} class="font-mono text-lg text-accent hover:underline">{profile.email}</a>
+          <button type="button" id="email-copy" class="rounded-md border border-border px-2 py-0.5 font-mono text-xs text-muted transition-colors hover:border-accent hover:text-fg focus-visible:outline-2 focus-visible:outline-accent" aria-label="Copy email address">Copy</button>
+        </div>
+      </div>
+      <button type="button" id="email-close" class="text-muted hover:text-fg" aria-label="Close">✕</button>
+    </div>
+    <p class="mb-4 text-sm text-muted">or use this form</p>
+    <form id="email-form" name="contact" method="POST" action="/" data-netlify="true" netlify-honeypot="bot-field" class="grid gap-3">
+      <input type="hidden" name="form-name" value="contact" />
+      <p class="hidden"><label>Don't fill this out: <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+      <label class="grid gap-1 text-sm">Name<input name="name" required autocomplete="name" class="field" /></label>
+      <label class="grid gap-1 text-sm">Email<input name="email" type="email" required autocomplete="email" class="field" /></label>
+      <label class="grid gap-1 text-sm">Message<textarea name="message" required rows="5" class="field"></textarea></label>
+      <button type="submit" class="btn-solid rounded-md px-4 py-2 text-sm font-medium transition-opacity disabled:opacity-60">Send</button>
+      <p id="email-status" class="min-h-4 text-xs text-muted" role="status" aria-live="polite"></p>
+    </form>
+  </dialog>
 </Base>

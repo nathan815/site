@@ -12,6 +12,13 @@ function toggleTheme() {
 $('toggle-theme').addEventListener('click', toggleTheme);
 
 
+/* ---------- mobile menu ---------- */
+const menuBtn = $('menu-toggle'), menu = $('mobile-menu');
+const setMenu = (open: boolean) => { menu.classList.toggle('hidden', !open); menuBtn.setAttribute('aria-expanded', String(open)); menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu'); $('menu-icon').setAttribute('d', open ? 'M4 4l12 12M16 4L4 16' : 'M3 5h14M3 10h14M3 15h14'); };
+menuBtn.addEventListener('click', () => setMenu(menu.classList.contains('hidden')));
+menu.addEventListener('click', (e) => (e.target as HTMLElement).closest('a') && setMenu(false));
+matchMedia('(min-width: 768px)').addEventListener('change', (m) => m.matches && setMenu(false));
+
 /* ---------- reveal on scroll ---------- */
 const io = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && (e.target.classList.add('in'), io.unobserve(e.target))), { threshold: 0.12 });
 document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
@@ -93,6 +100,9 @@ const go = (id: string) => { document.getElementById(id)?.scrollIntoView({ behav
 const registry: Cmd[] = [
   ...data.sections.map((s: string): Cmd => ({ name: `goto ${s}`, hint: `Jump to ${s}`, run: () => { go(s); return `→ ${s}`; } })),
   ...data.links.map((l: { label: string; href: string }): Cmd => ({ name: `open ${l.label.toLowerCase().replace(/\s+/g, '-')}`, hint: l.href, run: () => { window.open(l.href, '_blank', 'noopener'); return `opening ${l.href}`; } })),
+  ...(data.items as { kind: string; name: string; hint: string; target: string }[]).map((i): Cmd => i.kind === 'open'
+    ? { name: `repo ${i.name.toLowerCase()}`, hint: i.hint, run: () => { window.open(i.target, '_blank', 'noopener'); return `opening ${i.target}`; } }
+    : { name: `goto ${i.name.toLowerCase()}`, hint: i.hint, run: () => { const el = document.getElementById(i.target); if (el instanceof HTMLDetailsElement) el.open = true; go(i.target); return `→ ${i.name}`; } }),
   { name: 'email', hint: data.email, run: () => { location.href = `mailto:${data.email}`; return data.email; } },
   { name: 'status', hint: 'Live backend status', showOutput: true, run: async () => {
       try {
@@ -223,6 +233,59 @@ document.querySelectorAll<HTMLElement>('[data-scroll-end]').forEach((el) => { el
 const typing = (t: EventTarget | null) => t instanceof HTMLElement && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA');
 document.addEventListener('keydown', (e) => {
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); pal.classList.contains('hidden') ? openPalette() : closePalette(); }
-  else if (e.key === 'Escape') { closePalette(); closeTerm(); }
+  else if (e.key === 'Escape') { closePalette(); closeTerm(); setMenu(false); }
   else if (e.key === '`' && !typing(e.target)) { e.preventDefault(); term.classList.contains('hidden') ? openTerm() : closeTerm(); }
+});
+
+/* ---------- email dialog ---------- */
+const emailDialog = document.getElementById('email-dialog') as HTMLDialogElement | null;
+if (emailDialog) {
+  document.querySelectorAll('[data-email-dialog]').forEach((a) =>
+    a.addEventListener('click', (e) => { e.preventDefault(); emailDialog.showModal(); }));
+  document.getElementById('email-close')!.addEventListener('click', () => emailDialog.close());
+  emailDialog.addEventListener('click', (e) => { if (e.target === emailDialog) emailDialog.close(); });
+  const copyBtn = document.getElementById('email-copy')!;
+  let copyTimer: number | undefined;
+  copyBtn.addEventListener('click', async () => {
+    let ok = true;
+    try { await navigator.clipboard.writeText(data.email); } catch {
+      // Fallback for contexts where the async clipboard API is blocked.
+      const t = document.createElement('textarea');
+      t.value = data.email; t.setAttribute('readonly', ''); t.style.cssText = 'position:fixed;opacity:0';
+      emailDialog.appendChild(t); t.select();
+      try { ok = document.execCommand('copy'); } catch { ok = false; }
+      t.remove(); copyBtn.focus();
+    }
+    copyBtn.textContent = ok ? 'Copied ✓' : 'Press ⌘C';
+    clearTimeout(copyTimer);
+    copyTimer = window.setTimeout(() => { copyBtn.textContent = 'Copy'; }, 1800);
+  });
+  const form = document.getElementById('email-form') as HTMLFormElement;
+  const status = document.getElementById('email-status')!;
+  const submit = form.querySelector('button[type=submit]') as HTMLButtonElement;
+  const fail = `Couldn't send. Please email ${data.email} instead.`;
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submit.disabled = true; submit.textContent = 'Sending…'; status.textContent = '';
+    try {
+      const res = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(new FormData(form) as unknown as Record<string, string>).toString(),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      form.reset();
+      status.textContent = 'Thanks! Your message was sent.';
+    } catch {
+      status.textContent = fail;
+    } finally {
+      submit.disabled = false; submit.textContent = 'Send';
+    }
+  });
+  emailDialog.addEventListener('close', () => { status.textContent = ''; });
+}
+
+/* ---------- portrait reveals the Troy dot on tap ---------- */
+document.querySelector('.me-photo')?.addEventListener('click', (e) => {
+  (e.currentTarget as HTMLElement).closest('section')?.classList.toggle('show-troy');
 });
