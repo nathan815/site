@@ -11,8 +11,8 @@ export const profile = {
     'build with AI every day.',
   ],
   summary:
-    "I'm a Senior Software Engineer at Microsoft, where I've worked on Azure VMware Solution since 2020. I like building reliable cloud infrastructure and well-crafted software, and AI-assisted development is now central to my day-to-day work.",
-  location: 'Michigan, USA', // TODO: confirm
+    "I'm a software engineer at Microsoft, where I've worked on Azure VMware Solution since 2020. I like building reliable cloud infrastructure and well-crafted software, and AI-assisted development is now central to my day-to-day work.",
+  location: 'Microsoft',
   email: 'hello@nathancj.com',
   links: [
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/nathanielcjohnson' },

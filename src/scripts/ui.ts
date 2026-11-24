@@ -257,3 +257,8 @@ if (emailDialog) {
   });
   emailDialog.addEventListener('close', () => { status.textContent = ''; });
 }
+
+/* ---------- portrait reveals the Troy dot on tap ---------- */
+document.querySelector('.me-photo')?.addEventListener('click', (e) => {
+  (e.currentTarget as HTMLElement).closest('section')?.classList.toggle('show-troy');
+});
