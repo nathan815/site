@@ -35,11 +35,12 @@ new_sqlite_classes = ["Counter"]
 tag = "v2"
 new_sqlite_classes = ["RateLimiter"]
 
-# Chat conversation log (see migrations/ and the README). With no database_id, `wrangler deploy`
-# can create the database and fill the id in; `wrangler dev` uses a local SQLite file.
+# Chat conversation log (see migrations/ and the README). The id is pinned so CI deploys never
+# try to auto-provision a new database (ids are not secrets). `wrangler dev` uses a local SQLite file.
 [[d1_databases]]
 binding = "DB"
 database_name = "nathancj-chat"
+database_id = "4685e357-85e6-4d12-9593-bc52aa1911c9"
 migrations_dir = "migrations"
 
 # Daily cleanup of old chat log rows (LOG_RETENTION_DAYS, default 90).
