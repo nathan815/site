@@ -5,7 +5,8 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy --var VERSION:$(git rev-parse --short HEAD)",
+    "context": "node scripts/gen-context.ts",
+    "deploy": "npm run context && wrangler deploy --var VERSION:$(git rev-parse --short HEAD)",
     "test": "node --test \"src/**/*.test.ts\"",
     "typecheck": "tsc --noEmit"
   },
