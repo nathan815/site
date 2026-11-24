@@ -1,11 +1,24 @@
 ---
 import '../styles/global.css';
-import { profile } from '../data/site';
+import { profile, experience, projects } from '../data/site';
+import { githubActivity } from '../data/githubActivity';
+import { slug } from '../data/slug';
 const { title = `${profile.name} — ${profile.role}`, description = profile.summary.slice(0, 155) } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 // Cloudflare Web Analytics loads only when a site token is set at build time.
 const analyticsToken = import.meta.env.PUBLIC_ANALYTICS_TOKEN;
 const sections = ['skills', 'experience', 'projects', 'activity', 'contact'];
+// Extra palette entries: companies/schools, work projects, and GitHub repos.
+const repos = new Map<string, { name: string; hint: string; href: string }>();
+for (const p of projects) repos.set(p.href.toLowerCase(), { name: p.name, hint: p.blurb, href: p.href });
+for (const r of githubActivity.repos) if (!repos.has(r.url.toLowerCase())) repos.set(r.url.toLowerCase(), { name: r.name, hint: r.description, href: r.url });
+const searchItems = [
+  ...experience.flatMap((e) => [
+    { kind: 'goto', name: e.org.split(' · ')[0], hint: `${e.role} · ${e.period}`, target: `job-${slug(e.org)}` },
+    ...(e.projects ?? []).map((p) => ({ kind: 'goto', name: p.name, hint: `${e.org.split(' · ')[0]} project: ${p.hook}`, target: `proj-${slug(p.name)}` })),
+  ]),
+  ...[...repos.values()].map((r) => ({ kind: 'open', name: r.name, hint: `repo: ${r.hint}`, target: r.href })),
+];
 const commands = JSON.stringify({
   apiUrl: import.meta.env.PUBLIC_API_URL ?? '',
   sections,
@@ -14,6 +27,7 @@ const commands = JSON.stringify({
   summary: profile.summary,
   name: profile.name,
   role: profile.role,
+  items: searchItems,
 });
 ---
 <!doctype html>
@@ -49,12 +63,18 @@ const commands = JSON.stringify({
           {sections.slice(0, 4).map((s) => <li><a class="hover:text-fg capitalize" href={`#${s}`}>{s}</a></li>)}
         </ul>
         <div class="flex items-center gap-2">
-          <button id="open-palette" class="hidden items-center gap-2 rounded-md border border-border px-2.5 py-1 font-mono text-xs text-muted hover:text-fg sm:flex" aria-label="Open command palette">
-            <span>Search</span><kbd class="rounded bg-surface px-1.5 py-0.5">⌘K</kbd>
+          <button id="open-palette" class="flex items-center gap-2 rounded-md border border-border px-2.5 py-1 font-mono text-xs text-muted hover:text-fg" aria-label="Open command palette">
+            <span>Search</span><kbd class="hidden rounded bg-surface px-1.5 py-0.5 sm:inline">⌘K</kbd>
           </button>
           <button id="toggle-theme" class="rounded-md border border-border px-2.5 py-1 text-xs text-muted hover:text-fg" aria-label="Toggle light/dark theme">Theme</button>
+          <button id="menu-toggle" class="rounded-md border border-border px-2.5 py-1 text-xs text-muted hover:text-fg md:hidden" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+            <svg viewBox="0 0 20 20" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path id="menu-icon" d="M3 5h14M3 10h14M3 15h14"/></svg>
+          </button>
         </div>
       </nav>
+      <ul id="mobile-menu" class="mx-auto hidden max-w-5xl border-t border-border/60 px-4 py-2 text-sm md:hidden">
+        {sections.map((s) => <li><a class="block py-2 capitalize text-muted hover:text-fg" href={`#${s}`}>{s}</a></li>)}
+      </ul>
     </header>
 
     <slot />

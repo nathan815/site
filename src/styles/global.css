@@ -38,6 +38,8 @@ svg [data-tip]:focus-visible { outline: 2px solid var(--accent); outline-offset:
 }
 
 html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+/* Sections carry 4rem of top padding; pull them up so the heading, not the padding, lands under the nav. */
+section[id] { scroll-margin-top: -3.5rem; }
 body { background: var(--bg); color: var(--text); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
 
 .grid-bg {
@@ -62,3 +64,11 @@ body { background: var(--bg); color: var(--text); font-family: var(--font-sans);
   .reveal { opacity: 1; transform: none; transition: none; }
   .caret::after { animation: none; }
 }
+
+/* Form fields: a soft accent ring on focus instead of the browser default outline. */
+.field {
+  width: 100%; border: 1px solid var(--border); border-radius: .5rem; background: var(--bg); color: var(--text);
+  padding: .55rem .75rem; transition: border-color .15s, box-shadow .15s, background-color .15s;
+}
+.field:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
+.field:focus { outline: none; border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 40%, transparent); }
