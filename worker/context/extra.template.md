@@ -37,7 +37,7 @@
 # Tools (Claude Code, Copilot, MCP), where AI helps and where it does not, a real example workflow.
 
 ## Side projects (details)
-# For each of ADO-Boost, prscope, copilot-proxy, adx-dashboard-mcp, Lost Cities, etc.: why you built it, what is
+# For each of ADO-Boost, copilot-proxy, adx-dashboard-mcp, quicken-simplifi-mcp, Lost Cities, etc.: why you built it, what is
 # interesting technically, whether people use it.
 
 ## Education and early career

@@ -1,12 +1,13 @@
 // Renders src/data/site.ts into worker/src/context.generated.ts, the resume text the chat
 // model answers from. Run with `npm run context` (also part of `npm run deploy`).
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { profile, skills, experience, projects, contacts } from '../../src/data/site.ts';
+import { profile, skills, aiSkills, experience, projects, contacts } from '../../src/data/site.ts';
 
 const lines: string[] = [];
 lines.push(`NAME: ${profile.name}`, `ROLE: ${profile.role}`, `SUMMARY: ${profile.summary}`, `BASED IN: ${profile.location}`, `EMAIL: ${profile.email}`);
 lines.push('LINKS: ' + profile.links.map((l) => `${l.label} ${l.href}`).join('; '));
 lines.push('', 'SKILLS');
+lines.push(`- AI & agents: ${aiSkills.map((a) => a.name).join(', ')}`);
 for (const [g, items] of Object.entries(skills)) lines.push(`- ${g}: ${items.join(', ')}`);
 lines.push('', 'EXPERIENCE AND EDUCATION');
 for (const j of experience) {
