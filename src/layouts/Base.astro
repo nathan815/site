@@ -91,7 +91,7 @@ const commands = JSON.stringify({
     <slot />
 
     <footer class="mx-auto max-w-5xl px-4 py-10 text-center font-mono text-xs text-muted">
-      © {new Date().getFullYear()} {profile.name} · built with Astro · press <kbd class="rounded border border-border px-1">`</kbd> for a terminal
+      © {new Date().getFullYear()} {profile.name} · press <kbd class="rounded border border-border px-1">`</kbd> for a terminal
       <span id="view-counter" class="mt-3 flex flex-wrap items-center justify-center gap-2" aria-label="Site views" hidden></span>
       {analyticsToken && <span class="mt-1 block">Anonymous, cookie-free page-view analytics by Cloudflare.</span>}
     </footer>

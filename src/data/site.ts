@@ -21,12 +21,16 @@ export const profile = {
   ],
 };
 
+export const aiSkills: { name: string; note: string }[] = [
+  { name: 'GitHub Copilot App & CLI', note: 'Daily driver at work, in the app and the terminal' },
+  { name: 'Claude Code & Codex', note: 'Daily drivers for personal projects' },
+  { name: 'Copilot SDK', note: 'Building agents and tools on top of Copilot' },
+  { name: 'Azure AI Foundry', note: 'Inference for work apps, like the agent built into the AVS Console App' },
+];
+
 export const skills: Record<string, string[]> = {
-  Languages: ['TypeScript', 'JavaScript', 'C#', 'Go', 'Python', 'PowerShell', 'Java', 'Kotlin', 'SQL'],
-  Frontend: ['React', 'Vue', 'React Native', 'Astro', 'Tailwind'],
-  Backend: ['Node.js', 'Durable Functions', 'Spring Boot', 'Laravel', 'Redis'],
-  Data: ['Spark', 'Scala', 'Hadoop', 'HDFS', 'SQL Server'],
-  Tooling: ['Git', 'GitHub Actions', 'Azure', 'Azure DevOps', 'Copilot', 'Claude Code', 'MCP'],
+  Languages: ['C#', 'F#', 'Python', 'TypeScript', 'JavaScript', 'Go', 'PowerShell'],
+  'Cloud & DevOps': ['Azure', 'Azure Functions', 'AKS', 'Kubernetes', 'Azure Pipelines', 'Bicep', 'ARM templates', 'GitHub Actions', 'Azure DevOps', 'Git'],
 };
 
 interface Title { title: string; period?: string }
@@ -160,12 +164,6 @@ export const projects = [
     href: 'https://github.com/nathan815/ADO-Boost',
   },
   {
-    name: 'prscope',
-    blurb: 'A pull request dashboard that works across Azure DevOps repos.',
-    stack: ['TypeScript', 'Azure DevOps'],
-    href: 'https://github.com/nathan815/prscope',
-  },
-  {
     name: 'copilot-proxy',
     blurb: 'A secured proxy for using the GitHub Copilot API with Claude Code and Codex.',
     stack: ['PowerShell', 'GitHub Copilot', 'Claude Code'],
@@ -178,6 +176,12 @@ export const projects = [
     href: 'https://github.com/nathan815/adx-dashboard-mcp',
   },
   {
+    name: 'quicken-simplifi-mcp',
+    blurb: 'My fork of an MCP server for Quicken Simplifi, so agents can work with personal finance data.',
+    stack: ['TypeScript', 'MCP', 'Fork'],
+    href: 'https://github.com/nathan815/quicken-simplifi-mcp',
+  },
+  {
     name: 'Threes Scorekeeper',
     blurb: 'A scorekeeping app for the card game Threes.',
     stack: ['TypeScript'],
@@ -188,12 +192,6 @@ export const projects = [
     blurb: 'An online multiplayer version of the Lost Cities card game.',
     stack: ['Java', 'Spring Boot', 'TypeScript', 'Vue'],
     href: 'https://github.com/nathan815/LostCities',
-  },
-  {
-    name: 'Laughable Lyrics',
-    blurb: 'An Android app that generates comical translations of song lyrics.',
-    stack: ['Kotlin', 'Android'],
-    href: 'https://github.com/nathan815/Laughable-Lyrics',
   },
 ];
 

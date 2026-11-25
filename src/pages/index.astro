@@ -5,7 +5,7 @@ import GithubActivity from '../components/GithubActivity.astro';
 // Re-enable: see https://github.com/nathan815/site/issues/13
 // import Activity from '../components/Activity.astro';
 import { slug } from '../data/slug';
-import { profile, skills, experience, projects, showcaseUrl, contacts } from '../data/site';
+import { profile, skills, aiSkills, experience, projects, showcaseUrl, contacts } from '../data/site';
 const chatEnabled = Boolean(import.meta.env.PUBLIC_API_URL);
 // Screen readers get every tagline once, as one sentence; the typing animation is hidden from them.
 const taglineSentence = new Intl.ListFormat('en', { type: 'conjunction' }).format(profile.taglines.map((t) => t.replace(/\.$/, ''))) + '.';
@@ -159,12 +159,28 @@ const taglineSentence = new Intl.ListFormat('en', { type: 'conjunction' }).forma
 
     <!-- Skills -->
     <section id="skills" class="reveal py-16">
-      <h2 class="mb-6 font-mono text-base text-accent"># skills</h2>
-      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {Object.entries(skills).map(([group, items]) => (
+      <h2 class="mb-2 font-mono text-base text-accent"># skills</h2>
+      <p class="mb-6 text-sm text-muted">Where I spend most of my time: AI-assisted engineering first, then the stack underneath.</p>
+
+      <div class="ai-panel mb-4 rounded-xl p-5 sm:p-6">
+        <div class="mb-4 flex items-center gap-2 font-mono text-sm font-semibold text-accent">
+          <span aria-hidden="true">✦</span> AI &amp; agents
+        </div>
+        <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {aiSkills.map((a, i) => (
+            <li class:list={['ai-tile rounded-lg p-4', i < 2 && 'lg:col-span-1']}>
+              <p class="font-semibold">{a.name}</p>
+              <p class="mt-1 text-sm text-muted">{a.note}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2">
+        {Object.entries(skills).map(([group, items], i) => (
           <div class="card p-5">
-            <h3 class="mb-3 text-sm font-semibold">{group}</h3>
-            <div class="flex flex-wrap gap-2">{items.map((s) => <span class="tag">{s}</span>)}</div>
+            <h3 class="mb-3 flex items-baseline justify-between font-mono text-sm font-semibold">{group}<span class="text-xs font-normal text-muted">{items.length}</span></h3>
+            <div class="flex flex-wrap gap-2">{items.map((s, j) => <span class:list={['tag', i < 2 && 'tag-primary']}>{s}</span>)}</div>
           </div>
         ))}
       </div>
