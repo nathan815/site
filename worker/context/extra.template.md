@@ -28,7 +28,7 @@
 # What problem it solves, how an AI agent deploys to it, your role, who uses it.
 
 ## Other Microsoft work
-# PUC, tenant networking, AV64 / Gen 2, Public IP to the NSX Edge: anything beyond the one-paragraph blurbs on the site.
+# PUC, tenant networking, AV64 / Gen 2: anything beyond the one-paragraph blurbs on the site.
 
 ## Engineering approach
 # How you debug, review code, design APIs, test, handle on-call. Concrete habits and examples.

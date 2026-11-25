@@ -104,14 +104,6 @@ export const experience: Job[] = [
         stack: ['AV64', 'Control plane', 'Networking', 'Host agent'],
       },
       {
-        name: 'Public IP down to the NSX Edge',
-        hook: 'Internet access straight to the NSX Edge.',
-        metric: 'Thousands of IPs, not hundreds',
-        details:
-          'A generally available AVS feature that lets customers use Azure public IPs directly on the NSX Edge for inbound and outbound internet access. It supports far larger scale than managed SNAT, with thousands of public IPs versus hundreds. I worked on it on the tenant networking and control plane team.',
-        stack: ['VMware NSX', 'Azure networking'],
-      },
-      {
         name: 'Tenant networking and control plane',
         hook: 'The control plane that configures NSX, vCenter and ESXi.',
         details:
