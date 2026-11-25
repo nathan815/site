@@ -33,7 +33,7 @@ const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
   {a.repos.map((r) => (
     <li>
       <a href={r.url} target="_blank" rel="noopener" class="card block h-full p-5">
-        <h3 class="font-semibold">{r.name} <span class="text-accent">↗</span></h3>
+        <h3 class="font-semibold">{r.name} <span class="text-accent" aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></h3>
         {r.description && <p class="mt-2 text-sm text-muted">{r.description}</p>}
         <div class="mt-4 flex flex-wrap items-center gap-2">
           {r.language && <span class="tag">{r.language}</span>}

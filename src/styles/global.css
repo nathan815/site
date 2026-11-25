@@ -60,21 +60,36 @@ body { background: var(--bg); color: var(--text); font-family: var(--font-sans);
 .caret::after { content: '▍'; margin-left: 2px; color: var(--accent); animation: blink 1s steps(1) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 
-.reveal { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
-.reveal.in { opacity: 1; transform: none; }
+/* Only hide sections when JS is running to reveal them; without it they stay visible. */
+.js .reveal { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
+.js .reveal.in { opacity: 1; transform: none; }
+
+/* Keyboard focus: one visible accent ring everywhere. In the base layer so outline-none utilities can still opt out. */
+@layer base { :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; } }
+.card:focus-visible { border-color: var(--accent); }
+summary:focus-visible { border-radius: .25rem; }
+
+.skip-link {
+  position: fixed; left: .75rem; top: .75rem; z-index: 70; padding: .5rem .9rem; border-radius: .4rem;
+  background: var(--accent); color: var(--on-accent); font-weight: 600; font-size: .875rem;
+  transform: translateY(-200%);
+}
+.skip-link:focus-visible { transform: none; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .reveal { opacity: 1; transform: none; transition: none; }
+  .js .reveal { opacity: 1; transform: none; transition: none; }
   .caret::after { animation: none; }
 }
 
 /* Form fields: a soft accent ring on focus instead of the browser default outline. */
+/* Field borders use --field-border (3:1 against the background, WCAG 1.4.11); --border is too faint to mark an input. */
+:root { --field-border: color-mix(in srgb, var(--muted) 80%, var(--surface)); }
 .field {
-  width: 100%; border: 1px solid var(--border); border-radius: .5rem; background: var(--bg); color: var(--text);
+  width: 100%; border: 1px solid var(--field-border); border-radius: .5rem; background: var(--bg); color: var(--text);
   padding: .55rem .75rem; transition: border-color .15s, box-shadow .15s, background-color .15s;
 }
 .field:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
-.field:focus { outline: none; border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 40%, transparent); }
+.field:focus, .field:focus-visible { outline: none; border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 40%, transparent); }
 
 /* Pulsing dot on the hero map. */
 .troy-ring { transform-box: fill-box; transform-origin: center; stroke: none; opacity: .5; animation: troy-pulse 2.4s ease-out infinite; }
