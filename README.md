@@ -1,5 +1,12 @@
 # nathancj.com
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/51bcef1d-cbb6-4ccf-ada6-7c95028a5adb/deploy-status)](https://app.netlify.com/projects/nathanieljohnson/deploys)
+[![Deploy worker](https://github.com/nathan815/site/actions/workflows/deploy-worker.yml/badge.svg)](https://github.com/nathan815/site/actions/workflows/deploy-worker.yml)
+[![Astro](https://img.shields.io/badge/Astro-7-BC52EE?logo=astro&logoColor=white)](https://astro.build)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fnathancj.com&label=nathancj.com)](https://nathancj.com)
+
 Personal site built with [Astro](https://astro.build) + Tailwind CSS v4. Hosted on Netlify (`nathancj.com`; `nathanieljohnson.me` redirects here via `netlify.toml`).
 
 ## Develop
