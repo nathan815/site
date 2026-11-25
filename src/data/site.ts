@@ -31,9 +31,7 @@ export const aiSkills: { name: string; note: string }[] = [
 
 export const skills: Record<string, string[]> = {
   Languages: ['C#', 'F#', 'Python', 'TypeScript', 'JavaScript', 'Go', 'PowerShell'],
-  'Cloud & DevOps': ['Azure', 'Azure Pipelines', 'Bicep', 'ARM templates', 'Deployments', 'GitHub Actions', 'Azure DevOps', 'Git'],
-  Frontend: ['React', 'Vue', 'React Native', 'Astro', 'Tailwind'],
-  Backend: ['Node.js', 'Durable Functions', 'Spring Boot', 'Laravel', 'Redis'],
+  'Cloud & DevOps': ['Azure', 'Azure Functions', 'AKS', 'Kubernetes', 'Azure Pipelines', 'Bicep', 'ARM templates', 'GitHub Actions', 'Azure DevOps', 'Git'],
 };
 
 interface Title { title: string; period?: string }
