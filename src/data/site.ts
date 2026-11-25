@@ -26,7 +26,6 @@ export const aiSkills: { name: string; note: string }[] = [
   { name: 'Claude Code & Codex', note: 'Daily drivers for personal projects' },
   { name: 'Copilot SDK', note: 'Building agents and tools on top of Copilot' },
   { name: 'Azure AI Foundry', note: 'Inference for work apps, like the agent built into the AVS Console App' },
-  { name: 'OpenCode & T3 Code', note: 'Dabbling with other coding agents' },
 ];
 
 export const skills: Record<string, string[]> = {
