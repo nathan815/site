@@ -102,10 +102,10 @@ const errText = (e: unknown) => `error: ${e instanceof Error ? e.message : Strin
 })();
 
 /* ---------- shared command registry ---------- */
-interface Cmd { name: string; rest?: boolean; hint: string; showOutput?: boolean; run: () => string | void | Promise<string | void> }
+interface Cmd { name: string; rest?: boolean; hint: string; target?: string; showOutput?: boolean; run: () => string | void | Promise<string | void> }
 const go = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); };
 const registry: Cmd[] = [
-  ...data.sections.map((s: string): Cmd => ({ name: `goto ${s}`, hint: `Jump to ${s}`, run: () => { go(s); return `→ ${s}`; } })),
+  ...data.sections.map((s: string): Cmd => ({ name: `goto ${s}`, hint: `Jump to ${s}`, target: s, run: () => { go(s); return `→ ${s}`; } })),
   { name: 'email', hint: data.email, run: () => { location.href = `mailto:${data.email}`; return data.email; } },
   { name: 'status', hint: 'Live backend status', showOutput: true, run: async () => {
       try {
@@ -128,15 +128,32 @@ const registry: Cmd[] = [
   ...(data.apiUrl ? [{ name: 'ask', hint: 'Ask the AI about Nathan', run: () => { dispatchEvent(new CustomEvent('chat:open')); } } as Cmd] : []),
   { name: 'theme', hint: 'Toggle light/dark', run: () => `theme: ${toggleTheme()}` },
   { name: 'terminal', hint: 'Open the terminal', run: () => { openTerm(); } },
-  ...(data.items as { kind: string; name: string; hint: string; target: string }[]).filter((i) => i.kind !== 'open').map((i): Cmd => ({ rest: true, name: `goto ${i.name.toLowerCase()}`, hint: i.hint, run: () => { const el = document.getElementById(i.target); if (el instanceof HTMLDetailsElement) el.open = true; go(i.target); return `→ ${i.name}`; } })),
+  ...(data.items as { kind: string; name: string; hint: string; target: string }[]).filter((i) => i.kind !== 'open').map((i): Cmd => ({ rest: true, name: `goto ${i.name.toLowerCase()}`, hint: i.hint, target: i.target, run: () => { const el = document.getElementById(i.target); if (el instanceof HTMLDetailsElement) el.open = true; go(i.target); return `→ ${i.name}`; } })),
   ...data.links.map((l: { label: string; href: string }): Cmd => ({ rest: true, name: `open ${l.label.toLowerCase().replace(/\s+/g, '-')}`, hint: l.href, run: () => { window.open(l.href, '_blank', 'noopener'); return `opening ${l.href}`; } })),
   ...(data.items as { kind: string; name: string; hint: string; target: string }[]).filter((i) => i.kind === 'open').map((i): Cmd => ({ rest: true, name: `repo ${i.name.toLowerCase()}`, hint: i.hint, run: () => { window.open(i.target, '_blank', 'noopener'); return `opening ${i.target}`; } })),
 ];
 
+/* ---------- focus helpers ---------- */
+type Focusable = HTMLElement | SVGElement; // chart bars are focusable SVG rects
+const currentFocus = (): Focusable | null => {
+  const a = document.activeElement;
+  return (a instanceof HTMLElement || a instanceof SVGElement) && a !== document.body && !$('palette').contains(a) ? a : null;
+};
+// Falls back to the Search button when the saved element is gone or hidden (e.g. the chat closed meanwhile).
+const restoreFocus = (el: Focusable | null) => (el?.isConnected && el.getClientRects().length ? el : $('open-palette')).focus();
+// Navigation commands move keyboard focus along with the scroll position.
+function focusTarget(id: string) {
+  const el = document.getElementById(id);
+  const t = el instanceof HTMLDetailsElement ? el.querySelector('summary') : el;
+  if (!t) return restoreFocus(null);
+  if (t === el) t.setAttribute('tabindex', '-1');
+  t.focus({ preventScroll: true });
+}
+
 /* ---------- palette ---------- */
 const pal = $('palette'), palIn = $<HTMLInputElement>('palette-input'), palList = $('palette-list'), palStatus = $('palette-status');
 let sel = 0, shown: Cmd[] = [];
-let palReturn: HTMLElement | null = null; // element to refocus when the palette closes
+let palReturn: Focusable | null = null; // element to refocus when the palette closes
 let statusTimer: number | undefined;
 function renderPalette() {
   const q = palIn.value.trim().toLowerCase();
@@ -167,22 +184,33 @@ function renderPalette() {
 // Commands that produce text (status, ping) show it in the terminal; the rest just act.
 async function runFromPalette(c: Cmd) {
   closePalette(false);
-  if (!c.showOutput) { c.run(); return; }
+  if (!c.showOutput) {
+    c.run();
+    if (c.target) focusTarget(c.target);
+    else if (!currentFocus()) restoreFocus(palReturn); // terminal and ask move focus themselves
+    palReturn = null;
+    return;
+  }
   openTerm();
+  palReturn = null;
   termPrint(`$ ${c.name}`, 'text-fg');
   const res = await c.run();
   if (res) termPrint(String(res), 'text-muted');
 }
+// Inert background: nothing behind the palette can take focus, including chat code that refocuses its input.
+const setBackgroundInert = (on: boolean) => { for (const el of document.body.children) if (el !== pal && el instanceof HTMLElement) el.inert = on; };
 function openPalette() {
-  if (pal.classList.contains('hidden')) palReturn = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  if (pal.classList.contains('hidden')) palReturn = currentFocus();
   pal.classList.replace('hidden', 'flex'); palIn.value = ''; sel = 0; renderPalette(); palIn.focus();
+  setBackgroundInert(true);
 }
-// refocus=false when a command ran: it may have moved focus (terminal, chat) or scrolled somewhere new.
+// refocus=false when a command runs: runFromPalette decides where focus goes.
 function closePalette(refocus = true) {
   if (pal.classList.contains('hidden')) return;
   pal.classList.replace('flex', 'hidden');
+  setBackgroundInert(false);
   palStatus.textContent = '';
-  if (refocus) palReturn?.focus();
+  if (refocus) { restoreFocus(palReturn); palReturn = null; }
 }
 $('open-palette').addEventListener('click', openPalette);
 pal.addEventListener('click', (e) => e.target === pal && closePalette());
@@ -199,13 +227,10 @@ palIn.addEventListener('keydown', (e) => {
 const term = $('terminal'), out = $('term-out'), tin = $<HTMLInputElement>('term-input');
 const cmdHistory: string[] = []; let hi = 0; let greeted = false;
 const termPrint = (t: string, cls = '') => { const d = document.createElement('div'); d.className = `whitespace-pre-wrap ${cls}`; d.textContent = t; out.appendChild(d); out.scrollTop = out.scrollHeight; };
-let termReturn: HTMLElement | null = null;
+let termReturn: Focusable | null = null;
 function openTerm() {
+  if (term.classList.contains('hidden')) termReturn = currentFocus() ?? palReturn;
   dispatchEvent(new CustomEvent('chat:close')); // the chat panel and terminal share the bottom-right corner
-  if (term.classList.contains('hidden')) {
-    const a = document.activeElement;
-    termReturn = a instanceof HTMLElement && a !== document.body && !pal.contains(a) ? a : palReturn;
-  }
   term.classList.remove('hidden');
   if (!greeted) { greeted = true; termPrint(`Welcome. Type "help" to list commands.`, 'text-muted'); }
   tin.focus();
@@ -215,7 +240,7 @@ function closeTerm(refocus = true) {
   if (term.classList.contains('hidden')) return;
   const hadFocus = term.contains(document.activeElement);
   term.classList.add('hidden');
-  if (refocus && hadFocus) (termReturn ?? document.getElementById('open-palette'))?.focus();
+  if (refocus && hadFocus) restoreFocus(termReturn);
   termReturn = null;
 }
 addEventListener('terminal:close', () => closeTerm(false));
@@ -280,7 +305,8 @@ document.querySelectorAll<HTMLElement>('[data-scroll-end]').forEach((el) => { el
 const typing = (t: EventTarget | null) => t instanceof HTMLElement && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA');
 document.addEventListener('keydown', (e) => {
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); pal.classList.contains('hidden') ? openPalette() : closePalette(); }
-  else if (e.key === 'Escape') { closePalette(); closeTerm(); setMenu(false); }
+  else if (e.key === 'Escape' && !pal.classList.contains('hidden')) { e.stopImmediatePropagation(); closePalette(); } // top layer only: chat also listens for Escape
+  else if (e.key === 'Escape') { closeTerm(); setMenu(false); }
   else if (e.key === '`' && !typing(e.target)) { e.preventDefault(); term.classList.contains('hidden') ? openTerm() : closeTerm(); }
 });
 
